@@ -4166,8 +4166,8 @@ class Admin extends Authenticatable
  
      function deleteSubmittedTrack_trm($trackId)
      {
-         DB::select("update tracks_submitted set deleted = '1' where id = '" . $trackId . "'");
-         return 1;
+        // SECURITY FIX: Use Query Builder to prevent SQL injection
+        DB::table('tracks_submitted')->where('id', $trackId)->update(['deleted' => '1']);
      }
  
      
