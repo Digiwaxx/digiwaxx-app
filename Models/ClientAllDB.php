@@ -48,10 +48,10 @@ class ClientAllDB extends Model
 	}
 
 	public function getRightTracks($cId){
-		
+
 		//echo "SELECT * FROM  tracks  where client = '" . $cId . "' order by id desc limit 0, 5";die();
-		
-        $query = DB::select("SELECT * FROM  tracks  where client = '" . $cId . "' AND deleted = '0' order by id desc limit 0, 5");
+
+        $query = DB::select("SELECT * FROM  tracks  where client = ? AND deleted = '0' order by id desc limit 0, 5", [$cId]);
 
         $result['numRows'] = count($query);
 
@@ -64,7 +64,7 @@ class ClientAllDB extends Model
 
         // plays and downloads
 
-        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = '" . $trackId . "' order by preview desc");
+        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = ? order by preview desc", [$trackId]);
 
         $numRows = count($query);
 
@@ -86,7 +86,7 @@ class ClientAllDB extends Model
 
         // rating
 
-        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = '" . $trackId . "' order by id desc");
+        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = ? order by id desc", [$trackId]);
 
         $ratingRows = count($query);
 
@@ -109,11 +109,11 @@ class ClientAllDB extends Model
     }
 	
 	public function getClientFooterTracks($clientId){
-		
+
         $query = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks.imgpage, tracks_mp3s.location,tracks.pCloudFileID, tracks.pCloudParentFolderID FROM
 
-   tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks.client = '$clientId' order by tracks_mp3s.preview desc limit 0, 10");
-   
+   tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks.client = ? order by tracks_mp3s.preview desc limit 0, 10", [$clientId]);
+
 
         $result['numRows'] = count($query);
 
@@ -123,8 +123,8 @@ class ClientAllDB extends Model
     }
 	
 	public function getClientUnreadInbox($clientId){
-		
-        $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = '" . $clientId . "') AND latest = '0' AND unread = '0' order by messageId desc");
+
+        $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = ?) AND latest = '0' AND unread = '0' order by messageId desc", [$clientId]);
 
         $result['numRows'] = count($query);
 
@@ -134,21 +134,21 @@ class ClientAllDB extends Model
     }
 	
 	public function getTrackReviews($trackId){
-        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = '" . $trackId . "' order by tracks_reviews.id desc");
+        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = ? order by tracks_reviews.id desc", [$trackId]);
 
         $result['numRows'] = count($query);
 
         $result['data']  = $query;
 
-        return  $result;		
+        return  $result;
 	}
 		
 	public function getNumTrackComments($trackId){
-        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = '" . $trackId . "' order by tracks_reviews.id desc");
+        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = ? order by tracks_reviews.id desc", [$trackId]);
 
         $resultCount = count($query);
 
-        return  $resultCount;		
+        return  $resultCount;
 	}
 		
 	public function getTrackComments($trackId, $start, $limit){
@@ -156,19 +156,19 @@ class ClientAllDB extends Model
 
 	left join members on tracks_reviews.member = members.id
 
-	where tracks_reviews.track = '" . $trackId . "' order by tracks_reviews.id desc limit $start, $limit");
+	where tracks_reviews.track = ? order by tracks_reviews.id desc limit $start, $limit", [$trackId]);
 
         $result['numRows'] = count($query);
 
         $result['data']  = $query;
 
-        return  $result;		
+        return  $result;
 	}
 	
     public function getClientsDetails($clientId)
     {
         $result['id'] = 0;
-        $query = DB::select("SELECT id, uname,name,age,email FROM clients where id = '" . $clientId . "'");
+        $query = DB::select("SELECT id, uname,name,age,email FROM clients where id = ?", [$clientId]);
         $numRows = count($query);
         $data  = $query;
         if ($numRows > 0) {
@@ -179,7 +179,7 @@ class ClientAllDB extends Model
             $result['email'] = $data[0]->email;
         }
 
-        $query1 = DB::select("SELECT image FROM client_images where clientId = '" . $clientId . "' order by imageId desc limit 1");
+        $query1 = DB::select("SELECT image FROM client_images where clientId = ? order by imageId desc limit 1", [$clientId]);
         $numRows1 = count($query1);
         $data1  = $query1;
         if ($numRows1 > 0) {
@@ -191,8 +191,8 @@ class ClientAllDB extends Model
     }
 
 	public function getClientInfo($clientId){
-		
-        $query = DB::select("SELECT * FROM  clients where id = '$clientId'");
+
+        $query = DB::select("SELECT * FROM  clients where id = ?", [$clientId]);
 
         $result['numRows'] = count($query);
 
@@ -202,8 +202,8 @@ class ClientAllDB extends Model
     }
 
 	public function getClientImage($clientId){
-		
-        $query = DB::select("SELECT * FROM  client_images where clientId = '$clientId' order by imageId desc limit 1");
+
+        $query = DB::select("SELECT * FROM  client_images where clientId = ? order by imageId desc limit 1", [$clientId]);
 
         $result['numRows'] = count($query);
 
@@ -213,8 +213,8 @@ class ClientAllDB extends Model
     }
 
 	public function getClientSocialInfo($clientId){
-		
-        $query = DB::select("SELECT * FROM  client_social_media where clientId = '$clientId'");
+
+        $query = DB::select("SELECT * FROM  client_social_media where clientId = ?", [$clientId]);
 
         $result['numRows'] = count($query);
 
@@ -247,11 +247,11 @@ class ClientAllDB extends Model
             $trackReviewsActivate = 1;
         }
 
-        $query = DB::select("update `clients` set name = '" . urlencode($company) . "', ccontact = '" . urlencode($name) . "', address1 = '" . urlencode($address1) . "', address2 = '" . urlencode($address2) . "', city = '" . urlencode($city) . "', state = '" . urlencode($state) . "', zip = '" . $zip . "', phone = '" . $phone . "', mobile = '" . $mobile . "', email = '" . $email . "', website = '" . $website . "', trackReviewEmailsActivated = '".$trackReviewsActivate."' where id = '" . $clientId . "'");
-		
-		$checkRecord = DB::select("SELECT * FROM client_social_media WHERE clientId = '" . $clientId . "'");
+        $query = DB::select("update `clients` set name = ?, ccontact = ?, address1 = ?, address2 = ?, city = ?, state = ?, zip = ?, phone = ?, mobile = ?, email = ?, website = ?, trackReviewEmailsActivated = ? where id = ?", [urlencode($company), urlencode($name), urlencode($address1), urlencode($address2), urlencode($city), urlencode($state), $zip, $phone, $mobile, $email, $website, $trackReviewsActivate, $clientId]);
+
+		$checkRecord = DB::select("SELECT * FROM client_social_media WHERE clientId = ?", [$clientId]);
 		if(count($checkRecord) > 0){
-			DB::select("update client_social_media set facebook = '" . $facebook . "', twitter = '" . $twitter . "', instagram = '" . $instagram . "', linkedin = '" . $linkedin . "' where clientId = '" . $clientId . "'");
+			DB::select("update client_social_media set facebook = ?, twitter = ?, instagram = ?, linkedin = ? where clientId = ?", [$facebook, $twitter, $instagram, $linkedin, $clientId]);
 		}else{
 			$insertDta = array(
 				'clientId'=>$clientId,
@@ -269,19 +269,19 @@ class ClientAllDB extends Model
         $rpass = $password;
         $password = md5($password);
         //
-        $query = DB::select("SELECT * FROM clients where id = '" . $clientId . "' AND ( pword = '" . $rpass . "' OR pword = '" . $password . "')");
+        $query = DB::select("SELECT * FROM clients where id = ? AND ( pword = ? OR pword = ?)", [$clientId, $rpass, $password]);
 
         return count($query);
     }
-	
+
 	public function updateClientPassword($password, $clientId){
         $password = md5($password);
-        $query = DB::select("update clients set pword = '" . $password . "' where id = '" . $clientId . "'");
+        $query = DB::select("update clients set pword = ? where id = ?", [$password, $clientId]);
         return $clientId;
     }
 	public function getSubscriptionStatus($clientId){
 
-        $query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = '" . $clientId . "' and status = '1' order by subscriptionId desc limit 1");
+        $query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = ? and status = '1' order by subscriptionId desc limit 1", [$clientId]);
 
         $result['numRows'] = count($query);
 
@@ -297,15 +297,15 @@ class ClientAllDB extends Model
 
 	   where
 
-	   ((chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "' AND chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "')
+	   ((chat_messages.senderType = '2' AND chat_messages.senderId = ? AND chat_messages.receiverType = '1' AND chat_messages.receiverId = ?)
 
 	   OR
 
-	   (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "' AND chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "'))
+	   (chat_messages.senderType = '1' AND chat_messages.senderId = ? AND chat_messages.receiverType = '2' AND chat_messages.receiverId = ?))
 
-	   AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = '" . $clientId . "'
+	   AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = ?
 
-	   order by chat_messages.messageId desc");
+	   order by chat_messages.messageId desc", [$memberId, $clientId, $clientId, $memberId, $clientId]);
 
 			$result['numRows'] = count($query);
 
@@ -322,15 +322,15 @@ class ClientAllDB extends Model
 
    where
 
-   ((chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "' AND chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "')
+   ((chat_messages.senderType = '2' AND chat_messages.senderId = ? AND chat_messages.receiverType = '1' AND chat_messages.receiverId = ?)
 
    OR
 
-   (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "' AND chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "'))
+   (chat_messages.senderType = '1' AND chat_messages.senderId = ? AND chat_messages.receiverType = '2' AND chat_messages.receiverId = ?))
 
-   AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = '" . $clientId . "'
+   AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = ?
 
-   order by chat_messages.messageId desc");
+   order by chat_messages.messageId desc", [$memberId, $clientId, $clientId, $memberId, $clientId]);
 
 			$result['numRows'] = count($query);
 
@@ -346,15 +346,15 @@ class ClientAllDB extends Model
         }
     
         function getSubscriptionStatus_cld($clientId)
-    
+
         {
-    
-            $query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = '" . $clientId . "' and status = '1' order by subscriptionId desc limit 1");
-    
+
+            $query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = ? and status = '1' order by subscriptionId desc limit 1", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
     
@@ -394,134 +394,134 @@ class ClientAllDB extends Model
         }
     
         function getTrackPlays_cld($trackId)
-    
+
         {
-    
+
             // plays and downloads
-    
-            $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = '" . $trackId . "' order by preview desc");
-    
+
+            $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = ? order by preview desc", [$trackId]);
+
             $numRows = count($query);
-    
+
             $result['plays'] = 0;
-    
+
             $result['downloads'] = 0;
-    
+
             if ($numRows > 0) {
-    
+
                 $data = $query;
-    
+
                 foreach ($data as $track) {
-    
+
                     $result['plays'] += $track->num_plays;
-    
+
                     $result['downloads'] += $track->downloads;
                 }
             }
-    
+
             // rating
-    
-            $query = DB::select("SELECT whatrate FROM tracks_reviews where track = '" . $trackId . "' order by id desc");
-    
+
+            $query = DB::select("SELECT whatrate FROM tracks_reviews where track = ? order by id desc", [$trackId]);
+
             $ratingRows = count($query);
-    
+
             $result['rating'] = 0;
             $rating = 0;
-    
+
             if ($ratingRows > 0) {
-    
+
                 $data = $query;
-    
+
                 foreach ($data as $track) {
-    
+
                     $rating += $track->whatrate;
                 }
-    
+
                 $result['rating'] = round(($rating / $ratingRows), 1);
             }
-    
+
             return $result;
         }
     
         function getClientFooterTracks_cld($clientId)
-    
+
         {
-    
+
             $query = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks.imgpage, tracks_mp3s.location FROM
-    
-       tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks.client = '$clientId' order by tracks_mp3s.preview desc limit 0, 10");
-    
+
+       tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks.client = ? order by tracks_mp3s.preview desc limit 0, 10", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
-    
+
         function getClientUnreadInbox_cld($clientId)
-    
+
         {
-    
-            $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = '" . $clientId . "') AND latest = '0' AND unread = '0' order by messageId desc");
-    
+
+            $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = ?) AND latest = '0' AND unread = '0' order by messageId desc", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
-        
+
         function getClientUnreadInboxTotalCount($clientId)
-    
+
         {
-    
-            $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = '" . $clientId . "') AND latest = '0' AND unread = '0' order by messageId desc");
-    
+
+            $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = ?) AND latest = '0' AND unread = '0' order by messageId desc", [$clientId]);
+
             $result = count($query);
-    
+
             return $result;
         }
-        
+
         function getClientUnreadInboxAll($clientId, $start, $limit){
-    
-            $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = '" . $clientId . "') AND latest = '0' AND unread = '0' order by messageId desc LIMIT $start, $limit");
-    
+
+            $query = DB::select("SELECT * FROM chat_messages where (receiverType = '1' AND receiverId = ?) AND latest = '0' AND unread = '0' order by messageId desc LIMIT $start, $limit", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
     
         function getBannerads_cld($user_type, $position)
         {
-            $query = DB::select("SELECT banner_ad FROM  banner_ads where user_type = '" . $user_type . "' and ad_position = '" . $position . "'");
+            $query = DB::select("SELECT banner_ad FROM  banner_ads where user_type = ? and ad_position = ?", [$user_type, $position]);
             $result['numRows'] = count($query);
             $result['data']  = $query;
             return $result;
         }
-    
+
         function getRightTracks_cld()
-    
+
         {
-    
+
             $clientId = Session::get('clientId');
-    
+
             // where client = '". $_SESSION['clientId'] ."'
-    
-            $query = DB::select("SELECT * FROM  tracks  where client = '" . $clientId . "' order by id desc limit 0, 5");
-    
+
+            $query = DB::select("SELECT * FROM  tracks  where client = ? order by id desc limit 0, 5", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
     
         public function getClientsDetails_cld($clientId)
         {
             $result['id'] = 0;
-            $query = DB::select("SELECT id, uname,name,age,email FROM clients where id = '" . $clientId . "'");
+            $query = DB::select("SELECT id, uname,name,age,email FROM clients where id = ?", [$clientId]);
             $numRows = count($query);
             $data  = $query;
             if ($numRows > 0) {
@@ -531,8 +531,8 @@ class ClientAllDB extends Model
                 $result['age'] = $data[0]->age;
                 $result['email'] = $data[0]->email;
             }
-    
-            $query1 = DB::select("SELECT image FROM client_images where clientId = '" . $clientId . "' order by imageId desc limit 1");
+
+            $query1 = DB::select("SELECT image FROM client_images where clientId = ? order by imageId desc limit 1", [$clientId]);
             $numRows1 = count($query1);
             $data1  = $query1;
             if ($numRows1 > 0) {
@@ -544,15 +544,15 @@ class ClientAllDB extends Model
         }
     
         function getSubGenres_cld($genreId)
-    
+
         {
-    
-            $query = DB::select("SELECT subGenreId, subGenre FROM genres_sub where genreId = '" . $genreId . "' order by subGenre");
-    
+
+            $query = DB::select("SELECT subGenreId, subGenre FROM genres_sub where genreId = ? order by subGenre", [$genreId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
     
@@ -640,28 +640,28 @@ class ClientAllDB extends Model
         }
     
         function addClientTrackArtWork_cld($id, $image, $clientId,$pcloudFileId,$parentfolderid)
-    
+
         {
-    
+
             //echo "update `tracks_submitted` set imgpage = '". $image ."' where id = '". $id ."' and client = '". $clientId ."'";
-    
-            $query = DB::select("update `tracks_submitted` set imgpage = '" . $image . "' , pCloudFileID ='" .$pcloudFileId. "' , pCloudParentFolderID ='".$parentfolderid."' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+
+            $query = DB::select("update `tracks_submitted` set imgpage = ? , pCloudFileID = ? , pCloudParentFolderID = ? where id = ? and client = ?", [$image, $pcloudFileId, $parentfolderid, $id, $clientId]);
+
             //exit;
-    
+
             return 1;
         }
-    
+
         function addClientTrackThumb_cld($id, $image, $clientId)
-    
+
         {
-    
+
             //echo "update `tracks_submitted` set imgpage = '". $image ."' where id = '". $id ."' and client = '". $clientId ."'";
-    
-            $query = DB::select("update `tracks_submitted` set thumb = '" . $image . "' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+
+            $query = DB::select("update `tracks_submitted` set thumb = ? where id = ? and client = ?", [$image, $id, $clientId]);
+
             //exit;
-    
+
             return 1;
         }
     
@@ -672,51 +672,51 @@ class ClientAllDB extends Model
              // $query = DB::select("update `tracks_submitted` set amr1 = '" . $amrFile . "', version1 = '" . $version . "', title1 = '" . mysqli_real_escape_string($track_title) . "' where id = '" . $id . "' and client = '" . $clientId . "'");
 
         // $query = DB::select("update `tracks_submitted` set amr1 = '" . $amrFile . "', version1 = '" . $version . "', title1 = '" .$track_title. "' where id = '" . $id . "' and client = '" . $clientId . "'");
-        $query = DB::select('update `tracks_submitted` set amr1 = "' . $amrFile . '", version1 = "' . $version . '", title1 = "' .$track_title. '" where id = "' . $id . '" and client = "' . $clientId . '"');
+        $query = DB::select("update `tracks_submitted` set amr1 = ?, version1 = ?, title1 = ? where id = ? and client = ?", [$amrFile, $version, $track_title, $id, $clientId]);
 
         return 1;
         }
-    
+
         function addClientTrackAmr_cld2($id, $amrFile, $clientId, $version, $track_title)
         {
-            $query = DB::select("update `tracks_submitted` set amr2 = '" . $amrFile . "', version2 = '" . $version . "', title2 = '" . $track_title . "' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+            $query = DB::select("update `tracks_submitted` set amr2 = ?, version2 = ?, title2 = ? where id = ? and client = ?", [$amrFile, $version, $track_title, $id, $clientId]);
+
             return 1;
         }
-    
+
         function addClientTrackAmr_cld3($id, $amrFile, $clientId, $version, $track_title)
-    
+
         {
-    
-            $query = DB::select("update `tracks_submitted` set amr3 = '" . $amrFile . "', version3 = '" . $version . "', title3 = '" . $track_title . "' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+
+            $query = DB::select("update `tracks_submitted` set amr3 = ?, version3 = ?, title3 = ? where id = ? and client = ?", [$amrFile, $version, $track_title, $id, $clientId]);
+
             return 1;
         }
-    
+
         function addClientTrackAmr_cld4($id, $amrFile, $clientId, $version, $track_title)
-    
+
         {
-    
-            $query = DB::select("update `tracks_submitted` set amr4 = '" . $amrFile . "', version4 = '" . $version . "', title4 = '" . $track_title . "' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+
+            $query = DB::select("update `tracks_submitted` set amr4 = ?, version4 = ?, title4 = ? where id = ? and client = ?", [$amrFile, $version, $track_title, $id, $clientId]);
+
             return 1;
         }
-        
+
           function addClientTrackAmr_cld5($id, $amrFile, $clientId, $version, $track_title)
-    
+
         {
-    
-            $query = DB::select("update `tracks_submitted` set amr5 = '" . $amrFile . "', version5 = '" . $version . "', title5 = '" . $track_title . "' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+
+            $query = DB::select("update `tracks_submitted` set amr5 = ?, version5 = ?, title5 = ? where id = ? and client = ?", [$amrFile, $version, $track_title, $id, $clientId]);
+
             return 1;
         }
-        
+
           function addClientTrackAmr_cld6($id, $amrFile, $clientId, $version, $track_title)
-    
+
         {
-    
-            $query = DB::select("update `tracks_submitted` set amr6 = '" . $amrFile . "', version6 = '" . $version . "', title6 = '" . $track_title . "' where id = '" . $id . "' and client = '" . $clientId . "'");
-    
+
+            $query = DB::select("update `tracks_submitted` set amr6 = ?, version6 = ?, title6 = ? where id = ? and client = ?", [$amrFile, $version, $track_title, $id, $clientId]);
+
             return 1;
         }
     
@@ -736,7 +736,7 @@ class ClientAllDB extends Model
     
         function saveTag_cld($tid, $tag)
         {
-            $query = DB::select("update tracks set tagging = '" . $tag . "' where id = '" . $tid . "'");
+            $query = DB::select("update tracks set tagging = ? where id = ?", [$tag, $tid]);
             // return $query;
             return 1;
         }
@@ -796,37 +796,37 @@ class ClientAllDB extends Model
         }
     
         function get_client_available_digicoins_cld($client_id)
-    
+
         {
-    
-            $query = DB::select("SELECT available_points FROM client_digicoins_available where client_id = '" . $client_id . "' order by client_digicoin_available_id desc");
-    
+
+            $query = DB::select("SELECT available_points FROM client_digicoins_available where client_id = ? order by client_digicoin_available_id desc", [$client_id]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
-    
+
         function deleteClientLabelRep_cld($did, $clientId)
-    
+
         {
-    
-            $query = DB::select("delete FROM  client_contacts where id = '$did' and  client_id = '$clientId'");
-    
+
+            $query = DB::select("delete FROM  client_contacts where id = ? and  client_id = ?", [$did, $clientId]);
+
             return 1;
         }
-    
+
         function getClientLabelRep_cld($id, $clientId)
-    
+
         {
-    
-            $query = DB::select("SELECT * FROM  client_contacts where id = '$id' and client_id = '$clientId'");
-    
+
+            $query = DB::select("SELECT * FROM  client_contacts where id = ? and client_id = ?", [$id, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
 
@@ -923,118 +923,118 @@ class ClientAllDB extends Model
         }
     
         function updateClientLabelRep_cld($data, $id, $clientId)
-    
+
         {
-    
+
             extract($data);
-    
+
             $email1 = '';
-    
+
             if (isset($email[1])) {
-    
+
                 $email1 = $email[1];
             }
-    
+
             $email2 = '';
-    
+
             if (isset($email[2])) {
-    
+
                 $email2 = $email[2];
             }
-    
+
             $phone1 = '';
-    
+
             if (isset($phone[1])) {
-    
+
                 $phone1 = $phone[1];
             }
-    
+
             $phone2 = '';
-    
+
             if (isset($phone[2])) {
-    
+
                 $phone2 = $phone[2];
             }
-    
-            $query = DB::select("update `client_contacts` set title = '" . urlencode($title) . "', name = '" . urlencode($name) . "', email = '" . urlencode($email[0]) . "', phone = '" . urlencode($phone[0]) . "', mobilePhone = '" . urlencode($mobile) . "', email1 = '" . urlencode($email1) . "', email2 = '" . urlencode($email2) . "', phone1 = '" . urlencode($phone1) . "', phone2 = '" . urlencode($phone2) . "' where id = '$id' and client_id = '$clientId'");
-    
+
+            $query = DB::select("update `client_contacts` set title = ?, name = ?, email = ?, phone = ?, mobilePhone = ?, email1 = ?, email2 = ?, phone1 = ?, phone2 = ? where id = ? and client_id = ?", [urlencode($title), urlencode($name), urlencode($email[0]), urlencode($phone[0]), urlencode($mobile), urlencode($email1), urlencode($email2), urlencode($phone1), urlencode($phone2), $id, $clientId]);
+
             return 1;
         }
     
         public function getClientInfo_cld($clientId){
-            
-            $query = DB::select("SELECT * FROM  clients where id = '$clientId'");
-    
+
+            $query = DB::select("SELECT * FROM  clients where id = ?", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return  $result;
         }
-    
+
         public function getClientImage_cld($clientId){
-            
-            $query = DB::select("SELECT * FROM  client_images where clientId = '$clientId' order by imageId desc limit 1");
-    
+
+            $query = DB::select("SELECT * FROM  client_images where clientId = ? order by imageId desc limit 1", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return  $result;
         }
-    
+
         public function getClientSocialInfo_cld($clientId){
-            
-            $query = DB::select("SELECT * FROM  client_social_media where clientId = '$clientId'");
-    
+
+            $query = DB::select("SELECT * FROM  client_social_media where clientId = ?", [$clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return  $result;
         }
     
         function getClientInbox_cld($clientId)
-    
+
         {
-    
-            $query =  DB::select("SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = '" . $clientId . "') OR (senderType = '1' AND senderId = '" . $clientId . "')) AND latest = '0' order by messageId desc");
-    
+
+            $query =  DB::select("SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = ?) OR (senderType = '1' AND senderId = ?)) AND latest = '0' order by messageId desc", [$clientId, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
-        
+
         function getClientInboxTotalCount($clientId)
-    
+
         {
-    
-            $query =  DB::select("SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = '" . $clientId . "') OR (senderType = '1' AND senderId = '" . $clientId . "')) AND latest = '0' order by messageId desc");
-    
+
+            $query =  DB::select("SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = ?) OR (senderType = '1' AND senderId = ?)) AND latest = '0' order by messageId desc", [$clientId, $clientId]);
+
             $result = count($query);
-    
+
             return $result;
         }
-        
+
         function getClientInboxAllMessages($clientId, $start, $limit)
-    
+
         {
 		/* 	echo "SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = '" . $clientId . "') OR (senderType = '1' AND senderId = '" . $clientId . "')) AND latest = '0' order by messageId desc LIMIT $start, $limit";die(); */
-            $query =  DB::select("SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = '" . $clientId . "') OR (senderType = '1' AND senderId = '" . $clientId . "')) AND latest = '0' order by messageId desc LIMIT $start, $limit");
-    
+            $query =  DB::select("SELECT * FROM chat_messages where ((receiverType = '1' AND receiverId = ?) OR (senderType = '1' AND senderId = ?)) AND latest = '0' order by messageId desc LIMIT $start, $limit", [$clientId, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
     
         function getMemberDetails_cld($memberId)
         {
             $result['id'] = 0;
-            $query =  DB::select("SELECT * FROM members where id = '" . $memberId . "'");
+            $query =  DB::select("SELECT * FROM members where id = ?", [$memberId]);
             $numRows = count($query);
             $data  = $query;
             if ($numRows > 0) {
@@ -1044,8 +1044,8 @@ class ClientAllDB extends Model
                 $result['age'] = $data[0]->age;
                 $result['email'] = $data[0]->email;
             }
-    
-            $query1 =  DB::select("SELECT image,pCloudFileID_mem_image FROM member_images where memberId = '" . $memberId . "' order by imageId desc limit 1");
+
+            $query1 =  DB::select("SELECT image,pCloudFileID_mem_image FROM member_images where memberId = ? order by imageId desc limit 1", [$memberId]);
             $numRows1 = count($query1);
             $data1  = $query1;
             if ($numRows1 > 0) {
@@ -1054,7 +1054,7 @@ class ClientAllDB extends Model
                 }else{
                     $result['image'] = $data1[0]->image;
                 }
-                
+
             } else {
                 $result['image'] = '';
             }
@@ -1062,137 +1062,137 @@ class ClientAllDB extends Model
         }
     
         function getClientStarredMessages_cld($clientId)
-    
+
         {
-    
+
             $query = DB::select("SELECT chat_messages_starred.userId, chat_messages.messageId, chat_messages.senderType, chat_messages.senderId, chat_messages.receiverType, chat_messages.receiverId, chat_messages.message, chat_messages.dateTime FROM chat_messages
-    
+
             left join chat_messages_starred on chat_messages.messageId = chat_messages_starred.messageId
-    
-            where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "') OR (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "')) AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = '" . $clientId . "' order by chat_messages_starred.messageId desc");
-    
+
+            where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = ?) OR (chat_messages.senderType = '1' AND chat_messages.senderId = ?)) AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = ? order by chat_messages_starred.messageId desc", [$clientId, $clientId, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
-        
+
         function getClientStarredTotalCount($clientId)
-    
+
         {
-    
+
             $query = DB::select("SELECT chat_messages_starred.userId, chat_messages.messageId, chat_messages.senderType, chat_messages.senderId, chat_messages.receiverType, chat_messages.receiverId, chat_messages.message, chat_messages.dateTime FROM chat_messages
-    
+
             left join chat_messages_starred on chat_messages.messageId = chat_messages_starred.messageId
-    
-            where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "') OR (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "')) AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = '" . $clientId . "' order by chat_messages_starred.messageId desc");
-    
+
+            where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = ?) OR (chat_messages.senderType = '1' AND chat_messages.senderId = ?)) AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = ? order by chat_messages_starred.messageId desc", [$clientId, $clientId, $clientId]);
+
             $result = count($query);
-    
+
             return $result;
         }
-        
+
         function getClientStarredMessagesAll($clientId, $start, $limit)
-    
+
         {
-    
+
             $query = DB::select("SELECT chat_messages_starred.userId, chat_messages.messageId, chat_messages.senderType, chat_messages.senderId, chat_messages.receiverType, chat_messages.receiverId, chat_messages.message, chat_messages.dateTime FROM chat_messages
-    
+
             left join chat_messages_starred on chat_messages.messageId = chat_messages_starred.messageId
-    
-            where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "') OR (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "')) AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = '" . $clientId . "' order by chat_messages_starred.messageId desc LIMIT $start, $limit");
-    
+
+            where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = ?) OR (chat_messages.senderType = '1' AND chat_messages.senderId = ?)) AND chat_messages_starred.userType = '1' AND chat_messages_starred.userId = ? order by chat_messages_starred.messageId desc LIMIT $start, $limit", [$clientId, $clientId, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
     
         function getClientArchivedMessages_cld($clientId)
-    
+
         {
-    
+
             $query = DB::select("SELECT chat_messages_archived.userId, chat_messages.messageId, chat_messages.senderType, chat_messages.senderId, chat_messages.receiverType, chat_messages.receiverId, chat_messages.message, chat_messages.dateTime FROM chat_messages
-    
+
        left join chat_messages_archived on chat_messages.messageId = chat_messages_archived.messageId
-    
-       where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "') OR (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "')) AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = '" . $clientId . "' order by chat_messages_archived.messageId desc");
-    
+
+       where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = ?) OR (chat_messages.senderType = '1' AND chat_messages.senderId = ?)) AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = ? order by chat_messages_archived.messageId desc", [$clientId, $clientId, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
-    
+
         function getClientArchivedMsgesTotalCount($clientId)
-    
+
         {
-    
+
             $query = DB::select("SELECT chat_messages_archived.userId, chat_messages.messageId, chat_messages.senderType, chat_messages.senderId, chat_messages.receiverType, chat_messages.receiverId, chat_messages.message, chat_messages.dateTime FROM chat_messages
-    
+
        left join chat_messages_archived on chat_messages.messageId = chat_messages_archived.messageId
-    
-       where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "') OR (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "')) AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = '" . $clientId . "' order by chat_messages_archived.messageId desc");
-    
+
+       where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = ?) OR (chat_messages.senderType = '1' AND chat_messages.senderId = ?)) AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = ? order by chat_messages_archived.messageId desc", [$clientId, $clientId, $clientId]);
+
             $result = count($query);
-    
+
             return $result;
         }
-    
+
         function getClientArchivedMessagesAll($clientId, $start, $limit)
-    
+
         {
-    
+
             $query = DB::select("SELECT chat_messages_archived.userId, chat_messages.messageId, chat_messages.senderType, chat_messages.senderId, chat_messages.receiverType, chat_messages.receiverId, chat_messages.message, chat_messages.dateTime FROM chat_messages
-    
+
        left join chat_messages_archived on chat_messages.messageId = chat_messages_archived.messageId
-    
-       where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = '" . $clientId . "') OR (chat_messages.senderType = '1' AND chat_messages.senderId = '" . $clientId . "')) AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = '" . $clientId . "' order by chat_messages_archived.messageId desc LIMIT $start, $limit");
-    
+
+       where ((chat_messages.receiverType = '1' AND chat_messages.receiverId = ?) OR (chat_messages.senderType = '1' AND chat_messages.senderId = ?)) AND chat_messages_archived.userType = '1' AND chat_messages_archived.userId = ? order by chat_messages_archived.messageId desc LIMIT $start, $limit", [$clientId, $clientId, $clientId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
 		
 		function getClientMembersWhoReviewedCount($clientId)
         {
-    
-            $query = DB::select("SELECT d.* 
+
+            $query = DB::select("SELECT d.*
                                         FROM tracks AS a
                                         INNER JOIN clients AS b
-                                        ON a.client = b.id AND a.client = '" . $clientId . "'
+                                        ON a.client = b.id AND a.client = ?
                                         INNER JOIN tracks_reviews AS c
                                         ON a.id = c.track
                                         INNER JOIN members AS d
                                         ON c.member = d.id
-                                        GROUP BY d.id");
-    
-            $result = count($query);          
-    
+                                        GROUP BY d.id", [$clientId]);
+
+            $result = count($query);
+
             return $result;
         }
-    
+
         function getClientMembersWhoReviewed_cld($clientId,$start,$limit)
         {
-    
-            $query = DB::select("SELECT d.* 
+
+            $query = DB::select("SELECT d.*
                                         FROM tracks AS a
                                         INNER JOIN clients AS b
-                                        ON a.client = b.id AND a.client = '" . $clientId . "'
+                                        ON a.client = b.id AND a.client = ?
                                         INNER JOIN tracks_reviews AS c
                                         ON a.id = c.track
                                         INNER JOIN members AS d
                                         ON c.member = d.id
-                                        GROUP BY d.id limit $start, $limit");
-    
+                                        GROUP BY d.id limit $start, $limit", [$clientId]);
+
             $result['numRows'] = count($query);
             $result['data']  = $query;
-    
+
             return $result;
         }
     
@@ -1283,139 +1283,139 @@ class ClientAllDB extends Model
         }
     
         function getSubscriptionDetails_cld($clientSubscriptionId)
-    
+
         {
-    
-            $query =  DB::select("SELECT packageId FROM client_subscriptions where subscriptionId = '$clientSubscriptionId'");
-    
+
+            $query =  DB::select("SELECT packageId FROM client_subscriptions where subscriptionId = ?", [$clientSubscriptionId]);
+
             $result['numRows'] = count($query);
-    
+
             $result['data']  = $query;
-    
+
             return $result;
         }
 
         function makeClientMsgRead_cld($memberId, $clientId)
 
         {
-    
-            $query = DB::select("update chat_messages set unread = '1' where (receiverType = '1' AND receiverId = '" . $clientId . "') AND (senderType = '2' AND senderId = '" . $memberId . "') AND unread = '0'");
-    
+
+            $query = DB::select("update chat_messages set unread = '1' where (receiverType = '1' AND receiverId = ?) AND (senderType = '2' AND senderId = ?) AND unread = '0'", [$clientId, $memberId]);
+
             return $query;
         }
     
         function sendClientMessage_cld($clientId, $message, $mid)
-    
+
         {
-    
+
             $query =  DB::select("update chat_messages set latest = '1' where
-    
-            (senderType = '2' AND senderId = '" . $mid . "' AND receiverType = '1' AND receiverId = '" . $clientId . "')
-    
+
+            (senderType = '2' AND senderId = ? AND receiverType = '1' AND receiverId = ?)
+
             OR
-    
-            (senderType = '1' AND senderId = '" . $clientId . "' AND receiverType = '2' AND receiverId = '" . $mid . "')");
-    
-    
+
+            (senderType = '1' AND senderId = ? AND receiverType = '2' AND receiverId = ?)", [$mid, $clientId, $clientId, $mid]);
+
+
             $insert_data = array(
                 'senderType' => 1,
                 'senderId' => $clientId,
                 'receiverType' => 2,
                 'receiverId' => $mid,
                 'message' => htmlspecialchars($message, ENT_QUOTES, 'UTF-8'),  // XSS protection
-                'dateTime' => NOW(),  
-        
+                'dateTime' => NOW(),
+
             );
-     
+
             $insert_id = DB::table('chat_messages')->insertGetId($insert_data);
-    
-    
-    
+
+
+
             // $query =  DB::select("insert into chat_messages (`senderType`, `senderId`, `receiverType`, `receiverId`, `message`, `dateTime`) values ('1', '" . $clientId . "', '2', '" . $mid . "',  '" . addslashes($message) . "',  NOW())");
-    
+
             // $insert_id = $this->db->insert_id();
-    
+
             return $insert_id;
         }
     
         function archiveClientMessage_cld($clientId, $messageId)
-    
+
         {
-    
-            $query =  DB::select("SELECT autoId FROM chat_messages_archived where userType = '1' and userId = '" . $clientId . "' and messageId = '" . $messageId . "'");
-    
+
+            $query =  DB::select("SELECT autoId FROM chat_messages_archived where userType = '1' and userId = ? and messageId = ?", [$clientId, $messageId]);
+
             $numRows = count($query);
-    
+
             if ($numRows > 0) {
-    
-                $query1 =  DB::select("delete FROM  chat_messages_archived where userType = '1' and userId = '" . $clientId . "' and messageId = '" . $messageId . "'");
-    
+
+                $query1 =  DB::select("delete FROM  chat_messages_archived where userType = '1' and userId = ? and messageId = ?", [$clientId, $messageId]);
+
                 $result['result'] = $query1;
-    
+
                 $result['transaction'] = 0;
             } else {
-    
+
                 $insert_data = array(
                     'userType' => 1,
                     'userId' => $clientId,
                     'messageId' => $messageId,
-                   
-            
+
+
                 );
-         
+
                 $insert_id = DB::table('chat_messages_archived')->insertGetId($insert_data);
-    
+
                 // $query2 =  DB::select("insert into chat_messages_archived (`userType`, `userId`, `messageId`) values ('1', '" . $clientId . "', '" . $messageId . "')");
-    
+
                 $result['result'] = $insert_id;
-    
+
                 $result['transaction'] = 1;
             }
-    
+
             return $result;
         }
-    
+
         function starClientMessage_cld($clientId, $messageId)
-    
+
         {
-    
-            $query = DB::select("SELECT autoId FROM chat_messages_starred where userType = '1' and userId = '" . $clientId . "' and messageId = '" . $messageId . "'");
-    
+
+            $query = DB::select("SELECT autoId FROM chat_messages_starred where userType = '1' and userId = ? and messageId = ?", [$clientId, $messageId]);
+
             $numRows = count($query);
-    
+
             if ($numRows > 0) {
-    
-                $query1 = DB::select("delete FROM  chat_messages_starred where userType = '1' and userId = '" . $clientId . "' and messageId = '" . $messageId . "'");
-    
+
+                $query1 = DB::select("delete FROM  chat_messages_starred where userType = '1' and userId = ? and messageId = ?", [$clientId, $messageId]);
+
                 $result['result'] = $query1;
-    
+
                 $result['transaction'] = 0;
             } else {
-    
+
                 $insert_data = array(
                     'userType' => 1,
                     'userId' => $clientId,
                     'messageId' => $messageId,
-                   
-            
+
+
                 );
-         
+
                 $insert_id = DB::table('chat_messages_starred')->insertGetId($insert_data);
-    
+
                 // $query2 = $this->db->query("insert into chat_messages_starred (`userType`, `userId`, `messageId`) values ('1', '" . $clientId . "', '" . $messageId . "')");
-    
+
                 $result['result'] = $insert_id;
-    
+
                 $result['transaction'] = 1;
             }
-    
+
             return $result;
         }
         function confirmSubmittedTrack_cld($trackId)
 
     {
 
-        $result = DB::select("update tracks_submitted set previewTrack = '1' where id = '$trackId' and previewTrack = '0'");
+        $result = DB::select("update tracks_submitted set previewTrack = '1' where id = ? and previewTrack = '0'", [$trackId]);
 
         return $result;
     }
@@ -1444,7 +1444,7 @@ class ClientAllDB extends Model
 
         $releasedate = $data['year'] . '-' . $data['month'] . '-' . $data['day'];
 
-        $query = DB::select("update  tracks_submitted set  artist = '" . urlencode($artist) . "', title = '" . urlencode($title) . "', producers = '" . urlencode($producer) . "', writer = '" .$writer. "' , songkey = '" .$songkey. "' , contact_email = '" .$contact_email. "' , time = '" . urlencode($trackTime) . "', link =  '" . urlencode($website) . "',  album = '" . urlencode($album) . "',  releasedate = '" . $releasedate . "', moreinfo = '" . urlencode($trackInfo) . "', genreId = '" . $genre . "', subGenreId = '" . $subGenre . "', bpm = '" . $bpm . "', albumType = '" . $albumType . "', link1 = '" . $website1 . "', link2 = '" . $website2 . "', facebookLink = '" . $facebookLink . "', twitterLink = '" . $twitterLink . "', instagramLink = '" . $instagramLink . "', applemusicLink = '" . $applemusicLink . "', amazonLink = '" . $amazonLink . "', spotifyLink = '" . $spotifyLink . "', snapchatLink = '" . $snapchatLink . "', tiktokLink = '" . $tiktokLink . "', otherLink = '" . $otherLink . "', contact_name = '" . $contact_name . "', contact_email_2 = '" . $contact_email_2 . "', contact_email_3 = '" . $contact_email_3 . "', contact_email_4 = '" . $contact_email_4 . "', contact_phone = '" . $contact_phone . "', relationship_to_artist = '" . $relationship_to_artist . "', videoURL = '" . $videoURL . "', embedvideoURL = '" . $embedvideoURL . "' where id = '" . $trackId . "' and client = '" . $clientId . "'");
+        $query = DB::select("update  tracks_submitted set  artist = ?, title = ?, producers = ?, writer = ? , songkey = ? , contact_email = ? , time = ?, link =  ?,  album = ?,  releasedate = ?, moreinfo = ?, genreId = ?, subGenreId = ?, bpm = ?, albumType = ?, link1 = ?, link2 = ?, facebookLink = ?, twitterLink = ?, instagramLink = ?, applemusicLink = ?, amazonLink = ?, spotifyLink = ?, snapchatLink = ?, tiktokLink = ?, otherLink = ?, contact_name = ?, contact_email_2 = ?, contact_email_3 = ?, contact_email_4 = ?, contact_phone = ?, relationship_to_artist = ?, videoURL = ?, embedvideoURL = ? where id = ? and client = ?", [urlencode($artist), urlencode($title), urlencode($producer), $writer, $songkey, $contact_email, urlencode($trackTime), urlencode($website), urlencode($album), $releasedate, urlencode($trackInfo), $genre, $subGenre, $bpm, $albumType, $website1, $website2, $facebookLink, $twitterLink, $instagramLink, $applemusicLink, $amazonLink, $spotifyLink, $snapchatLink, $tiktokLink, $otherLink, $contact_name, $contact_email_2, $contact_email_3, $contact_email_4, $contact_phone, $relationship_to_artist, $videoURL, $embedvideoURL, $trackId, $clientId]);
 
         return  $query;
     }
@@ -1455,7 +1455,7 @@ class ClientAllDB extends Model
 
         //echo "update `tracks_submitted` set imgpage = '". $image ."' where id = '". $id ."' and client = '". $clientId ."'";
 
-        $query = DB::select("update tracks_submitted set imgpage = '" . $image . "' , pCloudFileID ='" .$pcloudFileId. "' , pCloudParentFolderID ='".$parentfolderid."' where id = '" . $id . "' and client = '" . $clientId . "'");
+        $query = DB::select("update tracks_submitted set imgpage = ? , pCloudFileID = ? , pCloudParentFolderID = ? where id = ? and client = ?", [$image, $pcloudFileId, $parentfolderid, $id, $clientId]);
 
         //exit;
 
@@ -1487,7 +1487,7 @@ class ClientAllDB extends Model
 
 	left join members on tracks_reviews.member = members.id
 
-	where tracks_reviews.id = '" . $reviewId . "' order by tracks_reviews.id desc");
+	where tracks_reviews.id = ? order by tracks_reviews.id desc", [$reviewId]);
 
         $result['numRows'] =  count($query);
 
@@ -1502,13 +1502,13 @@ class ClientAllDB extends Model
 
         $result = 0;
 
-        $query =  DB::select("SELECT tracks_reviews.id  FROM tracks_reviews left join tracks on tracks_reviews.track = tracks.id where tracks_reviews.id = '" . $commentId . "' and tracks.client = '" . $clientId . "'");
+        $query =  DB::select("SELECT tracks_reviews.id  FROM tracks_reviews left join tracks on tracks_reviews.track = tracks.id where tracks_reviews.id = ? and tracks.client = ?", [$commentId, $clientId]);
 
         $numRows =  count($query);
 
         if ($numRows > 0) {
 
-            $query =  DB::select("update tracks_reviews set additionalcomments = '' where id = '" . $commentId . "'");
+            $query =  DB::select("update tracks_reviews set additionalcomments = '' where id = ?", [$commentId]);
 
             $result = 1;
         }
@@ -1519,7 +1519,7 @@ class ClientAllDB extends Model
 
     {
 
-        $query =  DB::select("SELECT tracks.*, tracks_mp3s.location FROM  tracks  left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks.id = '$trackId'");
+        $query =  DB::select("SELECT tracks.*, tracks_mp3s.location FROM  tracks  left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks.id = ?", [$trackId]);
 
         $result['numRows'] =  count($query);
 
@@ -1529,7 +1529,7 @@ class ClientAllDB extends Model
     }
 
     function getTrackSubmittedVersions($trackId){
-        $query =  DB::select("SELECT tracks.id, tracks.artist, tracks.title, tracks_submitted_versions.pcloud_fileId, tracks_submitted_versions.version_name FROM  tracks  left join tracks_submitted_versions ON tracks.id = tracks_submitted_versions.track_id where tracks.id = '$trackId' AND tracks_submitted_versions.approved=0 AND tracks_submitted_versions.deleted=0");
+        $query =  DB::select("SELECT tracks.id, tracks.artist, tracks.title, tracks_submitted_versions.pcloud_fileId, tracks_submitted_versions.version_name FROM  tracks  left join tracks_submitted_versions ON tracks.id = tracks_submitted_versions.track_id where tracks.id = ? AND tracks_submitted_versions.approved=0 AND tracks_submitted_versions.deleted=0", [$trackId]);
 
         $result['numRows'] =  count($query);
 
@@ -1537,14 +1537,14 @@ class ClientAllDB extends Model
 
         ##dd($result);
 
-        return $result;        
-    }    
+        return $result;
+    }
 
     function getVideoTips($video_id)
 
     {
 
-        $query = DB::select("SELECT * FROM  member_digicoins where video_review_id = '" . $video_id . "'");
+        $query = DB::select("SELECT * FROM  member_digicoins where video_review_id = ?", [$video_id]);
 
         $result['numRows']  = count($query);
 
@@ -1589,7 +1589,7 @@ class ClientAllDB extends Model
 
     {
 
-        $query = DB::select("SELECT * FROM  track_video_reviews where track_id = '" . $track_id . "' and video_review_id = '" . $video_review_id . "'");
+        $query = DB::select("SELECT * FROM  track_video_reviews where track_id = ? and video_review_id = ?", [$track_id, $video_review_id]);
 
         $row['numRows']  = count($query);
 
@@ -1606,11 +1606,11 @@ class ClientAllDB extends Model
                 'date_time' => NOW(),
                 'points' => $tip,
                 'video_review_id' => $video_review_id,
-    
-               
-        
+
+
+
             );
-     
+
             $insert_id = DB::table('member_digicoins')->insertGetId($insert_data);
 
             // DB::select("insert into member_digicoins (`member_id`, `track_id`, `type_id`, `video_review_id`, `points`, `date_time`) values ('" . $row['data'][0]->member_id . "', '" . $track_id . "', '5', '" . $video_review_id . "', '" . $tip . "', NOW())");
@@ -1619,7 +1619,7 @@ class ClientAllDB extends Model
 
             if ($digicoin_id > 0) {
 
-                $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = '" . $row['data'][0]->member_id . "' order by member_digicoin_available_id desc");
+                $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = ? order by member_digicoin_available_id desc", [$row['data'][0]->member_id]);
 
                 $available_coins_numRows = count($available_coins);
 
@@ -1629,10 +1629,10 @@ class ClientAllDB extends Model
 
                     $available_digicoins_increment = ($available_digicoins[0]->available_points) + $tip;
 
-                    DB::select("update member_digicoins_available set available_points = '" . $available_digicoins_increment . "', latest_date_time = NOW() where member_id = '" . $row['data'][0]->member_id . "'");
+                    DB::select("update member_digicoins_available set available_points = ?, latest_date_time = NOW() where member_id = ?", [$available_digicoins_increment, $row['data'][0]->member_id]);
                 } else {
 
-                    DB::select("insert into member_digicoins_available (`member_id`, `available_points`, `latest_date_time`) values ('" . $row['data'][0]->member_id . "', '" . $tip . "', NOW())");
+                    DB::select("insert into member_digicoins_available (`member_id`, `available_points`, `latest_date_time`) values (?, ?, NOW())", [$row['data'][0]->member_id, $tip]);
                 }
             }
         }
@@ -1670,7 +1670,7 @@ class ClientAllDB extends Model
         extract($data);
         $release_date = $data['year'] . '-' . $data['month'] . '-' . $data['day'];
 
-        $query = DB::select("update  tracks  set client = '$clientId', artist = '" . urlencode($artist) . "', title = '" . urlencode($title) . "', producer = '" . urlencode($producer) . "', writer = '" .$writer. "' , songkey = '" .$songkey. "' , time = '" . urlencode($trackTime) . "', link =  '" . urlencode($website) . "',  album = '" . urlencode($album) . "',  release_date = '" . $release_date . "', moreinfo = '" . urlencode($trackInfo) . "', genreId = '" . $genre . "', subGenreId = '" . $subGenre . "', bpm = '" . $bpm . "', videoURL = '" . $videoURL . "', embedvideoURL = '" . $embedvideoURL . "', facebookLink = '" . $facebookLink . "', twitterLink = '" . $twitterLink . "', contact_email = '" . $contact_email . "', instagramLink = '" . $instagramLink . "', applemusicLink = '" . $applemusicLink . "', amazonLink = '" . $amazonLink . "', spotifyLink = '" . $spotifyLink . "', snapchatLink = '" . $snapchatLink . "', tiktokLink = '" . $tiktokLink . "', otherLink = '" . $otherLink . "', contact_name = '" . $contact_name . "', contact_email_2 = '" . $contact_email_2 . "', contact_email_3 = '" . $contact_email_3 . "', contact_email_4 = '" . $contact_email_4 . "', contact_phone = '" . $contact_phone . "', relationship_to_artist = '" . $relationship_to_artist . "' where id = '" . $trackId . "'");
+        $query = DB::select("update  tracks  set client = ?, artist = ?, title = ?, producer = ?, writer = ? , songkey = ? , time = ?, link =  ?,  album = ?,  release_date = ?, moreinfo = ?, genreId = ?, subGenreId = ?, bpm = ?, videoURL = ?, embedvideoURL = ?, facebookLink = ?, twitterLink = ?, contact_email = ?, instagramLink = ?, applemusicLink = ?, amazonLink = ?, spotifyLink = ?, snapchatLink = ?, tiktokLink = ?, otherLink = ?, contact_name = ?, contact_email_2 = ?, contact_email_3 = ?, contact_email_4 = ?, contact_phone = ?, relationship_to_artist = ? where id = ?", [$clientId, urlencode($artist), urlencode($title), urlencode($producer), $writer, $songkey, urlencode($trackTime), urlencode($website), urlencode($album), $release_date, urlencode($trackInfo), $genre, $subGenre, $bpm, $videoURL, $embedvideoURL, $facebookLink, $twitterLink, $contact_email, $instagramLink, $applemusicLink, $amazonLink, $spotifyLink, $snapchatLink, $tiktokLink, $otherLink, $contact_name, $contact_email_2, $contact_email_3, $contact_email_4, $contact_phone, $relationship_to_artist, $trackId]);
         return  $query;
     }
 
@@ -1680,7 +1680,7 @@ class ClientAllDB extends Model
 
         //echo "update `tracks_submitted` set imgpage = '". $image ."' where id = '". $id ."' and client = '". $clientId ."'";
 
-        $query = DB::select("update tracks set imgpage = '" . $image . "'  , pCloudFileID ='" .$pcloudFileId. "' , pCloudParentFolderID ='".$parentfolderid."'  where id = '" . $id . "' and client = '" . $clientId . "'");
+        $query = DB::select("update tracks set imgpage = ?  , pCloudFileID = ? , pCloudParentFolderID = ?  where id = ? and client = ?", [$image, $pcloudFileId, $parentfolderid, $id, $clientId]);
 
         //exit;
 
@@ -1695,7 +1695,7 @@ class ClientAllDB extends Model
 
         if(!empty($pcloudFileId) && !empty($trackMainId)){
 
-            $query = DB::select("SELECT * FROM  tracks_submitted_versions  where track_id = '" . $trackMainId . "' AND pcloud_fileId = '".$pcloudFileId."' AND deleted = '0'");
+            $query = DB::select("SELECT * FROM  tracks_submitted_versions  where track_id = ? AND pcloud_fileId = ? AND deleted = '0'", [$trackMainId, $pcloudFileId]);
 
             $insertData = array(
                 'track_id' => $trackMainId,
@@ -1703,15 +1703,15 @@ class ClientAllDB extends Model
                 'pcloud_fileId' => $pcloudFileId,
                 'track_title' => $fileName
             );
-            
+
             if(count($query) == 0){
-                $insertId = DB::table('tracks_submitted_versions')->insertGetId($insertData); 
+                $insertId = DB::table('tracks_submitted_versions')->insertGetId($insertData);
                 return $insertId;
             }else{
                  return true;
-            }            
-                   
-            
+            }
+
+
         }
 
         return true;

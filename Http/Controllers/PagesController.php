@@ -899,16 +899,17 @@ class PagesController extends Controller
 			// 			$email = 'sgtech@yopmail.com';
 			//$email = 'sgtechqa@gmail.com'; 
 
-			$mssge = '<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left-inner">
+			// SECURITY FIX: Escape all user input to prevent XSS attacks
+		$mssge = '<table width="600" border="0" align="center" cellpadding="0" cellspacing="0" class="two-left-inner">
             <tr>
-              <td align="left" valign="top"><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:600; color:#fff; line-height: 25px; margin-bottom:0">Email:</p></td><td><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:400; color:#fff; line-height: 25px; margin-bottom:0">' . $_POST['email'] . '</p></td>
+              <td align="left" valign="top"><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:600; color:#fff; line-height: 25px; margin-bottom:0">Email:</p></td><td><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:400; color:#fff; line-height: 25px; margin-bottom:0">' . htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') . '</p></td>
             </tr>
              <tr>
-              <td align="left" valign="top"><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:600; color:#fff; line-height: 25px; margin-bottom:0">Subject:</p></td><td><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:400; color:#fff; line-height: 25px; margin-bottom:0">' . $_POST['subject'] . '</p></td>
+              <td align="left" valign="top"><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:600; color:#fff; line-height: 25px; margin-bottom:0">Subject:</p></td><td><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:400; color:#fff; line-height: 25px; margin-bottom:0">' . htmlspecialchars($_POST['subject'], ENT_QUOTES, 'UTF-8') . '</p></td>
             </tr>
              <tr>
-              <td align="left" valign="top"><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:600; color:#fff; line-height: 25px; margin-bottom:0">Message:</p></td><td><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:400; color:#fff; line-height: 25px; margin-bottom:0">' . $_POST['message'] . '</h3></td>
-            </tr>            
+              <td align="left" valign="top"><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:600; color:#fff; line-height: 25px; margin-bottom:0">Message:</p></td><td><p style="font-family:Open Sans, sans-serif, Verdana; font-size:14px; font-weight:400; color:#fff; line-height: 25px; margin-bottom:0">' . htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8') . '</h3></td>
+            </tr>
           </table>';
 
 			$data = array('emailId' => $email, 'message' => $mssge, 'from_email' => $from_email);
@@ -942,7 +943,16 @@ class PagesController extends Controller
 	}
 	public function reCaptcha($recaptcha)
 	{
-		$secret = "6Lcz58IkAAAAAMwf7LkqCEfemauHtcMkK-c0Mj8z";
+		// SECURITY FIX: Moved reCAPTCHA secret to environment variable
+		// The previous hardcoded secret has been exposed in git history
+		// and MUST be regenerated at Google Cloud Console
+		$secret = env('RECAPTCHA_SECRET_KEY');
+
+		if (empty($secret)) {
+			\Log::error('reCAPTCHA secret key not configured in environment');
+			return ['success' => false, 'error-codes' => ['missing-secret-key']];
+		}
+
 		$ip = $_SERVER['REMOTE_ADDR'];
 
 		$postvars = array("secret" => $secret, "response" => $recaptcha, "remoteip" => $ip);
@@ -1115,7 +1125,8 @@ class PagesController extends Controller
 
 			$email = 'sgtech@yopmail.com';
 
-			$mssge = '<h3><br>New <strong>Sponsorship and Advertising Inquiry</strong></h3>
+			// SECURITY FIX: Escape all user input to prevent XSS attacks
+		$mssge = '<h3><br>New <strong>Sponsorship and Advertising Inquiry</strong></h3>
             <table border="1" bordercolor="#000000" style="background-color: #ffffff; width: 100%; max-width: 600px; border-collapse: collapse;">
                 <tbody>
                     <tr>
@@ -1123,17 +1134,17 @@ class PagesController extends Controller
                     </tr>
                     <tr>
                     <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px; width: 180px" ><b>Email:</b></td>
-                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >' . $_POST['email'] . '</td>
+                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >' . htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') . '</td>
                     </tr>
                     <tr>
                     <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px; width: 180px" ><b>Subject:</b></td>
-                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >' . $_POST['subject'] . '</td>
+                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >' . htmlspecialchars($_POST['subject'], ENT_QUOTES, 'UTF-8') . '</td>
                     </tr>
                     <tr>
                     <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px; width: 180px" ><b>Message:</b></td>
-                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >' . $_POST['message'] . '</td>
+                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >' . htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8') . '</td>
                     </tr>
-                
+
                 </tbody>
             </table>';
 
@@ -1152,8 +1163,9 @@ class PagesController extends Controller
             $this->email->subject('Enquiry from Sponsorship and Advertising');
 
             
+            // SECURITY FIX: Escape all user input to prevent XSS attacks
             $message=
-            
+
             '<h3><br>New <strong>Sponsorship and Advertising Inquiry</strong></h3>
             <table border="1" bordercolor="#000000" style="background-color: #ffffff; width: 100%; max-width: 600px; border-collapse: collapse;">
                 <tbody>
@@ -1162,17 +1174,17 @@ class PagesController extends Controller
                     </tr>
                     <tr>
                     <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px; width: 180px" ><b>Email:</b></td>
-                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >'.$_POST['email'].'</td>
+                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >'.htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8').'</td>
                     </tr>
                     <tr>
                     <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px; width: 180px" ><b>Subject:</b></td>
-                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >'.$_POST['subject'].'</td>
+                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >'.htmlspecialchars($_POST['subject'], ENT_QUOTES, 'UTF-8').'</td>
                     </tr>
                     <tr>
                     <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px; width: 180px" ><b>Message:</b></td>
-                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >'.$_POST['message'].'</td>
+                    <td style="border: 1px solid #dddddd;  text-align: left; padding: 8px;" >'.htmlspecialchars($_POST['message'], ENT_QUOTES, 'UTF-8').'</td>
                     </tr>
-                
+
                 </tbody>
             </table>';
 
