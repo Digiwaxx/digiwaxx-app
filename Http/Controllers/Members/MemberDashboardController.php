@@ -15178,7 +15178,62 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 
 	}
-	
+
+	/**
+	 * FEATURE FIX: Track play count for audio playback
+	 * This endpoint is called via AJAX when a member plays a track
+	 */
+	public function trackPlay(Request $request)
+	{
+		// Authentication check
+		if(empty(Session::get('memberId'))){
+			return response()->json(['error' => 'Unauthorized'], 401);
+		}
+
+		// Validate input
+		$request->validate([
+			'mp3Id' => 'required|integer',
+			'trackId' => 'required|integer',
+		]);
+
+		$memberId = Session::get('memberId');
+		$mp3Id = $request->input('mp3Id');
+		$trackId = $request->input('trackId');
+
+		// Get country information (optional - can be enhanced with IP geolocation)
+		$countryName = $request->input('countryName', 'Unknown');
+		$countryCode = $request->input('countryCode', 'XX');
+
+		// Rate limiting: Check if this user played this track in last hour
+		$recentPlay = DB::table('track_member_play')
+			->where('memberId', $memberId)
+			->where('mp3Id', $mp3Id)
+			->where('playedDateTime', '>=', DB::raw('DATE_SUB(NOW(), INTERVAL 1 HOUR)'))
+			->first();
+
+		if ($recentPlay) {
+			// Don't increment if played within last hour (prevents spam)
+			return response()->json([
+				'success' => true,
+				'message' => 'Play already recorded recently'
+			]);
+		}
+
+		// Increment play count
+		$result = $this->memberAllDB_model->playIncrement($mp3Id, $trackId, $memberId, $countryName, $countryCode);
+
+		if ($result) {
+			return response()->json([
+				'success' => true,
+				'message' => 'Play count incremented'
+			]);
+		} else {
+			return response()->json([
+				'error' => 'Failed to record play'
+			], 500);
+		}
+	}
+
 	public function Download_member_track(Request $request)
 	{
         //echo $_SERVER['DOCUMENT_ROOT'];die;
