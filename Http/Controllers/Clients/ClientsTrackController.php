@@ -478,12 +478,22 @@ class ClientsTrackController extends Controller
 	{
 		$f_id = (int)Crypt::decryptString($request->id);
         $track_id = Crypt::decryptString($request->track_id);
-        
+
+        // SECURITY FIX: Verify track ownership before allowing deletion
+        $Tracks = TracksSubmitted::find($track_id);
+
+        if(!$Tracks){
+            return response()->json(['error' => 'Track not found'], 404);
+        }
+
+        $clientId = Session::get('clientId');
+        if($Tracks->client != $clientId){
+            return response()->json(['error' => 'Unauthorized - You can only delete your own tracks'], 403);
+        }
+
 		$pcloudFile = new File($this->pCloudApp);
 
 		$fileMetadata = $pcloudFile->delete($f_id);
-
-        $Tracks = TracksSubmitted::find($track_id);
         $Tracks->updated_at = date('Y-m-d H:i:s');
 
         if (!empty($Tracks->amr1) && ($Tracks->amr1 == $f_id)) {

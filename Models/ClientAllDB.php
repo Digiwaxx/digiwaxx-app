@@ -1322,7 +1322,7 @@ class ClientAllDB extends Model
                 'senderId' => $clientId,
                 'receiverType' => 2,
                 'receiverId' => $mid,
-                'message' => addslashes($message),
+                'message' => htmlspecialchars($message, ENT_QUOTES, 'UTF-8'),  // XSS protection
                 'dateTime' => NOW(),  
         
             );

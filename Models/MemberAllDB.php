@@ -1306,20 +1306,60 @@ class MemberAllDB extends Model
              "' . $data['likeRecord'] . '",
              "' . $countryName . '",
              "' . $countryCode . '")');
-         */
- 
-         $member_session_id = Session::get('memberId');
- 
-         $insertData = array(
-             'version' => 2,
-             'track' => $tid,
-             'member' => $member_session_id,
-             'whatrate' => $data['whatRate'],
-             'additionalcomments' => urlencode($data['comments']),
-             'added' => NOW(),
-             'countryName' => $countryName,
-             'countryCode' => $countryCode,
-         );
+         */        $member_session_id = Session::get('memberId');
+
+        // SECURITY FIX: Prevent duplicate reviews
+        $existingReview = DB::table('tracks_reviews')
+            ->where('track', $tid)
+            ->where('member', $member_session_id)
+            ->first();
+
+        if ($existingReview) {
+            return -1; // Already reviewed
+        }
+
+        // SECURITY FIX: Prevent self-reviews (DJs rating their own tracks)
+        $track = DB::table('tracks')->where('id', $tid)->first();
+        if (!$track) {
+            return -2; // Track not found
+        }
+
+        // Check if this member is the track owner (client)
+        $member = DB::table('members')->where('id', $member_session_id)->first();
+        if ($member && isset($member->client_id) && $member->client_id == $track->client) {
+            return -3; // Cannot review your own track
+        }
+
+        // SECURITY FIX: Validate input
+        if (!isset($data['whatRate']) || !is_numeric($data['whatRate'])) {
+            return -4; // Invalid rating
+        }
+
+        $rating = (int)$data['whatRate'];
+        if ($rating < 1 || $rating > 5) {
+            return -5; // Rating must be 1-5
+        }
+
+        if (!isset($data['comments'])) {
+            $data['comments'] = '';
+        }
+
+        $comments = trim($data['comments']);
+        if (strlen($comments) > 5000) {
+            return -6; // Comment too long
+        }
+
+        $insertData = array(
+            'version' => 2,
+            'track' => $tid,
+            'member' => $member_session_id,
+            'whatrate' => $rating,
+            'additionalcomments' => htmlspecialchars($comments, ENT_QUOTES, 'UTF-8'),
+            'added' => NOW(),
+            'countryName' => $countryName,
+            'countryCode' => $countryCode,
+        );
+
  
          $insertId = DB::table('tracks_reviews')->insertGetId($insertData);
          
@@ -1921,7 +1961,7 @@ class MemberAllDB extends Model
             'senderId' => $memberId,
             'receiverType' => 1,
             'receiverId' => $cid,
-            'message' => addslashes($message),
+            'message' => htmlspecialchars($message, ENT_QUOTES, 'UTF-8'),  // XSS protection
             'dateTime' =>  date("Y-m-d H:m:s"),
         
         );

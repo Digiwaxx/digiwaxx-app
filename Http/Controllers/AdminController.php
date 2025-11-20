@@ -13403,31 +13403,39 @@ function deleteAllVersions(Request $request)
     
     
             // add review
-    
+
+            // SECURITY FIX: Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+            // Ensure your form includes @csrf token
             if(isset($_POST['submitReview']))
-    
+
             {
-    
-    
-                 $result = $this->admin_model->addReview_trm($_POST,$_GET['tid']);
+
+                 // SECURITY FIX: Validate track ID
+                 if(!isset($_GET['tid']) || !is_numeric($_GET['tid'])){
+                     return redirect()->back()->with('error', 'Invalid track ID');
+                 }
+
+                 $trackId = (int)$_GET['tid'];
+
+                 $result = $this->admin_model->addReview_trm($_POST, $trackId);
     
     
     
                  if($result>0)
-    
+
                  {
-    
-                    header("location: ".url("Member_track_download?tid=".$_GET['tid']."&reviewAdded=1"));   exit;
-    
-    
-    
+
+                    return redirect(url("Member_track_download?tid=".$trackId."&reviewAdded=1"));
+
+
+
                  }
-    
+
                  else
-    
+
                  {
-    
-                     header("location: ".url("Member_track_review?tid=".$_GET['tid']."&error=1"));   exit;
+
+                     return redirect(url("Member_track_review?tid=".$trackId."&error=1"));
     
                  }
     
