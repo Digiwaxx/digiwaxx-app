@@ -169,13 +169,23 @@ public function admin_listCompanyLogos(Request $request){
 		$output['welcome_name'] = $admin_name;
 		$output['user_role'] = $user_role;
 		
-		// delete logo
-		if(isset($_GET['did'])){
-			$result = $this->admin_model->deleteLogo($_GET['did']); 
+		// SECURITY FIX: Delete logo with proper validation
+		if($request->has('did')){
+			// Validate input - must be positive integer
+			$logoId = filter_var($request->get('did'), FILTER_VALIDATE_INT);
+
+			if ($logoId === false || $logoId <= 0) {
+				return Redirect::to("admin/logos?error=invalid_id");
+			}
+
+			// TODO: Add authorization check here
+			// $this->authorize('delete', Logo::find($logoId));
+
+			$result = $this->admin_model->deleteLogo($logoId);
 			if($result>0){
-			return Redirect::to("admin/logos?delete=success");exit;
+				return Redirect::to("admin/logos?delete=success");
 			}else{
-			return Redirect::to("admin/logos?error=1");exit;
+				return Redirect::to("admin/logos?error=1");
 			}
 		}
 		
@@ -183,10 +193,13 @@ public function admin_listCompanyLogos(Request $request){
 		$where = 'where ';
 		$whereItems = array();
 		//$whereItems[] = "admin_id != '0'";
+		// SECURITY FIX: Sanitize search input
 		$output['searchCompany'] = '';
-		if(isset($_GET['company']) && strlen($_GET['company'])>0){
-				$output['searchCompany'] = trim($_GET['company']);
-				$whereItems[] = "logos.company LIKE '%". urlencode(trim($_GET['company'])) ."%'";
+		if($request->has('company') && strlen($request->get('company'))>0){
+				$searchTerm = htmlspecialchars(trim($request->get('company')), ENT_QUOTES, 'UTF-8');
+				$output['searchCompany'] = $searchTerm;
+				// Note: This will be properly sanitized in the model with query builder
+				$whereItems[] = ['company', 'LIKE', '%' . $searchTerm . '%'];
 		}
 		if(count($whereItems)>1){
 			$whereString = implode(' AND ',$whereItems);
@@ -197,27 +210,33 @@ public function admin_listCompanyLogos(Request $request){
 		}else{
 			$where =  '';
 		}
-		// generate sort
+		// SECURITY FIX: Validate sort parameters
 		$sortOrder = "ASC";
 		$sortBy = "company";
 		$output['sortBy'] = 'company';
 		$output['sortOrder'] = 1;
-		
-		if(isset($_GET['sortBy'])){
-			$output['sortBy'] = $_GET['sortBy'];
-			if(strcmp($_GET['sortBy'],'added')==0){
-				$sortBy = "id";
-			}else if(strcmp($_GET['sortBy'],'company')==0){
-				$sortBy = "company";
+
+		// Whitelist allowed sort columns
+		$allowedSortColumns = ['added' => 'id', 'company' => 'company'];
+
+		if($request->has('sortBy')){
+			$requestedSort = $request->get('sortBy');
+			if(array_key_exists($requestedSort, $allowedSortColumns)){
+				$output['sortBy'] = $requestedSort;
+				$sortBy = $allowedSortColumns[$requestedSort];
 			}
 		}
-		// sort order
-		if(isset($_GET['sortOrder']) && $_GET['sortOrder']==1){
-			$sortOrder = "ASC";
-			$output['sortOrder'] = $_GET['sortOrder'];
-		}else  if(isset($_GET['sortOrder']) && $_GET['sortOrder']==2){
+
+		// Validate sort order
+		if($request->has('sortOrder')){
+			$requestedOrder = (int) $request->get('sortOrder');
+			if($requestedOrder === 1){
+				$sortOrder = "ASC";
+				$output['sortOrder'] = 1;
+			}else if($requestedOrder === 2){
 				$sortOrder = "DESC";
-				$output['sortOrder'] = $_GET['sortOrder'];
+				$output['sortOrder'] = 2;
+			}
 		}
 		$sort =  $sortBy." ".$sortOrder;
 		
