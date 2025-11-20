@@ -111,7 +111,7 @@ class Admin extends Authenticatable
      * @GS
      */
 	public function deleteLogo($did){
-		$query = DB::select("select img from logos where id = '". $did ."'");  
+		$query = DB::select("select img from logos where id = ?", [$did]);  
 		$data  = $query;
 		$imgUrl =  public_path("Logos/".$data[0]->img);
 		//echo $imgUrl;die('--');
@@ -174,7 +174,7 @@ class Admin extends Authenticatable
      */
 	
 	public function unlinkCompanyLogo($did){		
-		$query = DB::select("select img from logos where id = '". $did ."'");  
+		$query = DB::select("select img from logos where id = ?", [$did]);  
 		$data  = $query;
 		if(!empty($data[0]->img)){
 		$imgUrl =  public_path("Logos/".$data[0]->img);		
@@ -316,7 +316,7 @@ class Admin extends Authenticatable
      * @GS
      */
 	public function getSubGenres($genreId){
-		$queryRes = DB::select("select subGenreId, subGenre from  genres_sub where genreId = '". $genreId ."' order by subGenre asc");
+		$queryRes = DB::select("select subGenreId, subGenre from  genres_sub where genreId = ? order by subGenre asc", [$genreId]);
 		
         $result['numRows'] = count($queryRes);
 
@@ -465,7 +465,7 @@ class Admin extends Authenticatable
 
 		 left join admins on tool_tracks.added_by = admins.id
 
-		 where tool_tracks.tool_track_id = '". $tool_id ."'");
+		 where tool_tracks.tool_track_id = ?", [$tool_id]);
 		
         $result['numRows'] = count($queryRes);
 		
@@ -480,7 +480,7 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getMp3($tool_id){
-		$queryRes = DB::select("select * from  tool_track_files where tool_track_id = '". $tool_id ."'");
+		$queryRes = DB::select("select * from  tool_track_files where tool_track_id = ?", [$tool_id]);
 		
         $result['numRows'] = count($queryRes);
 		
@@ -518,7 +518,7 @@ class Admin extends Authenticatable
 		);
 		$insertId = DB::table('tool_track_files')->insertGetId($insData);
 		return  $insertId;
-		/* $query = DB::select("select count(*) as Total FROM tool_track_files where tool_track_id = '". $lastId ."'");  
+		/* $query = DB::select("select count(*) as Total FROM tool_track_files where tool_track_id = ?", [$lastId]);  
 		if($query[0]->Total > 0){
 			
 		$resQry = DB::table('tool_track_files')
@@ -539,7 +539,7 @@ class Admin extends Authenticatable
      */
 	
 	public function unlinkDjToolFile($tool_id){		
-		$query = DB::select("select * from  tool_track_files where tool_track_id = '". $tool_id ."'");  
+		$query = DB::select("select * from  tool_track_files where tool_track_id = ?", [$tool_id]);  
 		$data  = $query;
 		if(!empty($data[0]->track_file)){
 			$trkFileUrl =  public_path("tools/".$data[0]->track_file);		
@@ -672,13 +672,13 @@ class Admin extends Authenticatable
      */	
 	public function getMail($mailId){
 		
-		$queryRes = DB::select("select * from  mailouts where id = '". $mailId ."'");
+		$queryRes = DB::select("select * from  mailouts where id = ?", [$mailId]);
 
         $result['numRows'] = count($queryRes);
 		
 		$result['data'] = $queryRes;
 		
-		$query1 = DB::select("select * from  mails where mailout = '". $mailId ."'");
+		$query1 = DB::select("select * from  mails where mailout = ?", [$mailId]);
 
         $result['mailsSent'] = count($query1);
 		
@@ -686,7 +686,7 @@ class Admin extends Authenticatable
 
 		$result['track']  = $query2;
 		
-		$query3 = DB::select("select * from  mails where mailout = '". $mailId ."' AND received!='0000-00-00 00:00:00'");  
+		$query3 = DB::select("select * from  mails where mailout = ? AND received!='0000-00-00 00:00:00'", [$mailId]);  
 
 		$result['numReceived']  = $query3;
 		
@@ -701,7 +701,7 @@ class Admin extends Authenticatable
 	*/	
 	public function getTrackInfo($trackId){
 		
-	   $queryRes = DB::select("select * from  tracks  where id = '". $trackId ."'");
+	   $queryRes = DB::select("select * from  tracks  where id = ?", [$trackId]);
 		
 	   $result['numRows'] = count($queryRes);
 
@@ -716,7 +716,7 @@ class Admin extends Authenticatable
 	*/	
 	public function getTrackVersions($trackId){
 		
-	   $query = DB::select("select * from  tracks_mp3s  where track = '". $trackId ."'"); 
+	   $query = DB::select("select * from  tracks_mp3s  where track = ?", [$trackId]); 
 		
 	   $result['numRows'] = count($query);
 
@@ -747,7 +747,7 @@ class Admin extends Authenticatable
 	*/	
 	public function getTemplate($templateId){
 		
-	   $query = DB::select("select * from  templates  where id = '". $templateId ."'"); 
+	   $query = DB::select("select * from  templates  where id = ?", [$templateId]); 
 
 	   $result  = $query;
 
@@ -825,7 +825,7 @@ class Admin extends Authenticatable
 	*/	
 	public function closeMail($mailId){
 		
-		$query = DB::select("SELECT id FROM mails where mailout = '". $mailId ."'");
+		$query = DB::select("SELECT id FROM mails where mailout = ?", [$mailId]);
 		
 		$numRows  = count($query);
 		
@@ -1118,7 +1118,7 @@ class Admin extends Authenticatable
 		$contint = strtolower(trim($continent));
 		$contryCode = strtolower(trim($country_code));
 		$contry = strtolower(trim($country));		
-		$queryRes = DB::select("select * from  country WHERE LOWER(`continentId`)='$contint' AND LOWER(`abbr`)='$contryCode' AND LOWER(`country`)='$contry'");
+		$queryRes = DB::select("select * from  country WHERE LOWER(`continentId`)='$contint' AND LOWER(`abbr`)='$contryCode' AND LOWER(`country`)=?", [$contry]);
 		$result = count($queryRes);
 		return $result;
 	}
@@ -1164,7 +1164,7 @@ class Admin extends Authenticatable
 		
 		$result['result'] = 1;
 		
-		$query1 = DB::select("select continent from continents where continentId = '$continent'");
+		$query1 = DB::select("select continent from continents where continentId = ?", [$continent]);
 		
 		$row = $query1;
 		
@@ -1227,7 +1227,7 @@ class Admin extends Authenticatable
      */	
 	public function getSelectedCountries($continentId){
 		
-		$queryRes = DB::select("select countryId, country from  country where continentId = '". $continentId ."'");
+		$queryRes = DB::select("select countryId, country from  country where continentId = ?", [$continentId]);
 
         $result['numRows'] = count($queryRes);
 		
@@ -1245,7 +1245,7 @@ class Admin extends Authenticatable
 		
 		extract($data);
 		
-		$queryRes = DB::select("select * from  states where name = '$state'");
+		$queryRes = DB::select("select * from  states where name = ?", [$state]);
 
         $result = count($queryRes);
 		
@@ -1355,7 +1355,7 @@ class Admin extends Authenticatable
 	public function getPageText($id)
 	{
 
-	 $query = DB::select("select * from  dynamic_pages where  page_id = '". $id ."'");   
+	 $query = DB::select("select * from  dynamic_pages where  page_id = ?", [$id]);   
 	 $result  = $query;
 	 return  $result;
 	}
@@ -1383,7 +1383,7 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getBannerText($id){
-	 $query = DB::select("select * from  banners where  pageId = '". $id ."'");   
+	 $query = DB::select("select * from  banners where  pageId = ?", [$id]);   
 	 $result  = $query;
 	 return  $result;		
 	}
@@ -1393,7 +1393,7 @@ class Admin extends Authenticatable
      * @GS
      */
 	public function getContentUsingMeta($pageID, $metaKey){
-	 $query = DB::select("select * from  pages_meta where  pageId = '". $pageID ."' AND meta_key = '". $metaKey ."'");   
+	 $query = DB::select("select * from  pages_meta where  pageId = '?' AND meta_key = '?'", [$pageID, $metaKey]);   
 	 $result  = $query;
 	 return  $result;		
 	}
@@ -1477,7 +1477,7 @@ class Admin extends Authenticatable
 	}
 	
 	public function getPageLinks($pageId){
-	 $query = DB::select("select * from dynamic_links where pageId = '". $pageId ."' order by linkId asc");   
+	 $query = DB::select("select * from dynamic_links where pageId = ? order by linkId asc", [$pageId]);   
 	 $result  = $query;
 	 return  $result;		
 	}
@@ -1489,7 +1489,7 @@ class Admin extends Authenticatable
 	}
 	
 	public function getBanner($page_id){
-	 $query = DB::select("select banner_image, pCloudFileID from dynamic_pages where page_id = '". $page_id ."'");   
+	 $query = DB::select("select banner_image, pCloudFileID from dynamic_pages where page_id = ?", [$page_id]);   
 	 $result  = $query;
 	 return  $result;		
 	}
@@ -1616,8 +1616,8 @@ class Admin extends Authenticatable
 	
     public function getMembershipDetails($memberId, $start, $limit){
 
-        $query = DB::select("select *  from  member_subscriptions	where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit $start, $limit");
-        $query = DB::select("select *  from  member_subscriptions	where member_Id = '" . $memberId . "' and status = '1'");
+        $query = DB::select("select *  from  member_subscriptions	where member_Id = ? and status = '1' order by subscription_Id desc limit $start, $limit", [$memberId]);
+        $query = DB::select("select *  from  member_subscriptions	where member_Id = ? and status = '1'", [$memberId]);
         $result['numRows']  = count($query);
 
         $result['data']  = $query;
@@ -1649,7 +1649,7 @@ class Admin extends Authenticatable
 
         $today = date("Y-m-d");
 
-        $query1 = DB::select("select subscription_Id, endDate from  member_subscriptions where member_Id = '" . $memberId . "' and endDate > '" . $today . "' order by subscription_Id desc limit 0, 1");
+        $query1 = DB::select("select subscription_Id, endDate from  member_subscriptions where member_Id = '?' and endDate > '?' order by subscription_Id desc limit 0, 1", [$memberId, $today]);
         $result1 = count($query1);
 		
         if ($result1 < 1) {
@@ -1681,7 +1681,7 @@ class Admin extends Authenticatable
 	
 	public function getViewMemberInfo($memId){
 		
-       $query = DB::select("select * from  members left join members_dj_mixer on members.id = members_dj_mixer.member where members.id = '$memId'");
+       $query = DB::select("select * from  members left join members_dj_mixer on members.id = members_dj_mixer.member where members.id = ?", [$memId]);
 
         $result['numRows'] =  count($query);
 
@@ -1692,7 +1692,7 @@ class Admin extends Authenticatable
 	
 	public function adminChangeMemberPassword($password, $memberId){
 		$pas1=md5($password);
-		$query = DB::select("update `members` set pword = '" . $pas1 . "' where id = '" . $memberId . "'");
+		$query = DB::select("update `members` set pword = '?' where id = '?'", [$pas1, $memberId]);
 
         return $query;
 		
@@ -2209,7 +2209,7 @@ class Admin extends Authenticatable
         $clubdj_partytype = '';    
 
 		
-        $managementQuery = DB::select("SELECT id FROM members_dj_mixer where member = '" . $memberId . "'");
+        $managementQuery = DB::select("SELECT id FROM members_dj_mixer where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
@@ -2489,7 +2489,7 @@ class Admin extends Authenticatable
 
 
 
-        $queryMemRadioDta = DB::select("SELECT id FROM members_radio_station where member = '" .$memberId. "'");
+        $queryMemRadioDta = DB::select("SELECT id FROM members_radio_station where member = ?", [$memberId]);
 
         $memRadioDtaRows = count($queryMemRadioDta);
 
@@ -2723,13 +2723,13 @@ class Admin extends Authenticatable
 
 
 
-        $managementQuery = DB::select("select id from members_mass_media where member = '" . $memberId . "'");
+        $managementQuery = DB::select("select id from members_mass_media where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
         /* if ($managementRows > 0) {
 
-            DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = '" . $memberId . "'");
+            DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = ?", [$memberId]);
         } else {
 
             DB::select("insert into `members_mass_media` (`member`, `mediatype_tvfilm`, `mediatype_publication`, `mediatype_newmedia`, `mediatype_newsletter`, `media_name`, `media_website`, `media_department`) values ('" . $memberId . "', '" . $massTv . "', '" . $massPublication . "', '" . $massDotcom . "', '" . $massNewsletter . "', '" . $massName . "', '" . $massWebsite . "', '" . $massDepartment . "')");
@@ -2753,13 +2753,13 @@ class Admin extends Authenticatable
 
 
 
-        $managementQuery = DB::select("select id from members_record_label where member = '" . $memberId . "'");
+        $managementQuery = DB::select("select id from members_record_label where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
         /* if ($managementRows > 0) {
 
-            DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = '" . $memberId . "'");
+            DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = ?", [$memberId]);
         } else {
 
             DB::select("insert into `members_record_label` (`member`, `labeltype_major`, `labeltype_indy`, `labeltype_distribution`, `label_name`, `label_department`) values ('" . $memberId . "', '" . $recordMajor . "', '" . $recordIndy . "', '" . $recordDistribution . "', '" . $recordName . "', '" . $recordDepartment . "')");
@@ -2785,29 +2785,29 @@ class Admin extends Authenticatable
 
 
 
-        $managementQuery = DB::select("select id from members_management where member = '" . $memberId . "'");
+        $managementQuery = DB::select("select id from members_management where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
         /* if ($managementRows > 0) {
 
-            DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = '" . $memberId . "'");
+            DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = ?", [$memberId]);
         } else {
 
             DB::select("insert into `members_management` (`member`, `managementtype_artist`, `managementtype_tour`, `managementtype_personal`, `managementtype_finance`, `management_name`, `management_who`, `management_industry`) values ('" . $memberId . "', '" . $managementArtist . "', '" . $managementTour . "', '" . $managementPersonal . "', '" . $managementFinance . "', '" . $managementName . "', '" . $managementWho . "', '" . $managementIndustry . "')");
         } */
         // clothing
 		
-        $clothingQuery = DB::select("select id from members_clothing_apparel where member = '" . $memberId . "'");
+        $clothingQuery = DB::select("select id from members_clothing_apparel where member = ?", [$memberId]);
 
         $clothingRows = count($clothingQuery);
 
         /* if ($clothingRows > 0) {
 
-            DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = '" . $memberId . "'");
+            DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = ?", [$memberId]);
         } else {
 
-            DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('" . $memberId . "', '" . $clothingName . "', '" . $clothingDepartment . "')");
+            DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('?', '?', '?')", [$memberId, $clothingName, $clothingDepartment]);
         } */
 
         // promoter
@@ -2828,12 +2828,12 @@ class Admin extends Authenticatable
             $promoterStreet = 0;
         }
 
-        $promoterQuery = DB::select("select id from members_promoter where member = '" . $memberId . "'");
+        $promoterQuery = DB::select("select id from members_promoter where member = ?", [$memberId]);
 
         $promoterRows = count($promoterQuery);
 
         /* if ($promoterRows > 0) {
-            DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = '" . $memberId . "'");
+            DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = ?", [$memberId]);
         } else {
 
             DB::select("insert into `members_promoter` (`member`, `promotertype_indy`, `promotertype_club`, `promotertype_event`, `promotertype_street`, `promoter_name`, `promoter_department`, `promoter_website`) values ('" . $memberId . "', '" . $promoterIndy . "', '" . $promoterClub . "', '" . $promoterSpecial . "', '" . $promoterStreet . "', '" . $promoterName . "', '" . $promoterDepartment . "', '" . $promoterWebsite . "')");
@@ -2857,12 +2857,12 @@ class Admin extends Authenticatable
             $specialOther = 0;
         }
 
-        $specialQuery = DB::select("select id from members_special_services where member = '" . $memberId . "'");
+        $specialQuery = DB::select("select id from members_special_services where member = ?", [$memberId]);
 
         $specialRows = count($specialQuery);
 
         /* if ($specialRows > 0){
-            DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = '" . $memberId . "'");
+            DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = ?", [$memberId]);
         }else{
             DB::select("insert into `members_special_services` (`member`, `servicestype_corporate`, `servicestype_graphicdesign`, `servicestype_webdesign`, `servicestype_other`, `services_name`, `services_website`) values ('" . $memberId . "', '" . $specialCorporate . "', '" . $specialGraphic . "', '" . $specialWeb . "', '" . $specialOther . "', '" . $specialName . "', '" . $specialWebsite . "')");
         } */
@@ -2884,7 +2884,7 @@ class Admin extends Authenticatable
             $productionSound = 0;
         }
 
-        $productionQuery = DB::select("select id from members_production_talent where member = '" . $memberId . "'");
+        $productionQuery = DB::select("select id from members_production_talent where member = ?", [$memberId]);
 
         $productionRows = count($productionQuery);
 
@@ -2904,7 +2904,7 @@ class Admin extends Authenticatable
 
     {
 
-        $query = DB::select("select moduleId  from   admin_modules where adminId = '" . $adminId . "'");
+        $query = DB::select("select moduleId  from   admin_modules where adminId = ?", [$adminId]);
 
         $result['numRows'] =  count($query);
 
@@ -2986,11 +2986,11 @@ class Admin extends Authenticatable
         
         $admin_id = Auth::user()->id;
 
-        $query1 = DB::select("select *  from   admins where uname = '" . $username . "'");
+        $query1 = DB::select("select *  from   admins where uname = ?", [$username]);
 
         $userRows1 =  count($query1);
 
-        $query2 = DB::select("select *  from   admins where email = '" . $email . "'");
+        $query2 = DB::select("select *  from   admins where email = ?", [$email]);
 
         $userRows2 =  count($query2);
 
@@ -3096,7 +3096,7 @@ class Admin extends Authenticatable
     function deleteLabel($did)
 	{
 
-            $result =  DB::select("delete from  client_contacts where id = '$did'");  
+            $result =  DB::select("delete from  client_contacts where id = ?", [$did]);  
 
             return $result;
 
@@ -3260,13 +3260,13 @@ class Admin extends Authenticatable
 
     function getStaffTracks($trackId)
     {
-        $query = DB::select("select sortOrder from  staff_selection where trackId = '$trackId' order by sortOrder desc limit 1");
+        $query = DB::select("select sortOrder from  staff_selection where trackId = ? order by sortOrder desc limit 1", [$trackId]);
         return count($query);
     }
 
     function getYouTracks($trackId)
     {
-        $query = DB::select("select sortOrder from  you_selection where trackId = '$trackId' order by sortOrder desc limit 1");
+        $query = DB::select("select sortOrder from  you_selection where trackId = ? order by sortOrder desc limit 1", [$trackId]);
         return count($query);
     }
 
@@ -3358,7 +3358,7 @@ class Admin extends Authenticatable
 
     function updatePageImage($trackId, $img)
     {
-        $query =  DB::select("UPDATE `tracks` set  `imgpage` = '" . $img . "' where id = '" . $trackId . "'");
+        $query =  DB::select("UPDATE `tracks` set  `imgpage` = '?' where id = '?'", [$img, $trackId]);
         return 1;
     }
     
@@ -3370,7 +3370,7 @@ class Admin extends Authenticatable
     
     function updatePageImage_in_album($albumId, $img)
     {
-        $query =  DB::select("UPDATE `tracks_album` set  `album_page_image` = '" . $img . "' where id = '" . $albumId . "'");
+        $query =  DB::select("UPDATE `tracks_album` set  `album_page_image` = '?' where id = '?'", [$img, $albumId]);
         return 1;
     }
     
@@ -3534,7 +3534,7 @@ class Admin extends Authenticatable
 
     function addEmailImage($trackId, $img)
     {
-        $query = DB::select("UPDATE `tracks` set  `img` = '" . $img . "' where id = '" . $trackId . "'");
+        $query = DB::select("UPDATE `tracks` set  `img` = '?' where id = '?'", [$img, $trackId]);
         return 1;
     }
 
@@ -3542,7 +3542,7 @@ class Admin extends Authenticatable
 
     function getTrackMp3s($trackId)
     {
-        $query = DB::select("select id, version, location, preview, downloads, num_plays from tracks_mp3s where track = '" . $trackId . "'");
+        $query = DB::select("select id, version, location, preview, downloads, num_plays from tracks_mp3s where track = ?", [$trackId]);
         $result['numRows']  = count($query);
         $result['data']  = $query;
         return  $result;
@@ -3601,7 +3601,7 @@ class Admin extends Authenticatable
 
     function addPageImage($trackId, $img)
     {
-        $query = DB::select("UPDATE `tracks` set  `imgpage` = '" . $img . "' where id = '" . $trackId . "'");
+        $query = DB::select("UPDATE `tracks` set  `imgpage` = '?' where id = '?'", [$img, $trackId]);
         return 1;
     }
     
@@ -3656,7 +3656,7 @@ class Admin extends Authenticatable
      // New functions R-S
      function deleteTrack_trm($trackId)
      {
-          DB::select("update tracks set deleted = '1' where id = '" . $trackId . "'");
+          DB::select("update tracks set deleted = '1' where id = ?", [$trackId]);
          return 1;
      }
  
@@ -3667,7 +3667,7 @@ class Admin extends Authenticatable
          }else{
              $check=0;
          }
-         $query =  DB::select("UPDATE `tracks` set  `priority` = '" . $check . "' where id = '" . $trackid . "'");
+         $query =  DB::select("UPDATE `tracks` set  `priority` = '?' where id = '?'", [$check, $trackid]);
          return $query;
      }
  
@@ -3678,7 +3678,7 @@ class Admin extends Authenticatable
          }else{
              $check=0;
          }
-         $query =  DB::select("UPDATE `tracks` set  `hottest` = '" . $check . "' where id = '" . $trackid . "'");
+         $query =  DB::select("UPDATE `tracks` set  `hottest` = '?' where id = '?'", [$check, $trackid]);
          return $query;
      }
  
@@ -3686,7 +3686,7 @@ class Admin extends Authenticatable
      {   
          if($check=='true'){
              
-             $query =  DB::select("select * from  top_streaming_tracks  where trackId = '$trackid'");
+             $query =  DB::select("select * from  top_streaming_tracks  where trackId = ?", [$trackid]);
              if(count($query)==0){
  
                  $max = DB::table('top_streaming_tracks')->max('position');
@@ -3708,7 +3708,7 @@ class Admin extends Authenticatable
              
              
          }else{
-             $result =  DB::select("delete from top_streaming_tracks where trackId = '$trackid'");
+             $result =  DB::select("delete from top_streaming_tracks where trackId = ?", [$trackid]);
              return $result;
          }
      }
@@ -3718,14 +3718,14 @@ class Admin extends Authenticatable
          $order=explode(',',$order);
  
          foreach($order as $a){
-             $query =  DB::select("UPDATE `top_streaming_tracks` set  `position` = '" . $countt . "' where trackId = '" . $a . "'");
+             $query =  DB::select("UPDATE `top_streaming_tracks` set  `position` = '?' where trackId = '?'", [$countt, $a]);
              $countt++;
          }
          
      }
  
      function changeLogosOrder_trm($order,$a){
-         $query =  DB::select("UPDATE `tracks` set  `logos` = '" . $order . "' where id = '" . $a . "'");
+         $query =  DB::select("UPDATE `tracks` set  `logos` = '?' where id = '?'", [$order, $a]);
          return 1;
      }
  
@@ -3752,7 +3752,7 @@ class Admin extends Authenticatable
  
      function removeStaff_trm($trackId)
      {
-         $query =  DB::select("DELETE FROM staff_selection WHERE trackId = '$trackId'");
+         $query =  DB::select("DELETE FROM staff_selection WHERE trackId = ?", [$trackId]);
          return $query;
      }
  
@@ -3779,7 +3779,7 @@ class Admin extends Authenticatable
  
      function removeYou_trm($trackId)
      {
-         $query =  DB::select("DELETE FROM you_selection WHERE trackId = '$trackId'");
+         $query =  DB::select("DELETE FROM you_selection WHERE trackId = ?", [$trackId]);
          return $query;
      }
  
@@ -3828,7 +3828,7 @@ class Admin extends Authenticatable
  
      function getReviews_trm($trackId)
      {
-         $query =DB::select("select * from tracks_reviews where track = '" . $trackId . "'");
+         $query =DB::select("select * from tracks_reviews where track = ?", [$trackId]);
          $result['numRows']  = count($query);
         // dd(  $result['numRows'] );
          $result['data']  = $query;
@@ -3845,7 +3845,7 @@ class Admin extends Authenticatable
  
      function deleteTrackAudio_trm($did)
      {
-         $result = DB::select("delete from tracks_mp3s where id = '$did'");
+         $result = DB::select("delete from tracks_mp3s where id = ?", [$did]);
          return $result;
      }
  
@@ -3890,7 +3890,7 @@ class Admin extends Authenticatable
  
      function addLogoImage_trm($logoId, $image)
      {
-         $query = DB::select("update logos set img = '" . $image . "' where id = '" . $logoId . "'");
+         $query = DB::select("update logos set img = '?' where id = '?'", [$image, $logoId]);
          return $query;
      }
      
@@ -3965,7 +3965,7 @@ class Admin extends Authenticatable
  
      function updateEmailImage_trm($trackId, $img)
      {
-         $query = DB::select("UPDATE `tracks` set  `img` = '" . $img . "' where id = '" . $trackId . "'");
+         $query = DB::select("UPDATE `tracks` set  `img` = '?' where id = '?'", [$img, $trackId]);
          return 1;
      }
  
@@ -3973,7 +3973,7 @@ class Admin extends Authenticatable
      {
          $query = DB::select("select track_label_reps.label_rep_id, client_contacts.name, client_contacts.email from track_label_reps 
          left join client_contacts on track_label_reps.label_rep_id = client_contacts.id
-         where track_label_reps.client_id = '" . $clientId . "' and track_label_reps.track_id = '" . $trackId . "'");
+         where track_label_reps.client_id = '?' and track_label_reps.track_id = '?'", [$clientId, $trackId]);
          $result['numRows']  = count($query);
          $result['data']  = $query;
          return  $result;
@@ -4207,9 +4207,9 @@ class Admin extends Authenticatable
  
      function approveSubTrack_trm($trackSubId)
      {
-         $approveQuery =DB::select("update tracks_submitted set approved = '1' where approved = '0' and id = '$trackSubId'");
+         $approveQuery =DB::select("update tracks_submitted set approved = '1' where approved = '0' and id = ?", [$trackSubId]);
          
-         $query =DB::select("select * from  tracks_submitted where id = '$trackSubId' order by id desc");
+         $query =DB::select("select * from  tracks_submitted where id = ? order by id desc", [$trackSubId]);
          $result['numRows'] = count($query);
          $result['data']  = $query;
  
@@ -4263,7 +4263,7 @@ class Admin extends Authenticatable
      
              $trackId = DB::table('tracks')->insertGetId($insertData);
              
-             DB::select("update tracks set order_position = '$trackId' where id = '$trackId'");
+             DB::select("update tracks set order_position = '$trackId' where id = ?", [$trackId]);
  
              // $query =DB::select("insert into tracks (`artist`, `title`, `albumType`, `album`, `time`, `label`, `link`, `link1`, `link2`, `moreinfo`, `producer`, `imgpage`, `thumb`, `added`,  `edited`,  `active`, `review`, `client`, `approved`, `deleted`, `madeAvailable`, `trackSubmittedId`, `release_date`, `genreId`, `subGenreId`, `bpm`, `facebookLink`, `twitterLink`, `instagramLink`) values ('" . $result['data'][0]->artist . "', '" . $result['data'][0]->title . "', '" . $result['data'][0]->albumType . "', '" . $result['data'][0]->album . "', '" . $result['data'][0]->time . "', '" . $result['data'][0]->label . "', '" . $result['data'][0]->link . "', '" . $result['data'][0]->link1 . "', '" . $result['data'][0]->link2 . "', '" . $result['data'][0]->moreinfo . "', '" . $result['data'][0]->producers . "', '" . $result['data'][0]->imgpage . "', '" . $result['data'][0]->thumb . "', NOW(), NOW(), '1', '0', '" . $result['data'][0]->client . "', '" . $result['data'][0]->approved . "', '0', NOW(), '" . $trackSubId . "', '" . $release_date[0] . "', '" . $result['data'][0]->genreId . "', '" . $result['data'][0]->subGenreId . "', '" . $result['data'][0]->bpm . "', '" . $result['data'][0]->facebookLink . "', '" . $result['data'][0]->twitterLink . "', '" . $result['data'][0]->instagramLink . "')");
              // $trackId = $this->db->insert_id();
@@ -4412,25 +4412,25 @@ class Admin extends Authenticatable
  
      function addClientTrackAmr1($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr1 = '" . $amrFile . "', version1 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr1 = '?', version1 = '?' where id = '?'", [$amrFile, $version, $id]);
          return 1;
      }
  
      function addClientTrackAmr2($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr2 = '" . $amrFile . "', version2 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr2 = '?', version2 = '?' where id = '?'", [$amrFile, $version, $id]);
          return 1;
      }
  
      function addClientTrackAmr3($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr3 = '" . $amrFile . "', version3 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr3 = '?', version3 = '?' where id = '?'", [$amrFile, $version, $id]);
          return 1;
      }
  
      function addClientTrackAmr4($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr4 = '" . $amrFile . "', version4 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr4 = '?', version4 = '?' where id = '?'", [$amrFile, $version, $id]);
          return 1;
      }
  
@@ -4440,7 +4440,7 @@ class Admin extends Authenticatable
                          ->where('trackId', $trackid)
                          ->delete();
  
-        // $result = DB::select("delete from top_streaming_tracks where trackId = '$trackid'");
+        // $result = DB::select("delete from top_streaming_tracks where trackId = ?", [$trackid]);
          return $result;
      }
  
@@ -4522,7 +4522,7 @@ class Admin extends Authenticatable
 
         }
 
-        $query = DB::select("SELECT * FROM tracks_reviews where member = '" . $get_member_id . "' and track = '" . $tid . "'");
+        $query = DB::select("SELECT * FROM tracks_reviews where member = '?' and track = '?'", [$get_member_id, $tid]);
 
         $result['numRows'] = count($query);
 
@@ -4609,7 +4609,7 @@ class Admin extends Authenticatable
 
             // Check whether already downloaded or not
 
-            $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = '" . $get_member_id . "' and track_id = '" . $tid . "' and type_id = '1'");
+            $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = '?' and track_id = '?' and type_id = '1'", [$get_member_id, $tid]);
 
             $digi_coins_numRows = count($digi_coins);
 
@@ -4617,7 +4617,7 @@ class Admin extends Authenticatable
 
                 // caliculate dj ponints for review
 
-                $query1 = DB::select("SELECT added FROM tracks where id = '" . $tid . "'");
+                $query1 = DB::select("SELECT added FROM tracks where id = ?", [$tid]);
 
                 $added_result  = $query1;
 
@@ -4641,13 +4641,13 @@ class Admin extends Authenticatable
                     $points = 2;
                 }
 
-                DB::select("insert into member_digicoins (`member_id`, `track_id`, `type_id`, `points`, `date_time`) values ('" . $get_member_id . "', '" . $tid . "', '1', '" . $points . "', NOW())");
+                DB::select("insert into member_digicoins (`member_id`, `track_id`, `type_id`, `points`, `date_time`) values ('?', '?', '1', '?', NOW())", [$get_member_id, $tid, $points]);
 
                 $digicoin_id = $this->db->insert_id();
 
                 if ($digicoin_id > 0) {
 
-                    $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = '" . $get_member_id . "' order by member_digicoin_available_id desc");
+                    $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = ? order by member_digicoin_available_id desc", [$get_member_id]);
 
                     $available_coins_numRows = count($available_coins);
 
@@ -4657,10 +4657,10 @@ class Admin extends Authenticatable
 
                         $available_digicoins_increment = ($available_digicoins[0]->available_points) + $points;
 
-                        DB::select("update member_digicoins_available set available_points = '" . $available_digicoins_increment . "', latest_date_time = NOW() where member_id = '" . $get_member_id . "'");
+                        DB::select("update member_digicoins_available set available_points = '?', latest_date_time = NOW() where member_id = '?'", [$available_digicoins_increment, $get_member_id]);
                     } else {
 
-                        DB::select("insert into member_digicoins_available (`member_id`, `available_points`, `latest_date_time`) values ('" . $get_member_id . "', '" . $points . "', NOW())");
+                        DB::select("insert into member_digicoins_available (`member_id`, `available_points`, `latest_date_time`) values ('?', '?', NOW())", [$get_member_id, $points]);
                     }
                 }
             }
@@ -4688,7 +4688,7 @@ class Admin extends Authenticatable
 
     {
 
-        $query = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '" . $memberId . "') OR (senderType = '2' AND senderId = '" . $memberId . "')) AND latest = '0' order by messageId desc");
+        $query = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '?') OR (senderType = '2' AND senderId = '?')) AND latest = '0' order by messageId desc", [$memberId, $memberId]);
 
         $result['numRows'] = count($query);
 
@@ -4722,7 +4722,7 @@ class Admin extends Authenticatable
 
         // plays and downloads
 
-        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = '" . $trackId . "' order by preview desc");
+        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = ? order by preview desc", [$trackId]);
 
         $numRows = count($query);
 
@@ -4744,7 +4744,7 @@ class Admin extends Authenticatable
 
         // rating
 
-        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = '" . $trackId . "' order by id desc");
+        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = ? order by id desc", [$trackId]);
 
         $ratingRows = count($query);
 
@@ -4773,7 +4773,7 @@ class Admin extends Authenticatable
 
         $query = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.preview, tracks_mp3s.location,  tracks.pCloudFileID, tracks.pCloudParentFolderID FROM
 
-        tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = '$trackId' order by tracks_mp3s.preview desc");
+        tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = ? order by tracks_mp3s.preview desc", [$trackId]);
 
         $result['numRows'] = count($query);
 
@@ -4791,9 +4791,9 @@ class Admin extends Authenticatable
 
         left join tracks_mp3s on track_member_downloads.mp3Id = tracks_mp3s.id
 
-        where track_member_downloads.memberId = '" . $memberId . "'
+        where track_member_downloads.memberId = ?
 
-        order by track_member_downloads.downloadId desc limit $start, $limit");
+        order by track_member_downloads.downloadId desc limit $start, $limit", [$memberId]);
 
         $numRows1 = count($query1);
 
@@ -4860,7 +4860,7 @@ class Admin extends Authenticatable
 
         $query = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.location FROM
 
-   tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = '$trackId' order by tracks_mp3s.preview desc");
+   tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = ? order by tracks_mp3s.preview desc", [$trackId]);
 
         $result['numRows'] = count($query);
 
@@ -4934,7 +4934,7 @@ class Admin extends Authenticatable
 
     {
 
-        $query = DB::select("SELECT status, package_Id, subscription_Id FROM member_subscriptions where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit 1");
+        $query = DB::select("SELECT status, package_Id, subscription_Id FROM member_subscriptions where member_Id = ? and status = '1' order by subscription_Id desc limit 1", [$memberId]);
 
         $result['numRows'] = count($query);
 
@@ -4947,7 +4947,7 @@ class Admin extends Authenticatable
 
     function getBanner_trm($page_id)
     {
-        $query =  DB::select("SELECT banner_image  FROM   dynamic_pages where page_id = '" . $page_id . "'");
+        $query =  DB::select("SELECT banner_image  FROM   dynamic_pages where page_id = ?", [$page_id]);
         return $query;
     }
 
@@ -4955,7 +4955,7 @@ class Admin extends Authenticatable
 
     {
 
-        $query =  DB::select("SELECT * FROM  banners where  pageId = '" . $id . "'");
+        $query =  DB::select("SELECT * FROM  banners where  pageId = ?", [$id]);
 
         $result  = $query;
         //dd($result);
@@ -5056,7 +5056,7 @@ class Admin extends Authenticatable
 
     function getPageLinks_trm($pageId)
     {
-        $query =  DB::select("SELECT * FROM dynamic_links where pageId = '" . $pageId . "' order by linkId asc");
+        $query =  DB::select("SELECT * FROM dynamic_links where pageId = ? order by linkId asc", [$pageId]);
         //   $result['numRows'] =  count($query);
         return $query;
     }
@@ -5064,7 +5064,7 @@ class Admin extends Authenticatable
 
     function getPageMeta_trm($id)
     {
-        $query =  DB::select("SELECT meta_tittle, meta_keywords, meta_description FROM  dynamic_pages where  page_id = '" . $id . "'");
+        $query =  DB::select("SELECT meta_tittle, meta_keywords, meta_description FROM  dynamic_pages where  page_id = ?", [$id]);
         $result['numRows'] = count($query);
         $result['data']  = $query;
 
@@ -5146,7 +5146,7 @@ class Admin extends Authenticatable
 
     {
 
-        $query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = '" . $clientId . "' and status = '1' order by subscriptionId desc limit 1");
+        $query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = ? and status = '1' order by subscriptionId desc limit 1", [$clientId]);
 
         $result['numRows'] =  count($query);
 
@@ -5216,7 +5216,7 @@ class Admin extends Authenticatable
 
         {
 
-        $query =  DB::select("select name  from   clients where id = '". $user_id ."'");  
+        $query =  DB::select("select name  from   clients where id = ?", [$user_id]);  
 
         $result  = $query;
         return $result;
@@ -5229,7 +5229,7 @@ class Admin extends Authenticatable
 
         {
 
-        $query =  DB::select("select fname  from   members where id = '". $user_id ."'");  
+        $query =  DB::select("select fname  from   members where id = ?", [$user_id]);  
 
         $result  = $query;
         return $result;
@@ -5241,7 +5241,7 @@ class Admin extends Authenticatable
 
         {
 
-        $result = DB::select("delete from  products where product_id = '". $did ."'");  
+        $result = DB::select("delete from  products where product_id = ?", [$did]);  
 
         return $result;
 
@@ -5304,7 +5304,7 @@ class Admin extends Authenticatable
    $query =DB::select("select * from  members 
     left join members_dj_mixer on members.id = members_dj_mixer.member
 
-   where members.id = '$memberId'");  
+   where members.id = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5318,7 +5318,7 @@ class Admin extends Authenticatable
 
 	{
 
-        $query =DB::select("select productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name from  members_production_talent where member = '$memberId'");  
+        $query =DB::select("select productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name from  members_production_talent where member = ?", [$memberId]);  
 
         $result['numRows'] = count($query);
 
@@ -5334,7 +5334,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website from  members_special_services where member = '$memberId'");  
+   $query =DB::select("select servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website from  members_special_services where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5352,7 +5352,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website from members_promoter where member = '$memberId'");  
+   $query =DB::select("select promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website from members_promoter where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5370,7 +5370,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select clothing_name, clothing_department from members_clothing_apparel where member = '$memberId'");  
+   $query =DB::select("select clothing_name, clothing_department from members_clothing_apparel where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5390,7 +5390,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry from members_management where member = '$memberId'");  
+   $query =DB::select("select managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry from members_management where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5410,7 +5410,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department from members_record_label where member = '$memberId'");  
+   $query =DB::select("select labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department from members_record_label where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5428,7 +5428,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department from members_mass_media where member = '$memberId'");  
+   $query =DB::select("select mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department from members_mass_media where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5448,7 +5448,7 @@ class Admin extends Authenticatable
 
  
 
-   $query =DB::select("select * from members_radio_station where member = '$memberId'");  
+   $query =DB::select("select * from members_radio_station where member = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5464,7 +5464,7 @@ class Admin extends Authenticatable
 
   
 
-   $query =DB::select("select * from  member_social_media where memberId = '$memberId'");  
+   $query =DB::select("select * from  member_social_media where memberId = ?", [$memberId]);  
 
    $result['numRows'] = count($query);
 
@@ -5482,7 +5482,7 @@ class Admin extends Authenticatable
 
   						   product_product_questions
 
-  						   INNER JOIN product_questions ON (product_product_questions.question_id = product_questions.question_id) WHERE product_id = '". $pid ."' ORDER BY product_product_questions.order");  
+  						   INNER JOIN product_questions ON (product_product_questions.question_id = product_questions.question_id) WHERE product_id = ? ORDER BY product_product_questions.order", [$pid]);  
 
   $result['numRows'] = count($query);
 
@@ -5501,7 +5501,7 @@ function getTextData($pid,$qid)
 
 	members.lname, members.stagename, members.city, members.state FROM product_text_answers JOIN members ON (product_text_answers.member_id =
 
-    members.id) WHERE product_text_answers.product_id = '". $pid ."' AND product_text_answers.question_id = '". $qid ."'");
+    members.id) WHERE product_text_answers.product_id = '?' AND product_text_answers.question_id = '?'", [$pid, $qid]);
 
 	
 
@@ -5553,7 +5553,7 @@ function getGraphDataAnswers($pid,$qid,$aid)
 
  $query =DB::select("SELECT COUNT(answer_id) as anscount FROM product_questions_answered 
 
-                     WHERE product_id = '". $pid ."' AND question_id = '". $qid ."' AND answer_id = '". $aid ."' GROUP BY answer_id");
+                     WHERE product_id = '?' AND question_id = '?' AND answer_id = '?' GROUP BY answer_id", [$pid, $qid, $aid]);
 
  	
    //print_r($query);die;
@@ -5571,7 +5571,7 @@ function deleteProductPrice($did)
 
   {
 
-   $result =DB::select("delete from  product_price where price_id = '". $did ."'");  
+   $result =DB::select("delete from  product_price where price_id = ?", [$did]);  
 
    return $result;
 
@@ -5582,7 +5582,7 @@ function deleteProductPrice($did)
 
   {
 
-   $result =DB::select("delete from  product_discount where discount_id = '". $did ."'");  
+   $result =DB::select("delete from  product_discount where discount_id = ?", [$did]);  
 
    return $result;
 
@@ -5668,11 +5668,11 @@ function deleteQuestion($question_id,$product_id)
 
 
 
- $result = DB::select("delete from  product_questions where question_id = '". $question_id ."'");  
+ $result = DB::select("delete from  product_questions where question_id = ?", [$question_id]);  
 
- DB::select("delete from  product_product_questions where question_id = '". $question_id ."' and product_id = '". $product_id ."'"); 
+ DB::select("delete from  product_product_questions where question_id = '?' and product_id = '?'", [$question_id, $product_id]); 
 
- DB::select("delete from  product_question_answers where question_id = '". $question_id ."' and product_id = '". $product_id ."'");  
+ DB::select("delete from  product_question_answers where question_id = '?' and product_id = '?'", [$question_id, $product_id]);  
 
  return $result;
 
@@ -5730,7 +5730,7 @@ function updateQuestion($data,$product_id,$question_id)
 
  $result =  DB::select("update product_questions set question = '". addslashes($question) ."' where question_id = '". $question_id ."'");  	 
 
-  DB::select("update product_product_questions set type =  '". $type ."' where product_id = '". $product_id ."' and question_id = '". $question_id ."'");   
+  DB::select("update product_product_questions set type =  '?' where product_id = '?' and question_id = '?'", [$type, $product_id, $question_id]);   
 
 
   // answers
@@ -5769,7 +5769,7 @@ function updateQuestion($data,$product_id,$question_id)
         
              $answer_id = DB::table('product_answers')->insertGetId($insertData);
 
-            // DB::select("insert into product_answers (`answer`) VALUES ('". $option ."')");   
+            // DB::select("insert into product_answers (`answer`) VALUES (?)", [$option]);   
 
             // $answer_id = $this->db->insert_id();
 
@@ -5788,7 +5788,7 @@ function updateQuestion($data,$product_id,$question_id)
             
                 DB::table('product_question_answers')->insertGetId($insertData);
 
-                // DB::select("insert into product_question_answers (`question_id`, `answer_id`, `product_id`) VALUES ('". $question_id ."', '". $answer_id ."', '". $product_id ."')");          
+                // DB::select("insert into product_question_answers (`question_id`, `answer_id`, `product_id`) VALUES ('?', '?', '?')", [$question_id, $answer_id, $product_id]);          
             }
 
         }
@@ -5850,7 +5850,7 @@ function addEmailImage_prm($productId,$img)
 
 {
 
-     $query =  DB::select("UPDATE `products` set  `emailimg` = '". $img ."' where product_id = '". $productId ."'");  
+     $query =  DB::select("UPDATE `products` set  `emailimg` = '?' where product_id = '?'", [$img, $productId]);  
 
      return 1;
 
@@ -5981,7 +5981,7 @@ if(!empty($launchDate)) {
 
   {
 
- $query = DB::select("insert into product_price (`product_id`, `digicoin_price`, `applies_from`, `created_on`) VALUES ('". $productId ."', '". $retailPrice ."', NOW(), NOW())");    
+ $query = DB::select("insert into product_price (`product_id`, `digicoin_price`, `applies_from`, `created_on`) VALUES ('?', '?', NOW(), NOW())", [$productId, $retailPrice]);    
 
   }
 
@@ -6061,7 +6061,7 @@ if($question_id>0)
 
 {
 
-    DB::select("insert into product_product_questions (`product_id`, `question_id`, `type`) VALUES ('". $product_id ."', '". $question_id ."', '". $type ."')");   
+    DB::select("insert into product_product_questions (`product_id`, `question_id`, `type`) VALUES ('?', '?', '?')", [$product_id, $question_id, $type]);   
 
   
 
@@ -6103,7 +6103,7 @@ if($question_id>0)
 
          {
 
-            DB::select("insert into product_question_answers (`question_id`, `answer_id`, `product_id`) VALUES ('". $question_id ."', '". $answer_id ."', '". $product_id ."')");      
+            DB::select("insert into product_question_answers (`question_id`, `answer_id`, `product_id`) VALUES ('?', '?', '?')", [$question_id, $answer_id, $product_id]);      
 
           
 
@@ -6124,7 +6124,7 @@ return $question_id;
   {
 
       $query = DB::select("select facebook, twitter, instagram, snapchat, tiktok, triller, twitch, mixcloud, reddit, linkedin from  client_social_media
-       where clientId = '$clientId'");
+       where clientId = ?", [$clientId]);
       $result['numRows']  = count($query);
       $result['data']  = $query;
       return  $result;
@@ -6139,7 +6139,7 @@ return $question_id;
   }
   function adc_getStates($cid)
   {
-      $query = DB::select("select stateId, name from  states where countryId = '" . $cid . "' order by name asc");
+      $query = DB::select("select stateId, name from  states where countryId = ? order by name asc", [$cid]);
       $result['numRows']  = count($query);
       $result['data']  = $query;
       return  $result;
@@ -6184,28 +6184,28 @@ return $question_id;
   }
   function adc_getStripeDetails($subscriptionId)
   {
-      $query = DB::select("select * from  client_payments_stripe where subscriptionId = '" . $subscriptionId . "'");
+      $query = DB::select("select * from  client_payments_stripe where subscriptionId = ?", [$subscriptionId]);
       return $query;
   }
   function adc_getPaypalDetails($subscriptionId)
   {
-      $query = DB::select("select * from  client_payments_paypal where subscriptionId = '" . $subscriptionId . "'");
+      $query = DB::select("select * from  client_payments_paypal where subscriptionId = ?", [$subscriptionId]);
       return $query;
   }
   function adc_declineClient($clientId)
   {
-      $result = DB::select("update clients set active = '-1'  where id = '" . $clientId . "'");
+      $result = DB::select("update clients set active = '-1'  where id = ?", [$clientId]);
       return  $result;
   }
   function adc_deleteClient($clientId)
   {
-      $result = DB::select("update clients set deleted = '1'  where id = '" . $clientId . "'");
+      $result = DB::select("update clients set deleted = '1'  where id = ?", [$clientId]);
       return  $result;
   }
   function adc_acceptClient($clientId)
   {
-      $result = DB::select("update clients set active = '1'  where id = '" . $clientId . "'");
-      $query = DB::select("select ccontact, email,name from  clients where id = '" . $clientId . "'");
+      $result = DB::select("update clients set active = '1'  where id = ?", [$clientId]);
+      $query = DB::select("select ccontact, email,name from  clients where id = ?", [$clientId]);
       $response['data'] = $query;
       $response['response'] = 1;
       return  $response;
@@ -6246,7 +6246,7 @@ return $question_id;
   }
   function adc_getAdmin($adminId)
   {
-      $query = DB::select("select id, name from  admins where id = '$adminId'");
+      $query = DB::select("select id, name from  admins where id = ?", [$adminId]);
       return $query;
   }
   function adc_getClient($clientId)
@@ -6254,7 +6254,7 @@ return $question_id;
       $query = DB::select("select clients.id, clients.uname, clients.name, clients.editedby, clients.edited, clients.ccontact, clients.address1, clients.address2, clients.city, clients.state, clients.country, clients.email, clients.website, clients.zip, clients.phone, clients.mobile, clients.trackReviewEmailsActivated from  clients 
        
        
-       where clients.id = '$clientId'");
+       where clients.id = ?", [$clientId]);
       $result['numRows']  = count($query);
       $result['data']  = $query;
       return  $result;
@@ -6298,18 +6298,18 @@ return $question_id;
   function adc_addClient($data)
   {
       extract($data);
-      $query1 = DB::select("select * from  members where uname = '" . $username . "'");
+      $query1 = DB::select("select * from  members where uname = ?", [$username]);
       $userRows1  = count($query1);
       $query2 = DB::select("select * from  members where email = '" . urlencode($email) . "'");
       $userRows2  = count($query2);
-      $query3 = DB::select("select * from  clients where uname = '" . $username . "'");
+      $query3 = DB::select("select * from  clients where uname = ?", [$username]);
       $userRows3  = count($query3);
       $query4 = DB::select("select * from  clients where email = '" . urlencode($email) . "'");
       $userRows4  = count($query4);
       if ($userRows1 < 1 && $userRows2 < 1 && $userRows3 < 1 && $userRows4 < 1) {
-          $country_query = DB::select("select country from  country where countryId = '" . $country . "'");
+          $country_query = DB::select("select country from  country where countryId = ?", [$country]);
           $country_result  = $country_query;
-          $state_query = DB::select("select name from  states where stateId = '" . $state . "'");
+          $state_query = DB::select("select name from  states where stateId = ?", [$state]);
           $state_result  = $state_query;
 
           if(!empty($state_result[0]->name)){
@@ -6387,7 +6387,7 @@ return $question_id;
   //     //                 ->update(['pword' => bcrypt($password)]);
 
   //     $password = md5($password);
-  //     $query = DB::select("update members set pword = '" . $password . "' where id = '" . $memberId_from_session . "'");
+  //     $query = DB::select("update members set pword = '?' where id = '?'", [$password, $memberId_from_session]);
 
   //     return $query;
   // }
@@ -6407,7 +6407,7 @@ return $question_id;
   {
 
       $query = DB::select("select facebook, twitter, snapchat, tiktok, triller, twitch , mixcloud, reddit, instagram, linkedin from  member_social_media 
- where memberId = '$memberId'");
+ where memberId = ?", [$memberId]);
 
       $result['numRows'] = count($query);
       $result['data']  = $query;
@@ -6420,7 +6420,7 @@ return $question_id;
 
   {
       $passwordIs = md5($password);
-      $query = DB::select("update `members` set pword = '" . $passwordIs . "' where id = '" . $memberId . "'");
+      $query = DB::select("update `members` set pword = '?' where id = '?'", [$passwordIs, $memberId]);
 
       return $query;
   }
@@ -6444,7 +6444,7 @@ return $question_id;
 
   function ad_mem_getStates($cid)
   {
-      $query = DB::select("select stateId, name from  states where countryId = '" . $cid . "' order by name asc");
+      $query = DB::select("select stateId, name from  states where countryId = ? order by name asc", [$cid]);
 
       $result['numRows']  = count($query);
       $result['data']  = $query;
@@ -6502,8 +6502,8 @@ return $question_id;
   {
       //  $memberId='92776';
 
-      $query = DB::select("select *  from  member_subscriptions	where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit $start, $limit");
-      $query = DB::select("select *  from  member_subscriptions	where member_Id = '" . $memberId . "' and status = '1'");
+      $query = DB::select("select *  from  member_subscriptions	where member_Id = ? and status = '1' order by subscription_Id desc limit $start, $limit", [$memberId]);
+      $query = DB::select("select *  from  member_subscriptions	where member_Id = ? and status = '1'", [$memberId]);
       $result['numRows']  = count($query);
 
       $result['data']  = $query;
@@ -6528,7 +6528,7 @@ return $question_id;
 
 
 
-      $query1 = DB::select("select subscription_Id, endDate from  member_subscriptions where member_Id = '" . $memberId . "' and endDate > '" . $today . "' order by subscription_Id desc limit 0, 1");
+      $query1 = DB::select("select subscription_Id, endDate from  member_subscriptions where member_Id = '?' and endDate > '?' order by subscription_Id desc limit 0, 1", [$memberId, $today]);
 
 
 
@@ -6578,7 +6578,7 @@ return $question_id;
 
   {
 
-      $query = DB::select("select * from  member_payments_stripe where subscriptionId = '" . $subscriptionId . "'");
+      $query = DB::select("select * from  member_payments_stripe where subscriptionId = ?", [$subscriptionId]);
 
       return $query;
   }
@@ -6589,7 +6589,7 @@ return $question_id;
 
   {
 
-      $query = DB::select("select * from  member_payments_paypal where subscriptionId = '" . $subscriptionId . "'");
+      $query = DB::select("select * from  member_payments_paypal where subscriptionId = ?", [$subscriptionId]);
 
       return $query;
   }
@@ -6646,7 +6646,7 @@ return $question_id;
 
   {
 
-      $result = DB::select("update members set active = '-1'  where id = '" . $memberId . "'");
+      $result = DB::select("update members set active = '-1'  where id = ?", [$memberId]);
 
       return  $result;
   }
@@ -6657,8 +6657,8 @@ return $question_id;
 
   {
 
-      //  $result = DB::select("update members set deleted = '1'  where id = '". $memberId ."'");  
-      $result = DB::select("delete from members where id = '" . $memberId . "'");
+      //  $result = DB::select("update members set deleted = '1'  where id = ?", [$memberId]);  
+      $result = DB::select("delete from members where id = ?", [$memberId]);
 
       return  $result;
   }
@@ -6671,7 +6671,7 @@ return $question_id;
 
   {
 
-      $result = DB::select("update members set active = '1'  where id = '" . $memberId . "'");
+      $result = DB::select("update members set active = '1'  where id = ?", [$memberId]);
 
       return  $result;
   }
@@ -6688,7 +6688,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name from  members_production_talent where member = '$memberId'");
+      $query = DB::select("select productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name from  members_production_talent where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6705,7 +6705,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website from  members_special_services where member = '$memberId'");
+      $query = DB::select("select servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website from  members_special_services where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6722,7 +6722,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website from members_promoter where member = '$memberId'");
+      $query = DB::select("select promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website from members_promoter where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6739,7 +6739,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select clothing_name, clothing_department from members_clothing_apparel where member = '$memberId'");
+      $query = DB::select("select clothing_name, clothing_department from members_clothing_apparel where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6758,7 +6758,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry from members_management where member = '$memberId'");
+      $query = DB::select("select managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry from members_management where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6777,7 +6777,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department from members_record_label where member = '$memberId'");
+      $query = DB::select("select labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department from members_record_label where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6794,7 +6794,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department from members_mass_media where member = '$memberId'");
+      $query = DB::select("select mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department from members_mass_media where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6813,7 +6813,7 @@ return $question_id;
 
 
 
-      $query = DB::select("select * from members_radio_station where member = '$memberId'");
+      $query = DB::select("select * from members_radio_station where member = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6838,7 +6838,7 @@ return $question_id;
 
   left join members_dj_mixer on members.id = members_dj_mixer.member
 
- where members.id = '$memberId'");
+ where members.id = ?", [$memberId]);
 
       $result['numRows'] = count($query);
 
@@ -6907,13 +6907,13 @@ return $question_id;
 
           //  verify email exists or not
 
-          $query1 = DB::select("select * from  members where email = '" . $email . "'");
+          $query1 = DB::select("select * from  members where email = ?", [$email]);
 
           $userRows1  = count($query1);
 
 
 
-          $query2 = DB::select("select * from  clients where email = '" . $email . "'");
+          $query2 = DB::select("select * from  clients where email = ?", [$email]);
 
           $userRows2  = count($query2);
 
@@ -6974,25 +6974,25 @@ return $question_id;
 
      $admin_id = Auth::user()->id;
 
-      $query1 = DB::select("select * from  members where uname = '" . $member_username . "'");
+      $query1 = DB::select("select * from  members where uname = ?", [$member_username]);
 
       $userRows1  = count($query1);
 
 
 
-      $query2 = DB::select("select * from  members where email = '" . $email . "'");
+      $query2 = DB::select("select * from  members where email = ?", [$email]);
 
       $userRows2  = count($query2);
 
 
 
-      $query3 = DB::select("select * from  clients where uname = '" . $member_username . "'");
+      $query3 = DB::select("select * from  clients where uname = ?", [$member_username]);
 
       $userRows3  = count($query3);
 
 
 
-      $query4 = DB::select("select * from  clients where email = '" . $email . "'");
+      $query4 = DB::select("select * from  clients where email = ?", [$email]);
 
       $userRows4  = count($query4);
 
@@ -7044,10 +7044,10 @@ return $question_id;
 
 
 
-          $country_query = DB::select("select country from  country where countryId = '" . $country . "'");
+          $country_query = DB::select("select country from  country where countryId = ?", [$country]);
           $country_result  = $country_query;
 
-          $state_query = DB::select("select name from  states where stateId = '" . $state . "'");
+          $state_query = DB::select("select name from  states where stateId = ?", [$state]);
           $state_result  = $state_query;
 
           if(!empty($state_result[0]->name)){
@@ -8263,7 +8263,7 @@ return $question_id;
               '" . (int) $piratedj_varies."', 
               '" . addslashes($piratedj_showtime)."')");
 
-              /*	  	  $result = DB::select("insert into  members_dj_mixer (`member`, `djtype_commercialreporting`, `djtype_commercialnonreporting`, `djtype_club`, `djtype_mixtape`, `djtype_satellite`, `djtype_internet`, `djtype_college`, `djtype_pirate`, `djwith_mp3`, `djwith_mp3_serato`, `djwith_mp3_final`, `djwith_mp3_pcdj`, `djwith_mp3_ipod`, `djwith_mp3_other`, `djwith_cd`, `djwith_vinyl`, `clubdj_clubname`, `clubdj_capacity`, `clubdj_hiphop`, `clubdj_rb`, `clubdj_pop`, `clubdj_reggae`, `clubdj_house`, `clubdj_calypso`, `clubdj_rock`, `clubdj_techno`, `clubdj_trance`, `clubdj_afro`, `clubdj_reggaeton`, `clubdj_gogo`, `clubdj_neosoul`, `clubdj_oldschool`, `clubdj_electronic`, `clubdj_latin`, `clubdj_dance`, `clubdj_jazz`, `clubdj_country`, `clubdj_world`, `clubdj_monday`, `clubdj_tuesday`, `clubdj_wednesday`, `clubdj_thursday`, `clubdj_friday`, `clubdj_saturday`, `clubdj_sunday`, `clubdj_varies`, `clubdj_city`, `clubdj_state`, `clubdj_intcountry`) values('". $insertId . "', '$djtype_commercialreporting',  '$djtype_commercialnonreporting', '$djtype_club', '$djtype_mixtape', '$djtype_satellite',  '$djtype_internet', '$djtype_college', '$djtype_pirate', '$djwith_mp3', '$djwith_mp3_serato', '$djwith_mp3_final', '$djwith_mp3_pcdj',  '$djwith_mp3_ipod', '$djwith_mp3_other', '$djwith_cd', '$djwith_vinyl', '$clubdj_clubname', '$clubdj_capacity', '$clubdj_hiphop', '$clubdj_rb', '$clubdj_pop', '$clubdj_reggae', '$clubdj_house', '$clubdj_calypso', '$clubdj_rock', '$clubdj_techno', '$clubdj_trance', '$clubdj_afro',  '$clubdj_reggaeton', '$clubdj_gogo', '$clubdj_neosoul', '$clubdj_oldschool', '$clubdj_electronic', '$clubdj_latin',  '$clubdj_dance', '$clubdj_jazz', '$clubdj_country', '$clubdj_world', '$clubdj_monday', '$clubdj_tuesday',  '$clubdj_wednesday', '$clubdj_thursday', '$clubdj_friday', '$clubdj_saturday',  '$clubdj_sunday', '$clubdj_varies', '$clubdj_city', '$clubdj_state', '$clubdj_intcountry')");  
+              /*	  	  $result = DB::select("insert into  members_dj_mixer (`member`, `djtype_commercialreporting`, `djtype_commercialnonreporting`, `djtype_club`, `djtype_mixtape`, `djtype_satellite`, `djtype_internet`, `djtype_college`, `djtype_pirate`, `djwith_mp3`, `djwith_mp3_serato`, `djwith_mp3_final`, `djwith_mp3_pcdj`, `djwith_mp3_ipod`, `djwith_mp3_other`, `djwith_cd`, `djwith_vinyl`, `clubdj_clubname`, `clubdj_capacity`, `clubdj_hiphop`, `clubdj_rb`, `clubdj_pop`, `clubdj_reggae`, `clubdj_house`, `clubdj_calypso`, `clubdj_rock`, `clubdj_techno`, `clubdj_trance`, `clubdj_afro`, `clubdj_reggaeton`, `clubdj_gogo`, `clubdj_neosoul`, `clubdj_oldschool`, `clubdj_electronic`, `clubdj_latin`, `clubdj_dance`, `clubdj_jazz`, `clubdj_country`, `clubdj_world`, `clubdj_monday`, `clubdj_tuesday`, `clubdj_wednesday`, `clubdj_thursday`, `clubdj_friday`, `clubdj_saturday`, `clubdj_sunday`, `clubdj_varies`, `clubdj_city`, `clubdj_state`, `clubdj_intcountry`) values(?, '$djtype_commercialreporting',  '$djtype_commercialnonreporting', '$djtype_club', '$djtype_mixtape', '$djtype_satellite',  '$djtype_internet', '$djtype_college', '$djtype_pirate', '$djwith_mp3', '$djwith_mp3_serato', '$djwith_mp3_final', '$djwith_mp3_pcdj',  '$djwith_mp3_ipod', '$djwith_mp3_other', '$djwith_cd', '$djwith_vinyl', '$clubdj_clubname', '$clubdj_capacity', '$clubdj_hiphop', '$clubdj_rb', '$clubdj_pop', '$clubdj_reggae', '$clubdj_house', '$clubdj_calypso', '$clubdj_rock', '$clubdj_techno', '$clubdj_trance', '$clubdj_afro',  '$clubdj_reggaeton', '$clubdj_gogo', '$clubdj_neosoul', '$clubdj_oldschool', '$clubdj_electronic', '$clubdj_latin',  '$clubdj_dance', '$clubdj_jazz', '$clubdj_country', '$clubdj_world', '$clubdj_monday', '$clubdj_tuesday',  '$clubdj_wednesday', '$clubdj_thursday', '$clubdj_friday', '$clubdj_saturday',  '$clubdj_sunday', '$clubdj_varies', '$clubdj_city', '$clubdj_state', '$clubdj_intcountry')", [$insertId]);  
 
 */
 
@@ -8781,7 +8781,7 @@ return $question_id;
 
 
 
-              DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('" . $insertId . "', '" . $clothingName . "', '" . $clothingDepartment . "')");
+              DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('?', '?', '?')", [$insertId, $clothingName, $clothingDepartment]);
 
 
 
@@ -9423,7 +9423,7 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_dj_mixer where member = '" . $memberId . "'");
+      $managementQuery = DB::select("select id from members_dj_mixer where member = ?", [$memberId]);
 
       $managementRows = $managemecount(ntQuery);
 
@@ -9882,7 +9882,7 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_radio_station where member = '" . $memberId . "'");
+      $managementQuery = DB::select("select id from members_radio_station where member = ?", [$memberId]);
 
       $managementRows = $managemecount(ntQuery);
 
@@ -10009,14 +10009,14 @@ return $question_id;
       }
 
 
-      $managementQuery = DB::select("select id from members_mass_media where member = '" . $memberId . "'");
+      $managementQuery = DB::select("select id from members_mass_media where member = ?", [$memberId]);
 
       $managementRows = $managemecount(ntQuery);
 
 
       if ($managementRows > 0) {
 
-          DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = '" . $memberId . "'");
+          DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = ?", [$memberId]);
       } else {
 
           DB::select("insert into `members_mass_media` (`member`, `mediatype_tvfilm`, `mediatype_publication`, `mediatype_newmedia`, `mediatype_newsletter`, `media_name`, `media_website`, `media_department`) values ('" . $memberId . "', '" . $massTv . "', '" . $massPublication . "', '" . $massDotcom . "', '" . $massNewsletter . "', '" . $massName . "', '" . $massWebsite . "', '" . $massDepartment . "')");
@@ -10041,7 +10041,7 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_record_label where member = '" . $memberId . "'");
+      $managementQuery = DB::select("select id from members_record_label where member = ?", [$memberId]);
 
       $managementRows = $managemecount(ntQuery);
 
@@ -10049,7 +10049,7 @@ return $question_id;
 
       if ($managementRows > 0) {
 
-          DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = '" . $memberId . "'");
+          DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = ?", [$memberId]);
       } else {
 
           DB::select("insert into `members_record_label` (`member`, `labeltype_major`, `labeltype_indy`, `labeltype_distribution`, `label_name`, `label_department`) values ('" . $memberId . "', '" . $recordMajor . "', '" . $recordIndy . "', '" . $recordDistribution . "', '" . $recordName . "', '" . $recordDepartment . "')");
@@ -10076,14 +10076,14 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_management where member = '" . $memberId . "'");
+      $managementQuery = DB::select("select id from members_management where member = ?", [$memberId]);
 
       $managementRows = $managemecount(ntQuery);
 
 
       if ($managementRows > 0) {
 
-          DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = '" . $memberId . "'");
+          DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = ?", [$memberId]);
       } else {
 
           DB::select("insert into `members_management` (`member`, `managementtype_artist`, `managementtype_tour`, `managementtype_personal`, `managementtype_finance`, `management_name`, `management_who`, `management_industry`) values ('" . $memberId . "', '" . $managementArtist . "', '" . $managementTour . "', '" . $managementPersonal . "', '" . $managementFinance . "', '" . $managementName . "', '" . $managementWho . "', '" . $managementIndustry . "')");
@@ -10095,17 +10095,17 @@ return $question_id;
 
 
 
-      $clothingQuery = DB::select("select id from members_clothing_apparel where member = '" . $memberId . "'");
+      $clothingQuery = DB::select("select id from members_clothing_apparel where member = ?", [$memberId]);
 
       $clothingRows = $clothicount(ngQuery);
 
 
       if ($clothingRows > 0) {
 
-          DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = '" . $memberId . "'");
+          DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = ?", [$memberId]);
       } else {
 
-          DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('" . $memberId . "', '" . $clothingName . "', '" . $clothingDepartment . "')");
+          DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('?', '?', '?')", [$memberId, $clothingName, $clothingDepartment]);
       }
 
 
@@ -10130,7 +10130,7 @@ return $question_id;
 
 
 
-      $promoterQuery = DB::select("select id from members_promoter where member = '" . $memberId . "'");
+      $promoterQuery = DB::select("select id from members_promoter where member = ?", [$memberId]);
 
       $promoterRows = $promotcount(erQuery);
 
@@ -10139,7 +10139,7 @@ return $question_id;
       if ($promoterRows > 0) {
 
 
-          DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = '" . $memberId . "'");
+          DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = ?", [$memberId]);
       }
       
       else {
@@ -10169,7 +10169,7 @@ return $question_id;
 
 
 
-      $specialQuery = DB::select("select id from members_special_services where member = '" . $memberId . "'");
+      $specialQuery = DB::select("select id from members_special_services where member = ?", [$memberId]);
 
       $specialRows = $specicount(alQuery);
 
@@ -10177,7 +10177,7 @@ return $question_id;
 
       if ($specialRows > 0) {
 
-          DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = '" . $memberId . "'");
+          DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = ?", [$memberId]);
       } else {
 
           DB::select("insert into `members_special_services` (`member`, `servicestype_corporate`, `servicestype_graphicdesign`, `servicestype_webdesign`, `servicestype_other`, `services_name`, `services_website`) values ('" . $memberId . "', '" . $specialCorporate . "', '" . $specialGraphic . "', '" . $specialWeb . "', '" . $specialOther . "', '" . $specialName . "', '" . $specialWebsite . "')");
@@ -10205,7 +10205,7 @@ return $question_id;
 
 
 
-      $productionQuery = DB::select("select id from members_production_talent where member = '" . $memberId . "'");
+      $productionQuery = DB::select("select id from members_production_talent where member = ?", [$memberId]);
 
       $productionRows = $producticount(onQuery);
 
@@ -10213,7 +10213,7 @@ return $question_id;
 
       if ($productionRows > 0) {
 
-          DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = '" . $memberId . "'");
+          DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = ?", [$memberId]);
       } else {
 
           DB::select("insert into `members_production_talent` (`member`, `productiontype_artist`, `productiontype_producer`, `productiontype_choreographer`, `productiontype_sound`, `production_name`) values ('" . $memberId . "', '" . $productionArtist . "', '" . $productionProducer . "', '" . $productionChoregrapher . "', '" . $productionSound . "', '" . $productionName . "')");
@@ -10248,7 +10248,7 @@ return $question_id;
       // Functions added by R-S ends here
 
       public function getNumTrackComments($trackId){
-        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = '" . $trackId . "' order by tracks_reviews.id desc");
+        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = ? order by tracks_reviews.id desc", [$trackId]);
 
         $resultCount = count($query);
 
@@ -10256,7 +10256,7 @@ return $question_id;
 	}
 
     public function getTrackComments($trackId, $start, $limit){
-        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.is_approved, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = '" . $trackId . "' order by tracks_reviews.id desc limit $start, $limit");
+        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.is_approved, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = ? order by tracks_reviews.id desc limit $start, $limit", [$trackId]);
 
         $result['numRows'] = count($query);
 
@@ -10269,7 +10269,7 @@ return $question_id;
 
     {
 
-        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.id = '" . $reviewId . "' order by tracks_reviews.id desc");
+        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.id = ? order by tracks_reviews.id desc", [$reviewId]);
 
         $result['numRows'] =  count($query);
 
@@ -10288,13 +10288,13 @@ return $question_id;
 
 	  left join tracks on tracks_reviews.track = tracks.id
 
-	  where tracks_reviews.id = '" . $commentId . "'");
+	  where tracks_reviews.id = ?", [$commentId]);
 
         $numRows =  count($query);
 
         if ($numRows > 0) {
 
-            $query =  DB::select("update tracks_reviews set additionalcomments = '' where id = '" . $commentId . "'");
+            $query =  DB::select("update tracks_reviews set additionalcomments = '' where id = ?", [$commentId]);
 
             $result = 1;
         }
@@ -10312,13 +10312,13 @@ return $question_id;
 
 	  left join tracks on tracks_reviews.track = tracks.id
 
-	  where tracks_reviews.id = '" . $commentId . "'");
+	  where tracks_reviews.id = ?", [$commentId]);
 
         $numRows =  count($query);
 
         if ($numRows > 0) {
 
-            $query =  DB::select("update tracks_reviews set is_approved = '1' where id = '" . $commentId . "'");
+            $query =  DB::select("update tracks_reviews set is_approved = '1' where id = ?", [$commentId]);
 
             $result = 1;
         }
@@ -10335,13 +10335,13 @@ return $question_id;
 
 	  left join tracks on tracks_reviews.track = tracks.id
 
-	  where tracks_reviews.id = '" . $commentId . "'");
+	  where tracks_reviews.id = ?", [$commentId]);
 
         $numRows =  count($query);
 
         if ($numRows > 0) {
 
-            $query =  DB::select("update tracks_reviews set is_approved = '0' where id = '" . $commentId . "'");
+            $query =  DB::select("update tracks_reviews set is_approved = '0' where id = ?", [$commentId]);
 
             $result = 1;
         }
@@ -10385,7 +10385,7 @@ return $question_id;
 
 
 	function getTrackReviews($trackId){
-        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = '" . $trackId . "' order by tracks_reviews.id desc");
+        $query = DB::select("SELECT tracks_reviews.id, tracks_reviews.whereheard, tracks_reviews.alreadyhave, tracks_reviews.willplay, tracks_reviews.whatrate, tracks_reviews.howsoon, tracks_reviews.howmanyplays, tracks_reviews.anotherformat, tracks_reviews.additionalcomments, tracks_reviews.formats_comradio, tracks_reviews.formats_satradio, tracks_reviews.formats_colradio, tracks_reviews.formats_internet, tracks_reviews.formats_clubs, tracks_reviews.formats_mixtapes, tracks_reviews.formats_musicvideo, tracks_reviews.godistance, tracks_reviews.godistanceyes, tracks_reviews.labelsupport, tracks_reviews.labelsupport_other, tracks_reviews.howsupport, tracks_reviews.howsupport_howsoon, tracks_reviews.likerecord, tracks_reviews.member,  members.stagename, members.city, members.state FROM tracks_reviews left join members on tracks_reviews.member = members.id where tracks_reviews.track = ? order by tracks_reviews.id desc", [$trackId]);
 
         $result['numRows'] = count($query);
 
@@ -10486,8 +10486,8 @@ return $question_id;
             GROUP BY memberId
         ) AS latest_images ON members.id = latest_images.memberId
         LEFT JOIN member_images ON latest_images.max_imageId = member_images.imageId
-        WHERE members.deleted = 0 AND DATE(members.lastlogon) = '$currentDate'
-        ORDER BY members.lastlogon DESC LIMIT 9");
+        WHERE members.deleted = 0 AND DATE(members.lastlogon) = ?
+        ORDER BY members.lastlogon DESC LIMIT 9", [$currentDate]);
         $result['numRows'] = count($query);
         $result['data'] = $query;
         return $result;
@@ -10503,8 +10503,8 @@ return $question_id;
             GROUP BY clientId
         ) AS latest_images ON clients.id = latest_images.clientId
         LEFT JOIN client_images ON latest_images.max_imageId = client_images.imageId
-        WHERE clients.deleted = 0 AND DATE(clients.lastlogon) = '$currentDate'
-        ORDER BY clients.lastlogon DESC LIMIT 9");
+        WHERE clients.deleted = 0 AND DATE(clients.lastlogon) = ?
+        ORDER BY clients.lastlogon DESC LIMIT 9", [$currentDate]);
         $result['numRows'] = count($query);
         $result['data'] = $query;
         return $result;
