@@ -2093,17 +2093,27 @@ class MemberAllDB extends Model
      }
  
      function confirmMemberCurrentPassword($password)
- 
-     {   
+
+     {
          $memberId_from_session = Session::get('memberId');
-         $rpass = $password;
-        $password = md5($password);
- 
-        //  $password = bcrypt($password);
- 
-         $query = DB::select("SELECT * FROM members where id = ? and ( pword = ? OR pword = ?)", [$memberId_from_session, $rpass, $password]);
- 
-         return count($query);
+
+         // SECURITY FIX: Use proper password verification that handles both MD5 and bcrypt
+         // Fetch the stored password hash
+         $user = DB::table('members')->where('id', $memberId_from_session)->first();
+
+         if (!$user) {
+             return 0;
+         }
+
+         // Use the migration helper to verify and upgrade if needed
+         $isValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
+             $password,
+             $user->pword,
+             'members',
+             $memberId_from_session
+         );
+
+         return $isValid ? 1 : 0;
      }
  
  
@@ -2116,7 +2126,8 @@ class MemberAllDB extends Model
          //                 ->where('id', $memberId_from_session)
          //                 ->update(['pword' => bcrypt($password)]);
  
-         $password = md5($password);
+         // SECURITY FIX: Use bcrypt instead of MD5
+        $password = \App\Helpers\PasswordMigrationHelper::hashPassword($password);
          $query = DB::update("update members set pword = ? where id = ?", [$password, $memberId_from_session]);
  
          return $query;

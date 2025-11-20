@@ -266,16 +266,28 @@ class ClientAllDB extends Model
     }
 	
 	public function confirmClientCurrentPassword($password, $clientId){
-        $rpass = $password;
-        $password = md5($password);
-        //
-        $query = DB::select("SELECT * FROM clients where id = ? AND ( pword = ? OR pword = ?)", [$clientId, $rpass, $password]);
+        // SECURITY FIX: Use proper password verification that handles both MD5 and bcrypt
+        // Fetch the stored password hash
+        $client = DB::table('clients')->where('id', $clientId)->first();
 
-        return count($query);
+        if (!$client) {
+            return 0;
+        }
+
+        // Use the migration helper to verify and upgrade if needed
+        $isValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
+            $password,
+            $client->pword,
+            'clients',
+            $clientId
+        );
+
+        return $isValid ? 1 : 0;
     }
 
 	public function updateClientPassword($password, $clientId){
-        $password = md5($password);
+        // SECURITY FIX: Use bcrypt instead of MD5
+        $password = \App\Helpers\PasswordMigrationHelper::hashPassword($password);
         $query = DB::select("update clients set pword = ? where id = ?", [$password, $clientId]);
         return $clientId;
     }

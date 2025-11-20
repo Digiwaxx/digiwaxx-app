@@ -1691,7 +1691,8 @@ class Admin extends Authenticatable
 	}
 	
 	public function adminChangeMemberPassword($password, $memberId){
-		$pas1=md5($password);
+		// SECURITY FIX: Use bcrypt instead of MD5
+		$pas1 = \App\Helpers\PasswordMigrationHelper::hashPassword($password);
 		$query = DB::select("update `members` set pword = ? where id = ?", [$pas1, $memberId]);
 
         return $query;
@@ -6428,7 +6429,8 @@ return $question_id;
   function ad_mem_changeMemberPassword($password, $memberId)
 
   {
-      $passwordIs = md5($password);
+      // SECURITY FIX: Use bcrypt instead of MD5
+      $passwordIs = \App\Helpers\PasswordMigrationHelper::hashPassword($password);
       $query = DB::update("update `members` set pword = ? where id = ?", [$passwordIs, $memberId]);
 
       return $query;
@@ -6934,7 +6936,8 @@ return $question_id;
               $password = rand(10000, 1000000);
               $password=trim($password);
               $password1=$password;
-              $password=md5($password);
+              // SECURITY FIX: Use bcrypt instead of MD5
+              $password = \App\Helpers\PasswordMigrationHelper::hashPassword($password);
 
               $insertData = array(
                   'pword' => $password,
