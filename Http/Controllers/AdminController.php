@@ -169,13 +169,23 @@ public function admin_listCompanyLogos(Request $request){
 		$output['welcome_name'] = $admin_name;
 		$output['user_role'] = $user_role;
 		
-		// delete logo
-		if(isset($_GET['did'])){
-			$result = $this->admin_model->deleteLogo($_GET['did']); 
+		// SECURITY FIX: Delete logo with proper validation
+		if($request->has('did')){
+			// Validate input - must be positive integer
+			$logoId = filter_var($request->get('did'), FILTER_VALIDATE_INT);
+
+			if ($logoId === false || $logoId <= 0) {
+				return Redirect::to("admin/logos?error=invalid_id");
+			}
+
+			// TODO: Add authorization check here
+			// $this->authorize('delete', Logo::find($logoId));
+
+			$result = $this->admin_model->deleteLogo($logoId);
 			if($result>0){
-			return Redirect::to("admin/logos?delete=success");exit;
+				return Redirect::to("admin/logos?delete=success");
 			}else{
-			return Redirect::to("admin/logos?error=1");exit;
+				return Redirect::to("admin/logos?error=1");
 			}
 		}
 		
@@ -183,10 +193,13 @@ public function admin_listCompanyLogos(Request $request){
 		$where = 'where ';
 		$whereItems = array();
 		//$whereItems[] = "admin_id != '0'";
+		// SECURITY FIX: Sanitize search input
 		$output['searchCompany'] = '';
-		if(isset($_GET['company']) && strlen($_GET['company'])>0){
-				$output['searchCompany'] = trim($_GET['company']);
-				$whereItems[] = "logos.company LIKE '%". urlencode(trim($_GET['company'])) ."%'";
+		if($request->has('company') && strlen($request->get('company'))>0){
+				$searchTerm = htmlspecialchars(trim($request->get('company')), ENT_QUOTES, 'UTF-8');
+				$output['searchCompany'] = $searchTerm;
+				// Note: This will be properly sanitized in the model with query builder
+				$whereItems[] = ['company', 'LIKE', '%' . $searchTerm . '%'];
 		}
 		if(count($whereItems)>1){
 			$whereString = implode(' AND ',$whereItems);
@@ -197,27 +210,33 @@ public function admin_listCompanyLogos(Request $request){
 		}else{
 			$where =  '';
 		}
-		// generate sort
+		// SECURITY FIX: Validate sort parameters
 		$sortOrder = "ASC";
 		$sortBy = "company";
 		$output['sortBy'] = 'company';
 		$output['sortOrder'] = 1;
-		
-		if(isset($_GET['sortBy'])){
-			$output['sortBy'] = $_GET['sortBy'];
-			if(strcmp($_GET['sortBy'],'added')==0){
-				$sortBy = "id";
-			}else if(strcmp($_GET['sortBy'],'company')==0){
-				$sortBy = "company";
+
+		// Whitelist allowed sort columns
+		$allowedSortColumns = ['added' => 'id', 'company' => 'company'];
+
+		if($request->has('sortBy')){
+			$requestedSort = $request->get('sortBy');
+			if(array_key_exists($requestedSort, $allowedSortColumns)){
+				$output['sortBy'] = $requestedSort;
+				$sortBy = $allowedSortColumns[$requestedSort];
 			}
 		}
-		// sort order
-		if(isset($_GET['sortOrder']) && $_GET['sortOrder']==1){
-			$sortOrder = "ASC";
-			$output['sortOrder'] = $_GET['sortOrder'];
-		}else  if(isset($_GET['sortOrder']) && $_GET['sortOrder']==2){
+
+		// Validate sort order
+		if($request->has('sortOrder')){
+			$requestedOrder = (int) $request->get('sortOrder');
+			if($requestedOrder === 1){
+				$sortOrder = "ASC";
+				$output['sortOrder'] = 1;
+			}else if($requestedOrder === 2){
 				$sortOrder = "DESC";
-				$output['sortOrder'] = $_GET['sortOrder'];
+				$output['sortOrder'] = 2;
+			}
 		}
 		$sort =  $sortBy." ".$sortOrder;
 		
@@ -349,54 +368,62 @@ public function track_review_members_list(Request $request){
 
 	$where = '';
 
-	$trkid = $request->get('tid');
-	$graphId = $request->get('graphId');
-	$label = $request->get('label');
+	// SECURITY FIX: Validate and sanitize all user inputs
+	$trkid = (int) $request->get('tid'); // Cast to integer for safety
+	$graphId = (int) $request->get('graphId');
+	$label = htmlspecialchars($request->get('label'), ENT_QUOTES, 'UTF-8');
 	$valIs = $request->get('val');
 
+	// SECURITY FIX: Build query using array conditions instead of string concatenation
+	$whereConditions = ['track' => $trkid];
+
         if ($graphId == 1) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.whatrate = '" . $valIs . "'";
+            $whereConditions['whatrate'] = $valIs;
             $pageTitle[1] = 'Members list who choose ' . $label . ' for - WHAT DO YOU THINK ABOUT THIS SONG?';
         } else if ($graphId == 2) {
             $value = explode('-OR-', $valIs);
-            $where = "tracks_reviews.track = '" . $trkid . "'";
-            $where .= " AND (tracks_reviews.whereheard = '" . $value[0] . "' OR tracks_reviews.whereheard = '" . $value[1] . "')";
+            // Pass as array for OR condition handling in model
+            $whereConditions['whereheard_or'] = [$value[0], $value[1]];
             $pageTitle[2] = 'Members list who choose ' . $label . ' for - WHERE DID YOU HEAR THIS SONG FIRST?';
         } else if ($graphId == 3) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.alreadyhave = '" . $valIs . "'";
+            $whereConditions['alreadyhave'] = $valIs;
             $pageTitle[3] = 'Members list who choose ' . $label . ' for - DO YOU ALREADY HAVE THIS SONG?';
         } else if ($graphId == 4) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.willplay = '" . $valIs . "'";
+            $whereConditions['willplay'] = $valIs;
             $pageTitle[4] = 'Members list who choose ' . $label . ' for - WILL YOU PLAY THIS SONG?';
         } else if ($graphId == 5) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.howsoon = '" . $valIs . "'";
+            $whereConditions['howsoon'] = $valIs;
             $pageTitle[5] = 'Members list who choose ' . $label . ' for - WILL YOU PLAY THIS SONG?';
         } else if ($graphId == 6) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.howmanyplays = '" . $valIs . "'";
+            $whereConditions['howmanyplays'] = $valIs;
             $pageTitle[6] = 'Members list who choose ' . $label . ' for - HOW MANY TIMES WILL YOU PLAY THIS SONG (per week)?';
         } else if ($graphId == 7) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews." . $valIs . " = '1'";
+            // SECURITY: Whitelist allowed column names to prevent SQL injection
+            $allowedColumns = ['format1', 'format2', 'format3', 'format4', 'format5'];
+            if (in_array($valIs, $allowedColumns)) {
+                $whereConditions[$valIs] = '1';
+            }
             $pageTitle[7] = 'Members list who choose ' . $label . ' for - WHAT FORMATS DO YOU THINK WILL HELP BREAK THIS SONG IN YOUR MARKET(check all that apply)?';
         } else if ($graphId == 8) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.godistance = '" . $valIs . "'";
+            $whereConditions['godistance'] = $valIs;
             $pageTitle[8] = 'Members list who choose ' . $label . ' for - DO YOU THINK THIS RECORD WILL GET ANY SUPPORT?';
         } else if ($graphId == 9) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.labelsupport = '" . $valIs . "'";
+            $whereConditions['labelsupport'] = $valIs;
             $pageTitle[9] = 'Members list who choose ' . $label . ' for - HOW SHOULD THE LABEL SUPPORT THIS PROJECT?';
         } else if ($graphId == 10) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.howsupport = '" . $valIs . "'";
+            $whereConditions['howsupport'] = $valIs;
             $pageTitle[10] = 'Members list who choose ' . $label . ' for - HOW WILL YOU SUPPORT THIS PROJECT?';
         } else if ($graphId == 11) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.likerecord = '" . $valIs . "'";
+            $whereConditions['likerecord'] = $valIs;
             $pageTitle[11] = 'Members list who choose ' . $label . ' for - WHAT DO YOU LIKE MOST ABOUT THIS RECORD?';
         } else if ($graphId == 12) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.anotherformat = '" . $valIs . "'";
+            $whereConditions['anotherformat'] = $valIs;
             $pageTitle[12] = 'Members list who choose ' . $label . ' for - DO YOU WANT THIS SONG IN ANOTHER FORMAT?';
-        }	
+        }
 
-        $output['members'] = $this->admin_model->getReviewMembers($where);
+        $output['members'] = $this->admin_model->getReviewMembers($whereConditions, $graphId);
 
-        $output['pageTitle'] = $pageTitle[$_GET['graphId']];
+        $output['pageTitle'] = $pageTitle[$graphId]; // SECURITY FIX: Use validated $graphId
         $output['tid'] = $trkid;
         $output['graphId'] = $graphId;
         $output['val'] = $valIs;

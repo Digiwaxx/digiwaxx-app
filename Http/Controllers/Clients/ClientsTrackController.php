@@ -238,6 +238,19 @@ class ClientsTrackController extends Controller
 
     public function upload(Request $request)
 	{
+		// SECURITY FIX: Validate file uploads to prevent RCE
+		$request->validate([
+			'files.*' => [
+				'required',
+				'file',
+				'mimes:mp3,wav,flac,aac,ogg,m4a,wma',
+				'max:102400', // 100MB max
+			],
+		], [
+			'files.*.mimes' => 'Only audio files are allowed (mp3, wav, flac, aac, ogg, m4a, wma)',
+			'files.*.max' => 'Audio file size must not exceed 100MB',
+		]);
+
 		$path = public_path('uploads/digi_pcloud');
 		// $admin_name = Auth::user()->name;
 		// $admin_id = Auth::user()->id;
@@ -262,8 +275,29 @@ class ClientsTrackController extends Controller
             $file_no = 0;
 
 			foreach ($files as $file) {
-                
-				$filename = $file->getClientOriginalName();
+
+				// SECURITY FIX: Additional MIME type validation
+				$allowedMimes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/flac', 'audio/aac', 'audio/ogg', 'audio/mp4', 'audio/x-m4a', 'audio/x-ms-wma'];
+				$allowedExtensions = ['mp3', 'wav', 'flac', 'aac', 'ogg', 'm4a', 'wma'];
+
+				if (!in_array($file->getMimeType(), $allowedMimes)) {
+					return Response::json(['error' => 'Invalid file type. Only audio files are allowed.'], 422);
+				}
+
+				$extension = strtolower($file->getClientOriginalExtension());
+				if (!in_array($extension, $allowedExtensions)) {
+					return Response::json(['error' => 'Invalid file extension. Only audio files are allowed.'], 422);
+				}
+
+				// SECURITY FIX: Validate file size (100MB max)
+				if ($file->getSize() > 104857600) {
+					return Response::json(['error' => 'File size must be less than 100MB.'], 422);
+				}
+
+				// SECURITY FIX: Sanitize filename to prevent path traversal
+				$originalFilename = $file->getClientOriginalName();
+				$filename = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', pathinfo($originalFilename, PATHINFO_FILENAME));
+				$filename = substr($filename, 0, 100) . '.' . $extension; // Limit length and add extension
 
 				// pcloud
 				$filepath = $file->getRealPath();

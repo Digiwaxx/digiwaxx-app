@@ -13,7 +13,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        \App\Models\Tracks::class => \App\Policies\TrackPolicy::class,
+        // Logo policy ready when Logo model is created
+        // 'App\Models\Logo' => \App\Policies\LogoPolicy::class,
     ];
 
     /**

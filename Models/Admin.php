@@ -121,22 +121,47 @@ class Admin extends Authenticatable
 		return $result;
 	}
 
-    public function getReviewMembers($where)
+    public function getReviewMembers($whereConditions, $graphId = null)
     {
-        $query = DB::select("select tracks_reviews.id, members.fname, members.stagename  from tracks_reviews 
-		 left join members on tracks_reviews.member = members.id
-		 where $where");
-        $result['numRows']  = count($query);
-        $result['data']  = $query;
+        // SECURITY FIX: Use query builder instead of raw SQL with string concatenation
+        $query = DB::table('tracks_reviews')
+            ->leftJoin('members', 'tracks_reviews.member', '=', 'members.id')
+            ->select('tracks_reviews.id', 'members.fname', 'members.stagename');
+
+        // Apply where conditions safely
+        foreach ($whereConditions as $column => $value) {
+            if ($column === 'whereheard_or' && is_array($value)) {
+                // Handle OR condition for whereheard
+                $query->where(function($q) use ($value) {
+                    $q->where('tracks_reviews.whereheard', $value[0])
+                      ->orWhere('tracks_reviews.whereheard', $value[1]);
+                });
+            } else {
+                // Add table prefix for safety
+                $fullColumn = strpos($column, '.') === false ? 'tracks_reviews.' . $column : $column;
+                $query->where($fullColumn, $value);
+            }
+        }
+
+        $data = $query->get()->toArray();
+        $result['numRows']  = count($data);
+        $result['data']  = $data;
         return  $result;
     }
 
     public function getReview($reviewId)
     {
-        $query = DB::select("select *  from tracks_reviews 
-		 left join members on tracks_reviews.member = members.id
-		 	 left join tracks on tracks_reviews.track = tracks.id
-		 where tracks_reviews.id = '" . $reviewId . "'");
+        // SECURITY FIX: Use query builder instead of raw SQL with concatenation
+        // Cast to int for extra safety
+        $reviewId = (int) $reviewId;
+
+        $query = DB::table('tracks_reviews')
+            ->leftJoin('members', 'tracks_reviews.member', '=', 'members.id')
+            ->leftJoin('tracks', 'tracks_reviews.track', '=', 'tracks.id')
+            ->where('tracks_reviews.id', $reviewId)
+            ->get()
+            ->toArray();
+
         $result['numRows']  = count($query);
         $result['data']  = $query;
         return  $result;

@@ -62,10 +62,25 @@ if ($request->isMethod('post')) {
       ->where('email', $email_get)
       ->update(['lastlogon' => date("Y-m-d h:i:s")]);
 
-      // set cookies while login 
-      setcookie('adminId', $result->id, 0, "/");
-      setcookie('user_role', $result->user_role, 0, "/");
+      // SECURITY FIX: Set cookies with secure flags (HttpOnly, Secure, SameSite)
+      // HttpOnly: Prevents JavaScript access (XSS protection)
+      // Secure: Only sent over HTTPS
+      // SameSite: CSRF protection
+      $cookieOptions = [
+          'expires' => 0, // Session cookie
+          'path' => '/',
+          'domain' => '', // Current domain
+          'secure' => true, // Only HTTPS
+          'httponly' => true, // No JavaScript access
+          'samesite' => 'Lax' // CSRF protection
+      ];
+
+      setcookie('adminId', $result->id, $cookieOptions);
+      setcookie('user_role', $result->user_role, $cookieOptions);
       Session::put('admin_Id', $result->id);
+
+      // SECURITY FIX: Regenerate session ID to prevent session fixation
+      $request->session()->regenerate();
 
       return redirect()->intended(route('admin_dashboard'));
 

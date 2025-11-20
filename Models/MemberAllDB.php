@@ -4249,17 +4249,23 @@ class MemberAllDB extends Model
          return $result;
      }
 	 
-	 function downloadIncrement($mp3Id, $trackId, $memberId, $countryName, $countryCode){   
+	 function downloadIncrement($mp3Id, $trackId, $memberId, $countryName, $countryCode){
 
     $memberId_from_session = Session::get('memberId');
 
-    $query = DB::select("SELECT downloads FROM tracks_mp3s where id = '" . $mp3Id . "'");
+    // SECURITY FIX: Use Query Builder instead of raw SQL to prevent SQL injection
+    $mp3 = DB::table('tracks_mp3s')->where('id', $mp3Id)->first();
 
-    $data  = $query;
+    if (!$mp3) {
+        return false;
+    }
 
-    $downloads =  $data[0]->downloads + 1;
+    $downloads = $mp3->downloads + 1;
 
-    $query = DB::select("update tracks_mp3s set downloads = '" . $downloads . "' where id = '" . $mp3Id . "'");
+    // SECURITY FIX: Use Query Builder for update
+    DB::table('tracks_mp3s')
+        ->where('id', $mp3Id)
+        ->update(['downloads' => $downloads]);
 
     $insert_data = array(
         'memberId' => $memberId,
@@ -4268,12 +4274,11 @@ class MemberAllDB extends Model
         'downloadedDateTime' => NOW(),
         'downloadedCountry' => $countryName,
         'downloadedCountryCode' =>  $countryCode,
-    
+
     );
 
+    // SECURITY FIX: Removed duplicate INSERT - was recording downloads twice
     $insert_id = DB::table('track_member_downloads')->insertGetId($insert_data);
-
-    $query = DB::select("insert into  track_member_downloads (`memberId`, `trackId`, `mp3Id`, `downloadedDateTime`, `downloadedCountry`, `downloadedCountryCode`) values ('" . $memberId . "', '" . $trackId . "', '" . $mp3Id . "', NOW(), '" . $countryName . "', '" . $countryCode . "')");
 
     $insertId = $insert_id;
 
@@ -4282,8 +4287,12 @@ class MemberAllDB extends Model
     if ($insertId > 0) {
 
         // Check whether already downloaded or not
-
-        $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = '" . $memberId_from_session . "' and track_id = '" . $trackId . "' and type_id = '2'");
+        // SECURITY FIX: Use Query Builder instead of raw SQL
+        $digi_coins = DB::table('member_digicoins')
+            ->where('member_id', $memberId_from_session)
+            ->where('track_id', $trackId)
+            ->where('type_id', 2)
+            ->get();
 
         $digi_coins_numRows = count($digi_coins);
 
@@ -4296,18 +4305,20 @@ class MemberAllDB extends Model
                 'type_id' => 2,
                 'points' => 2,
                 'date_time' =>  NOW(),
-            
-            );
-     
-            $insert_id = DB::table('member_digicoins')->insertGetId($insert_data);
 
-            // DB::select("insert into member_digicoins (`member_id`, `track_id`, `mp3_id`, `type_id`, `points`, `date_time`) values ('" . $memberId_from_session . "', '" . $trackId . "', '" . $mp3Id . "', '2', '2', NOW())");
+            );
+
+            $insert_id = DB::table('member_digicoins')->insertGetId($insert_data);
 
             $digicoin_id = $insert_id;
 
             if ($digicoin_id > 0) {
 
-                $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = '" . $memberId_from_session . "' order by member_digicoin_available_id desc");
+                // SECURITY FIX: Use Query Builder
+                $available_coins = DB::table('member_digicoins_available')
+                    ->where('member_id', $memberId_from_session)
+                    ->orderBy('member_digicoin_available_id', 'desc')
+                    ->get();
 
                 $available_coins_numRows = count($available_coins);
 
@@ -4317,16 +4328,127 @@ class MemberAllDB extends Model
 
                     $available_digicoins_increment = ($available_digicoins[0]->available_points) + 2;
 
-                    DB::select("update member_digicoins_available set available_points = '" . $available_digicoins_increment . "', latest_date_time = NOW() where member_id = '" . $memberId_from_session . "'");
+                    // SECURITY FIX: Use Query Builder for update
+                    DB::table('member_digicoins_available')
+                        ->where('member_id', $memberId_from_session)
+                        ->update([
+                            'available_points' => $available_digicoins_increment,
+                            'latest_date_time' => NOW()
+                        ]);
                 } else {
 
-                    DB::select("insert into member_digicoins_available (`member_id`, `available_points`, `latest_date_time`) values ('" . $memberId_from_session . "', '2', NOW())");
+                    // SECURITY FIX: Use Query Builder for insert
+                    DB::table('member_digicoins_available')->insert([
+                        'member_id' => $memberId_from_session,
+                        'available_points' => 2,
+                        'latest_date_time' => NOW()
+                    ]);
                 }
             }
         }
     }  // digi coins for download
 
+    return true;
 }
+
+/**
+ * FEATURE FIX: Implement play tracking mechanism
+ * Increments play count for a track and awards digi coins (once per member per track)
+ */
+function playIncrement($mp3Id, $trackId, $memberId, $countryName, $countryCode){
+
+    $memberId_from_session = Session::get('memberId');
+
+    // Validate inputs
+    if (!$mp3Id || !$trackId || !$memberId_from_session) {
+        return false;
+    }
+
+    // SECURITY FIX: Use Query Builder to prevent SQL injection
+    $mp3 = DB::table('tracks_mp3s')->where('id', $mp3Id)->first();
+
+    if (!$mp3) {
+        return false;
+    }
+
+    // Increment play count
+    $num_plays = $mp3->num_plays + 1;
+
+    DB::table('tracks_mp3s')
+        ->where('id', $mp3Id)
+        ->update(['num_plays' => $num_plays]);
+
+    // Record play in track_member_play table (for analytics)
+    $insert_data = array(
+        'memberId' => $memberId,
+        'trackId' => $trackId,
+        'mp3Id' => $mp3Id,
+        'playedDateTime' => NOW(),
+        'playedCountry' => $countryName,
+        'playedCountryCode' => $countryCode,
+    );
+
+    $insert_id = DB::table('track_member_play')->insertGetId($insert_data);
+
+    // Award digi coins for first play only
+    if ($insert_id > 0) {
+
+        // Check whether already played and awarded
+        $digi_coins = DB::table('member_digicoins')
+            ->where('member_id', $memberId_from_session)
+            ->where('track_id', $trackId)
+            ->where('type_id', 3) // type 3 = play
+            ->get();
+
+        $digi_coins_numRows = count($digi_coins);
+
+        // Award coins only for first play
+        if ($digi_coins_numRows < 1) {
+
+            $insert_data = array(
+                'member_id' => $memberId_from_session,
+                'track_id' => $trackId,
+                'mp3_id' => $mp3Id,
+                'type_id' => 3, // play type
+                'points' => 1,
+                'date_time' => NOW(),
+            );
+
+            $digicoin_insert_id = DB::table('member_digicoins')->insertGetId($insert_data);
+
+            if ($digicoin_insert_id > 0) {
+
+                // Update available coins
+                $available_coins = DB::table('member_digicoins_available')
+                    ->where('member_id', $memberId_from_session)
+                    ->orderBy('member_digicoin_available_id', 'desc')
+                    ->first();
+
+                if ($available_coins) {
+
+                    $available_digicoins_increment = $available_coins->available_points + 1;
+
+                    DB::table('member_digicoins_available')
+                        ->where('member_id', $memberId_from_session)
+                        ->update([
+                            'available_points' => $available_digicoins_increment,
+                            'latest_date_time' => NOW()
+                        ]);
+                } else {
+
+                    DB::table('member_digicoins_available')->insert([
+                        'member_id' => $memberId_from_session,
+                        'available_points' => 1,
+                        'latest_date_time' => NOW()
+                    ]);
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
 function getMemberSubscriptionInfo_fem($memberId = NULL, $subscriptionId = NULL)
 {
 

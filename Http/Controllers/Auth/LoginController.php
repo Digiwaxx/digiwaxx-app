@@ -160,7 +160,7 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-		Global $username, $password;
+		// SECURITY FIX: Removed global variables, using local scope
 		$username = trim($request->input('email'));
 		$password = trim($request->input('password'));
 		$membertype = $request->input('membertype');
@@ -193,29 +193,25 @@ class LoginController extends Controller
         }
         
         
-		if($membertype == 'client'){			
-		
-			/* $users = DB::table('clients')
-				->where(function($query) {
-					global $username;				
-					$query->where('uname', urlencode($username))
-						  ->orWhere('email', urlencode($username))
-						  ->orWhere('uname',$username)
-						  ->orWhere('email',$username);
-				})
-				->Where(function($query) {
-					global $password;
-					$query->where('pword', md5($password))
-						  ->orWhere('pword','=',$password);
-				})
-				->where('deleted',0)
-				->get()->toArray(); */
+		if($membertype == 'client'){
 
-            $users = DB::select("SELECT * 
-                                        FROM `clients` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "') 
-                                            AND (`pword` = '" . md5(trim($password)) . "' OR MD5(pword) = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'");				
+			// SECURITY FIX: Use query builder with parameter binding to prevent SQL injection
+			// Removed urlencode() from database queries - data should be stored raw
+			$users = DB::table('clients')
+				->where(function($query) use ($username) {
+					$query->where(DB::raw('LOWER(uname)'), strtolower(trim($username)))
+						  ->orWhere('email', trim($username));
+				})
+				->where(function($query) use ($password) {
+					// SECURITY NOTE: MD5 is deprecated. Checking both for backward compatibility
+					// TODO: Migrate all passwords to bcrypt
+					$hashedPassword = md5(trim($password));
+					$query->where('pword', $hashedPassword)
+						  ->orWhere(DB::raw('MD5(pword)'), $hashedPassword);
+				})
+				->where('deleted', 0)
+				->get()
+				->toArray();				
 			
 			if(!empty($users) && count($users)>0){
 								
@@ -243,30 +239,24 @@ class LoginController extends Controller
 				exit;
 			}		
 		}else if($membertype == 'member'){
-		  /*	$users = DB::table('members')
-				->where(function($query) {
-					global $username;				
-					$query->where('uname', urlencode($username))
-						  ->orWhere('email', urlencode($username))
-						  ->orWhere('uname',$username)
-						  ->orWhere('email',$username);
-						 
+
+			// SECURITY FIX: Use query builder with parameter binding to prevent SQL injection
+			// Removed urlencode() from database queries - data should be stored raw
+			$users = DB::table('members')
+				->where(function($query) use ($username) {
+					$query->where(DB::raw('LOWER(uname)'), strtolower(trim($username)))
+						  ->orWhere('email', trim($username));
 				})
-				->Where(function($query) {
-					global $password;
-					$query->where('pword', md5($password))
-						  ->orWhere('pword',$password);
+				->where(function($query) use ($password) {
+					// SECURITY NOTE: MD5 is deprecated. Checking both for backward compatibility
+					// TODO: Migrate all passwords to bcrypt
+					$hashedPassword = md5(trim($password));
+					$query->where('pword', $hashedPassword)
+						  ->orWhere(DB::raw('MD5(pword)'), $hashedPassword);
 				})
-				->where('deleted',0)
-				->get()->toArray(); */
-			
-			## DB QUERY COPIED from LIVE WEBSITE
-			
-            $users = DB::select("SELECT * 
-                                        FROM `members` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "' ) 
-                                            AND (`pword` = '" . md5(trim($password)) . "' OR MD5(pword) = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'");
+				->where('deleted', 0)
+				->get()
+				->toArray();
                                             
 			if(!empty($users) && count($users)>0){
 				$result['type'] = 2;
@@ -320,7 +310,14 @@ class LoginController extends Controller
 						$page = "Client_dashboard";
 						Session::put('clientId', $result['data'][0]->id);
 						Session::put('clientName', $result['data'][0]->name);
-						$query1 = DB::select("SELECT image,pCloudFileID_client_image  FROM client_images where clientId = '" . $result['data'][0]->id . "' order by imageId desc limit 1");
+						// SECURITY FIX: Use query builder to prevent SQL injection
+						$query1 = DB::table('client_images')
+							->select('image', 'pCloudFileID_client_image')
+							->where('clientId', $result['data'][0]->id)
+							->orderBy('imageId', 'desc')
+							->limit(1)
+							->get()
+							->toArray();
                          $numRows1 = count($query1);
                          $data1  = $query1;
                          if ($numRows1 > 0) {
@@ -392,7 +389,14 @@ class LoginController extends Controller
 						$page = "Member_dashboard_newest_tracks";
 						Session::put('memberId', $result['data'][0]->id);
 						Session::put('memberName', urldecode($result['data'][0]->fname));
-						$query1 = DB::select("SELECT image,pCloudFileID_mem_image  FROM member_images where memberId = '" . $result['data'][0]->id . "' order by imageId desc limit 1");
+						// SECURITY FIX: Use query builder to prevent SQL injection
+						$query1 = DB::table('member_images')
+							->select('image', 'pCloudFileID_mem_image')
+							->where('memberId', $result['data'][0]->id)
+							->orderBy('imageId', 'desc')
+							->limit(1)
+							->get()
+							->toArray();
                          $numRows1 = count($query1);
                          $data1  = $query1;
                          if ($numRows1 > 0) {
@@ -845,65 +849,6 @@ class LoginController extends Controller
 	  Session::flush();
       return redirect('login');
     }
-    
-    public function testWebLogin(){
-        global $username, $password; 
-        $username = 'aa@yopmail.com'; // tester1234
-        $password = 'p!Nao$GH'; 
-        
-        ## MEMBER
-        
-        //$username = 'SgTechGs 123'; // SgTechGs gurpreet@orientaloutsourcing.com
-        //$password = 'he7PIF@9';
-        
-/*		$users = DB::table('clients')
-			->where(function($query) {
-				global $username;				
-				$query->where('uname', urlencode($username))
-					  ->orWhere('email', urlencode($username))
-					  ->orWhere('uname',$username)
-					  ->orWhere('email',$username);
-			})
-			->Where(function($query) {
-				global $password;
-				$query->where('pword', md5($password))
-					  ->orWhere('pword','=',$password);
-			})
-			->where('deleted',0)
-			->get()->toArray(); */
-			
-/* 		$users = DB::table('members')
-			->where(function($query) {
-				global $username;				
-				$query->where('uname', urlencode($username))
-					  ->orWhere('email', urlencode($username))
-					  ->orWhere('uname',$username)
-					  ->orWhere('email',$username);
-					 
-			})
-			->Where(function($query) {
-				global $password;
-				$query->where('pword', md5($password))
-					  ->orWhere('pword',$password);
-			})
-			->where('deleted',0)
-			->get()->toArray(); */
-		echo "SELECT * FROM `members` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "' ) 
-                                            AND (`pword` = '" . trim($password) . "' OR MD5(pword) = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'";	
-			
-       $users = DB::select("SELECT * FROM `members` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "' ) 
-                                            AND (`pword` = '" . trim($password) . "' OR pword = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'");			
-		if(!empty($users) && count($users)>0){
-				$result['type'] = 2;
-				$result['numRows'] = count($users);
-				$result['data'] = $users;		   
-		echo'<pre>';print_r($result);die();
-		}
-				
-    }
 
+    // SECURITY: testWebLogin function removed - debug code should never be in production
 }
