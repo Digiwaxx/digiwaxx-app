@@ -10196,15 +10196,22 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 	   // save message
 
-	   if(isset($_GET['message']) && isset($_GET['cid']))
+	   if(isset($_POST['message']) && isset($_POST['cid']))
 
 	   {
 
-	   $result = $this->memberAllDB_model->sendMemberMessage($memberId_from_session,$_GET['cid'],$_GET['message']); 
+	   // CSRF protection - verify token
+	   if (!isset($_POST['_token']) || $_POST['_token'] !== Session::get('_token')) {
+			$response = array('response'=>0, 'error' => 'Invalid CSRF token');
+			echo json_encode($response);
+			exit;
+	   }
+
+	   $result = $this->memberAllDB_model->sendMemberMessage($memberId_from_session,$_POST['cid'],$_POST['message']);
 
 	   $date = date('M d, Y');
 
-	   
+
 
 	   if($result>0)
 
@@ -10222,7 +10229,7 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 	   }
 
-	   
+
 
 	   echo json_encode($response);
 

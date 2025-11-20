@@ -1282,6 +1282,20 @@ class MemberAllDB extends Model
      function addReview($data, $tid, $countryName, $countryCode)
  
      {
+        $member_session_id = Session::get('memberId');
+
+        // Prevent self-review: Check if member is the track owner
+        $trackOwner = DB::select("SELECT artist FROM tracks WHERE id = ?", [$tid]);
+        if (count($trackOwner) > 0 && $trackOwner[0]->artist == $member_session_id) {
+            return ['error' => 'You cannot review your own track', 'insertId' => 0];
+        }
+
+        // Prevent duplicate reviews: Check if member has already reviewed this track
+        $existingReview = DB::select("SELECT id FROM tracks_reviews WHERE track = ? AND member = ?", [$tid, $member_session_id]);
+        if (count($existingReview) > 0) {
+            return ['error' => 'You have already reviewed this track', 'insertId' => 0];
+        }
+
  
          // $anotherFormat = implode(',', $data['anotherFormat']);
  
@@ -1307,8 +1321,6 @@ class MemberAllDB extends Model
              "' . $countryName . '",
              "' . $countryCode . '")');
          */
- 
-         $member_session_id = Session::get('memberId');
  
          $insertData = array(
              'version' => 2,

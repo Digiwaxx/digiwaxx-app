@@ -164,10 +164,27 @@ class LoginController extends Controller
 		$username = trim($request->input('email'));
 		$password = trim($request->input('password'));
 		$membertype = $request->input('membertype');
-		
-	
-		
-		
+
+		// Rate limiting: Prevent brute force attacks
+		$ipAddress = $request->ip();
+		$rateLimitKey = 'login_attempts_' . $ipAddress . '_' . md5($username);
+		$maxAttempts = 5;
+		$lockoutTime = 900; // 15 minutes in seconds
+
+		// Check if account is locked due to too many failed attempts
+		$lockoutKey = 'login_lockout_' . $ipAddress . '_' . md5($username);
+		$lockoutUntil = Session::get($lockoutKey);
+
+		if ($lockoutUntil && time() < $lockoutUntil) {
+			$remainingTime = ceil(($lockoutUntil - time()) / 60);
+			return redirect('login')->with('error', "Too many failed login attempts. Please try again in $remainingTime minutes.");
+		}
+
+		// Get current attempt count
+		$attempts = (int)Session::get($rateLimitKey, 0);
+
+
+
 		if (Session::get('clientId')) {
             return redirect()->intended("Client_dashboard");
             exit;
@@ -225,28 +242,43 @@ class LoginController extends Controller
                                             ]);				
 			
 			if(!empty($users) && count($users)>0){
-								
+
+				// Reset rate limit on successful login
+				Session::forget($rateLimitKey);
+				Session::forget($lockoutKey);
+
 				$result['type'] = 1;
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
 				$upData = array(
 					'userLocation' => $_SERVER['REMOTE_ADDR'],
 					'lastlogon' => date('Y-m-d H:i:s'),
-					
+
 				);
-				
+
 				$resQry = DB::table('clients')
 				->where('id', $users[0]->id)  // find your user by their email
 				->limit(1)  // optional - to ensure only one record is updated.
 				->update($upData);  // update the record in the DB.
-				
+
 				//echo'<pre>';print_r($users[0]->uname);die('---YSYSYS');
-				//Session::put('loggedin_user', $users[0]->uname);				
+				//Session::put('loggedin_user', $users[0]->uname);
 				/* return redirect()->intended('home');
 				exit; */
-				
+
 			}else{
-				return redirect('login?type='.$membertype)->with('error', 'Oppes! You have entered invalid credentials');
+				// Increment failed login attempts
+				$attempts++;
+				Session::put($rateLimitKey, $attempts);
+
+				if ($attempts >= $maxAttempts) {
+					// Lock the account for the specified time
+					Session::put($lockoutKey, time() + $lockoutTime);
+					return redirect('login?type='.$membertype)->with('error', 'Too many failed login attempts. Account locked for 15 minutes.');
+				}
+
+				$remainingAttempts = $maxAttempts - $attempts;
+				return redirect('login?type='.$membertype)->with('error', "Invalid credentials. $remainingAttempts attempts remaining.");
 				exit;
 			}		
 		}else if($membertype == 'member'){
@@ -283,26 +315,42 @@ class LoginController extends Controller
                                             ]);
                                             
 			if(!empty($users) && count($users)>0){
+
+				// Reset rate limit on successful login
+				Session::forget($rateLimitKey);
+				Session::forget($lockoutKey);
+
 				$result['type'] = 2;
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
 				$upData = array(
 					'userLocation' => $_SERVER['REMOTE_ADDR'],
 					'lastlogon' => date('Y-m-d H:i:s'),
-					
+
 				);
-				
+
 				$resQry = DB::table('members')
 				->where('id', $users[0]->id)  // find your user by their email
 				->limit(1)  // optional - to ensure only one record is updated.
 				->update($upData);  // update the record in the DB.
-				
+
 				//echo'<pre>';print_r($users[0]->uname);die('---YSYSYS');
-				//Session::put('loggedin_user', $users[0]->uname);				
+				//Session::put('loggedin_user', $users[0]->uname);
 				/* return redirect()->intended('home');
 				exit; */
 			}else{
-				return redirect('login?type='.$membertype)->with('error', 'Oppes! You have entered invalid credentials');
+				// Increment failed login attempts
+				$attempts++;
+				Session::put($rateLimitKey, $attempts);
+
+				if ($attempts >= $maxAttempts) {
+					// Lock the account for the specified time
+					Session::put($lockoutKey, time() + $lockoutTime);
+					return redirect('login?type='.$membertype)->with('error', 'Too many failed login attempts. Account locked for 15 minutes.');
+				}
+
+				$remainingAttempts = $maxAttempts - $attempts;
+				return redirect('login?type='.$membertype)->with('error', "Invalid credentials. $remainingAttempts attempts remaining.");
 				exit;
 			}
 		}

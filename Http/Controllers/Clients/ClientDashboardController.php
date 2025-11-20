@@ -6325,35 +6325,42 @@ if ($_GET['page'] > $numPages && $numPages > 0) {
 			
 			
 			// send message
-			
-			if(isset($_GET['message']) && isset($_GET['mid']))
-			
+
+			if(isset($_POST['message']) && isset($_POST['mid']))
+
 			{
-			
-			$result = $this->clientAllDB_model->sendClientMessage_cld($clientId,$_GET['message'],$_GET['mid']); 
-			
+
+			// CSRF protection - verify token
+			if (!isset($_POST['_token']) || $_POST['_token'] !== Session::get('_token')) {
+				$response = array('response'=>0, 'error' => 'Invalid CSRF token');
+				echo json_encode($response);
+				exit;
+			}
+
+			$result = $this->clientAllDB_model->sendClientMessage_cld($clientId,$_POST['message'],$_POST['mid']);
+
 			$date = date('M d, Y');
-			
-			
-			
+
+
+
 			if($result>0)
-			
+
 			{
-			
+
 			 $response = array('response'=>1, 'dt' => $date);
-			
+
 			}
-			
+
 			else
-			
+
 			{
-			
+
 			 $response = array('response'=>0);
-			
+
 			}
-			
-			
-			
+
+
+
 			echo json_encode($response);
 			
 			
