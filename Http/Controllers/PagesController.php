@@ -68,10 +68,10 @@ class PagesController extends Controller
 		$output['max_reviews'] = '';
 
 		$max_downloads = DB::select("SELECT DISTINCT track_member_downloads.trackId,  COUNT(track_member_downloads.trackId) AS downloads, tracks.id, tracks.title, tracks.album, tracks.imgpage,tracks.pCloudFileID,tracks.pCloudParentFolderID FROM   track_member_downloads
-            
+
                left join tracks_mp3s on track_member_downloads.mp3Id = tracks_mp3s.id
                left join tracks on track_member_downloads.trackId = tracks.id
-               $where GROUP BY tracks.id order by $sort limit $limit");
+               $where GROUP BY tracks.id order by $sort limit " . (int)$limit);
 
 		//   pArr($max_downloads);
 		//   die();
@@ -249,7 +249,7 @@ class PagesController extends Controller
 
 
 
-		$display_news = DB::select("select* from news_details where approved=1 order by added desc limit $start,$limit ");;
+		$display_news = DB::select("select* from news_details where approved=1 order by added desc limit " . (int)$start . "," . (int)$limit);;
 
 		// 	$get_logo = $logo_details->logo;
 		$get_logo = $logo_details->pCloudFileID; //pCloudFileID
@@ -353,7 +353,7 @@ class PagesController extends Controller
 
 
 
-		$display_news = DB::select("select* from digiwaxx_videos where status=1 order by created_at desc limit $start,$limit ");;
+		$display_news = DB::select("select* from digiwaxx_videos where status=1 order by created_at desc limit " . (int)$start . "," . (int)$limit);;
 
 		// 	$get_logo = $logo_details->logo;	
 		$get_logo = $logo_details->pCloudFileID; //pCloudFileID
@@ -468,7 +468,7 @@ class PagesController extends Controller
 		}
 
 
-		$get_query = DB::select("select* from forum_article where art_status=1 order by art_id desc limit $start,$limit ");
+		$get_query = DB::select("select* from forum_article where art_status=1 order by art_id desc limit " . (int)$start . "," . (int)$limit);
 
 		$array = json_decode(json_encode($get_query), true);
 
@@ -709,7 +709,7 @@ class PagesController extends Controller
 
 		$arr = json_encode($array);
 
-		$other_comment = DB::select("select* from forum_article_comments where art_id=$id AND delete_status=0 AND comment_status=1 order by created_at asc ");
+		$other_comment = DB::select("select* from forum_article_comments where art_id=? AND delete_status=0 AND comment_status=1 order by created_at asc", [$id]);
 		$array1 = json_decode(json_encode($other_comment), true);
 
 		foreach ($array1 as $key => $value) {
@@ -734,7 +734,7 @@ class PagesController extends Controller
 		}
 
 		if (!empty($id1)) {
-			$like_fetch_user = DB::select("select art_id from forum_article_likes where art_id=$id AND user_id=$id1");
+			$like_fetch_user = DB::select("select art_id from forum_article_likes where art_id=? AND user_id=?", [$id, $id1]);
 			$liked_by_user = count($like_fetch_user);
 			$output['liked_by_user'] = $liked_by_user;
 		}
@@ -854,7 +854,7 @@ class PagesController extends Controller
 		$user_id = $request->user_id;
 
 
-		$delete_query = DB::delete("DELETE from forum_article_likes where art_id=$art_id AND user_id=$user_id");
+		$delete_query = DB::delete("DELETE from forum_article_likes where art_id=? AND user_id=?", [$art_id, $user_id]);
 
 		$total_likes = DB::table('forum_article_likes')->where('art_id', '=', $art_id)->count();
 		if ($delete_query) {

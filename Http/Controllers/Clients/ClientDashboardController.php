@@ -236,7 +236,7 @@ class ClientDashboardController extends Controller
 
 					if( !empty( $uploaded_data )){
 					    
-					    $pcloud_folder_query = DB::select("SELECT pCloudParentFolderID_client_image  FROM client_images where clientId = '" . $clientId. "' order by imageId desc limit 1");    
+					    $pcloud_folder_query = DB::select("SELECT pCloudParentFolderID_client_image  FROM client_images where clientId = ? order by imageId desc limit 1", [$clientId]);    
 				    
     				    $data_pcloud=$pcloud_folder_query;
     				    
@@ -1528,9 +1528,9 @@ class ClientDashboardController extends Controller
 		$headerOutput['tracks'] = $footerOutput['tracks'];
 		$headerOutput['banner_ads'] = $this->clientAllDB_model->getBannerads_cld(1,1);
 		foreach($output['tracks']['data'] as $data){
-    		$query1 = DB::select("SELECT * FROM tracks_reviews where track = '" . $data->id . "'");
+    		$query1 = DB::select("SELECT * FROM tracks_reviews where track = ?", [$data->id]);
     		$data->review_count = count($query1);
-    		
+
 		}
 // 		dd($output['tracks']['data']);
 
@@ -9543,13 +9543,13 @@ if ($_GET['page'] > $numPages && $numPages > 0) {
 		$artist = trim($phpObject['songArtist']);
 		$title = trim($phpObject['trackTitle']);
 		
-		$chk_qry = DB::select("SELECT id, title FROM `tracks` WHERE artist = '" . urlencode($artist) . "' AND title = '" . urlencode($title) . "' AND deleted=0");
+		$chk_qry = DB::select("SELECT id, title FROM `tracks` WHERE artist = ? AND title = ? AND deleted=0", [urlencode($artist), urlencode($title)]);
 		$result1['numRows'] = count($chk_qry);
 		$result1['data']  = $chk_qry;
         // return json_encode($result);
 
     	
-    	$chk_qry1 = DB::select("SELECT id, title FROM `tracks` WHERE artist = '" . urlencode($artist) . "' AND title = '" . urlencode($title) . "' AND deleted=0 AND client= '".$clientID."'");
+    	$chk_qry1 = DB::select("SELECT id, title FROM `tracks` WHERE artist = ? AND title = ? AND deleted=0 AND client= ?", [urlencode($artist), urlencode($title), $clientID]);
         $result1['numRows1'] = count($chk_qry1);
 		$result1['data1']  = $chk_qry1;
     	
@@ -9575,7 +9575,7 @@ if ($_GET['page'] > $numPages && $numPages > 0) {
     public function delete_track_client(){
         
         $trackId = json_decode($_POST['delTrackId'],true);
-        $q= DB::select("update tracks set deleted = '1' where id = '" . $trackId . "'");
+        $q= DB::update("update tracks set deleted = '1' where id = ?", [$trackId]);
         
         if($q){
             $result['status'] = 'success';
@@ -9670,7 +9670,7 @@ if ($_GET['page'] > $numPages && $numPages > 0) {
 		$headerOutput['wrapperClass'] = 'client';
 		
 		
-				 $payment_detail=DB::select("select * from package_user_details left join manage_packages on package_user_details.package_id =  manage_packages.id where  package_user_details.user_id=$clientID AND  package_user_details.user_type=2 AND  package_user_details.payment_status=1 AND package_user_details.payment_amount > 0 ORDER By package_user_details.id DESC");
+				 $payment_detail=DB::select("select * from package_user_details left join manage_packages on package_user_details.package_id =  manage_packages.id where  package_user_details.user_id=? AND  package_user_details.user_type=2 AND  package_user_details.payment_status=1 AND package_user_details.payment_amount > 0 ORDER By package_user_details.id DESC", [$clientID]);
 			if(count($payment_detail)>0){
 			    $output['pay_detail']=$payment_detail;
 			}

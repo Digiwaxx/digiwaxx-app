@@ -211,11 +211,18 @@ class LoginController extends Controller
 				->where('deleted',0)
 				->get()->toArray(); */
 
-            $users = DB::select("SELECT * 
-                                        FROM `clients` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "') 
-                                            AND (`pword` = '" . md5(trim($password)) . "' OR MD5(pword) = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'");				
+            $users = DB::select("SELECT *
+                                        FROM `clients`
+                                        WHERE (LOWER(`uname`) = ? OR `email` = ? OR  LOWER(`uname`) = ? OR `email` = ?)
+                                            AND (`pword` = ? OR MD5(pword) = ?)
+                                            AND `deleted` = '0'", [
+                                                urlencode(strtolower(trim($username))),
+                                                urlencode(trim($username)),
+                                                strtolower(trim($username)),
+                                                trim($username),
+                                                md5(trim($password)),
+                                                md5(trim($password))
+                                            ]);				
 			
 			if(!empty($users) && count($users)>0){
 								
@@ -262,11 +269,18 @@ class LoginController extends Controller
 			
 			## DB QUERY COPIED from LIVE WEBSITE
 			
-            $users = DB::select("SELECT * 
-                                        FROM `members` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "' ) 
-                                            AND (`pword` = '" . md5(trim($password)) . "' OR MD5(pword) = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'");
+            $users = DB::select("SELECT *
+                                        FROM `members`
+                                        WHERE (LOWER(`uname`) = ? OR `email` = ? OR  LOWER(`uname`) = ? OR `email` = ?)
+                                            AND (`pword` = ? OR MD5(pword) = ?)
+                                            AND `deleted` = '0'", [
+                                                urlencode(strtolower(trim($username))),
+                                                urlencode(trim($username)),
+                                                strtolower(trim($username)),
+                                                trim($username),
+                                                md5(trim($password)),
+                                                md5(trim($password))
+                                            ]);
                                             
 			if(!empty($users) && count($users)>0){
 				$result['type'] = 2;
@@ -320,7 +334,7 @@ class LoginController extends Controller
 						$page = "Client_dashboard";
 						Session::put('clientId', $result['data'][0]->id);
 						Session::put('clientName', $result['data'][0]->name);
-						$query1 = DB::select("SELECT image,pCloudFileID_client_image  FROM client_images where clientId = '" . $result['data'][0]->id . "' order by imageId desc limit 1");
+						$query1 = DB::select("SELECT image,pCloudFileID_client_image  FROM client_images where clientId = ? order by imageId desc limit 1", [$result['data'][0]->id]);
                          $numRows1 = count($query1);
                          $data1  = $query1;
                          if ($numRows1 > 0) {
@@ -392,7 +406,7 @@ class LoginController extends Controller
 						$page = "Member_dashboard_newest_tracks";
 						Session::put('memberId', $result['data'][0]->id);
 						Session::put('memberName', urldecode($result['data'][0]->fname));
-						$query1 = DB::select("SELECT image,pCloudFileID_mem_image  FROM member_images where memberId = '" . $result['data'][0]->id . "' order by imageId desc limit 1");
+						$query1 = DB::select("SELECT image,pCloudFileID_mem_image  FROM member_images where memberId = ? order by imageId desc limit 1", [$result['data'][0]->id]);
                          $numRows1 = count($query1);
                          $data1  = $query1;
                          if ($numRows1 > 0) {

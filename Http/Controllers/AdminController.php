@@ -20540,10 +20540,10 @@ function Digicoins()
 		
 		
     
-// 	$get_announ=DB::select("select id,ma_title,ma_description,ma_availability,ma_status,ma_created_on from members_announcements order by id desc limit $start,$limit");
+// 	$get_announ=DB::select("select id,ma_title,ma_description,ma_availability,ma_status,ma_created_on from members_announcements order by id desc limit " . (int)$start . "," . (int)$limit);
 
     
-    $get_query= DB::select("select* from forum_article order by art_id desc limit $start,$limit");
+    $get_query= DB::select("select* from forum_article order by art_id desc limit " . (int)$start . "," . (int)$limit);
    
     $array = json_decode(json_encode($get_query), true);
     
@@ -20575,7 +20575,7 @@ function Digicoins()
        
        $xx=$value['art_id'];
          
-          $get_com=DB::select("select* from forum_article_comments where art_id=$xx AND delete_status=0 ");
+          $get_com=DB::select("select* from forum_article_comments where art_id=? AND delete_status=0", [$xx]);
        $array[$key]['comment_count']=count($get_com);
 
        
@@ -20748,7 +20748,7 @@ function Digicoins()
     		 $currentPageNo = $_GET['page'];
     	 }
     	 
-    	 $query = DB::select("select* from forum_article_comments where art_id=$id AND delete_status=0 ");
+    	 $query = DB::select("select* from forum_article_comments where art_id=? AND delete_status=0", [$id]);
     	 $num_records = count($query);
     	 $numPages = (int) ($num_records / $limit);
     	 $reminder = ($num_records % $limit);
@@ -20799,7 +20799,7 @@ function Digicoins()
     
     
     
-     $fetch_det= DB::select("select* from forum_article_comments where art_id=$id AND delete_status=0 order by id desc limit $start,$limit ");
+     $fetch_det= DB::select("select* from forum_article_comments where art_id=? AND delete_status=0 order by id desc limit " . (int)$start . "," . (int)$limit, [$id]);
      $array = json_decode(json_encode($fetch_det), true);
     
     foreach($array as $key=>$value){
@@ -20884,7 +20884,7 @@ function Digicoins()
     $output['pageTitle'] = 'ARTICLE COMMENT';
     $output['user_role'] = $user_role;
     
-         $fetch_det= DB::select("select* from forum_article_comments where id=$id  ");
+         $fetch_det= DB::select("select* from forum_article_comments where id=?", [$id]);
      $array = json_decode(json_encode($fetch_det), true);
     
     foreach($array as $key=>$value){
@@ -21112,7 +21112,7 @@ function Digicoins()
 		
 		
 		
-		$get_announ=DB::select("select id,ma_title,ma_description,ma_availability,ma_status,ma_created_on from members_announcements order by id desc limit $start,$limit");
+		$get_announ=DB::select("select id,ma_title,ma_description,ma_availability,ma_status,ma_created_on from members_announcements order by id desc limit " . (int)$start . "," . (int)$limit);
 		
 		
 // 		$get_announ=DB::table('members_announcements')->select('id','ma_title','ma_description','ma_availability','ma_status','ma_created_on')->get();
@@ -21453,7 +21453,7 @@ function Digicoins()
 		
 		
 		
-	    $get_news=DB::select(" select id,title,description,added,approved from news_details ORDER BY added desc limit $start, $limit");
+	    $get_news=DB::select(" select id,title,description,added,approved from news_details ORDER BY added desc limit " . (int)$start . "," . (int)$limit);
        
         $output['get_news']=$get_news;
         $output['pageTitle'] = 'News';
@@ -21762,7 +21762,7 @@ function Digicoins()
         	 $output['pageTitle'] = 'Edit Package';
         	 $output['user_role'] = $user_role;
         	 
-        	 $get_package_details=DB::select("select manage_packages.package_name,manage_packages.package_type,manage_packages.package_price,available_to,package_features as feature from manage_packages  where manage_packages.id=$id");
+        	 $get_package_details=DB::select("select manage_packages.package_name,manage_packages.package_type,manage_packages.package_price,available_to,package_features as feature from manage_packages  where manage_packages.id=?", [$id]);
         // 	 $get_package_feature=DB::select("select package_features as feature from manage_packages where id=$id");
         
         	  
@@ -21917,7 +21917,7 @@ function Digicoins()
 		
 		
     	
-    	$query=DB::select("select * from package_user_details $where order by id desc limit $start,$limit");
+    	$query=DB::select("select * from package_user_details $where order by id desc limit " . (int)$start . "," . (int)$limit);
     	$output['user_details'] = $query;
     // 	dd($query);
     	
@@ -22288,7 +22288,7 @@ function Digicoins()
     		 $currentPageNo = $_GET['page'];
     	 }
     // 	 $query = DB::table('product_sneaker_details')->where('name',)->get();
-    	 $query= DB::select("select * from product_sneaker_details  $where ORDER BY  created_on DESC  limit $start, $limit ");
+    	 $query= DB::select("select * from product_sneaker_details  $where ORDER BY  created_on DESC  limit " . (int)$start . "," . (int)$limit);
     	 $num_records = count($query);
     	 $numPages = (int) ($num_records / $limit);
     	 $reminder = ($num_records % $limit);
@@ -22336,7 +22336,7 @@ function Digicoins()
 		
 		
 		
-	    $get_news=DB::select(" select * from product_sneaker_details  $where ORDER BY  created_on DESC  limit $start, $limit ");
+	    $get_news=DB::select(" select * from product_sneaker_details  $where ORDER BY  created_on DESC  limit " . (int)$start . "," . (int)$limit);
 	  
         $output['get_sneaker']=$get_news;
         $output['pageTitle'] = 'Sneakers';
@@ -22618,7 +22618,7 @@ function Digicoins()
 		
 		
 		
-	    $get_videos=DB::select(" select* from digiwaxx_videos ORDER BY created_at desc limit $start, $limit");
+	    $get_videos=DB::select(" select* from digiwaxx_videos ORDER BY created_at desc limit " . (int)$start . "," . (int)$limit);
        
         $output['get_videos']=$get_videos;
         $output['pageTitle'] = 'Videos';
@@ -22825,7 +22825,7 @@ function Digicoins()
                 	$metadata = $this->uploadImage_to_pcloud($destinationPath, $fileNameToStore, $folder);
                 	$pcloudFileId = $metadata->metadata->fileid;
                 	$parentfolderid = $metadata->metadata->parentfolderid;
-                	DB::select("UPDATE `logos` SET pCloudFileID_logo = '".$pcloudFileId."', pCloudParentFolderID_logo = '".$parentfolderid."' WHERE id = '".$vidImg."'");
+                	DB::update("UPDATE `logos` SET pCloudFileID_logo = ?, pCloudParentFolderID_logo = ? WHERE id = ?", [$pcloudFileId, $parentfolderid, $vidImg]);
                 	//@unlink($destinationPath.$fileNameToStore);                    
                     
                 }else{
@@ -22866,7 +22866,7 @@ function Digicoins()
                       $foldername = (string)$foldername;
                        //echo $foldername;die();
                    
-                      $folder_ex_query=DB::select("SELECT pCloudParentFolderID_mem_image from member_images where memberId =$mem_ID AND pCloudParentFolderID_mem_image IS NOT NULL LIMIT 1 ") ;
+                      $folder_ex_query=DB::select("SELECT pCloudParentFolderID_mem_image from member_images where memberId =? AND pCloudParentFolderID_mem_image IS NOT NULL LIMIT 1", [$mem_ID]);
                       if(!empty($folder_ex_query)){
                           if(!empty($folder_ex_query[0]->pCloudParentFolderID_mem_image)){
                               $folder=$folder_ex_query[0]->pCloudParentFolderID_mem_image;
@@ -22884,7 +22884,7 @@ function Digicoins()
                       
                       $pcloudFileId = $metadata->metadata->fileid;
                       $parentfolderid = $metadata->metadata->parentfolderid;
-                      DB::select("UPDATE `member_images` SET pCloudFileID_mem_image = '".$pcloudFileId."', pCloudParentFolderID_mem_image = '".$parentfolderid."' WHERE imageId = '".$id."'");
+                      DB::update("UPDATE `member_images` SET pCloudFileID_mem_image = ?, pCloudParentFolderID_mem_image = ? WHERE imageId = ?", [$pcloudFileId, $parentfolderid, $id]);
                       
                   }
                   else{
@@ -22923,7 +22923,7 @@ function Digicoins()
                 	$metadata = $this->uploadImage_to_pcloud($destinationPath, $fileNameToStore, $folder);
                 	$pcloudFileId = $metadata->metadata->fileid;
                 	$parentfolderid = $metadata->metadata->parentfolderid;
-                	DB::select("UPDATE `tracks` SET pCloudFileID = '".$pcloudFileId."', pCloudParentFolderID= '".$parentfolderid."' WHERE id = '".$vidImg."'");
+                	DB::update("UPDATE `tracks` SET pCloudFileID = ?, pCloudParentFolderID= ? WHERE id = ?", [$pcloudFileId, $parentfolderid, $vidImg]);
                 	//echo $vidImg;die();
                 	//@unlink($destinationPath.$fileNameToStore);                    
                     
@@ -22959,7 +22959,7 @@ function Digicoins()
                 	$metadata = $this->uploadImage_to_pcloud($destinationPath, $fileNameToStore, $folder);
                 	$pcloudFileId = $metadata->metadata->fileid;
                 	$parentfolderid = $metadata->metadata->parentfolderid;
-                	DB::select("UPDATE `tracks` SET pCloudFileID_cover = '".$pcloudFileId."', pCloudParentFolderID_cover= '".$parentfolderid."' WHERE id = '".$vidImg."'");
+                	DB::update("UPDATE `tracks` SET pCloudFileID_cover = ?, pCloudParentFolderID_cover= ? WHERE id = ?", [$pcloudFileId, $parentfolderid, $vidImg]);
                 	//echo $vidImg;die();
                 	//@unlink($destinationPath.$fileNameToStore);                    
                     

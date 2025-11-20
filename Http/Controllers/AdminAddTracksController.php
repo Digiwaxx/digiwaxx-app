@@ -857,10 +857,10 @@ class AdminAddTracksController extends Controller
  			if ($request->has('client') && !empty($request->client)) {
 			    ## echo $request->client;die('--EDED');
 				$trakclient = $request->client;
-				
-				DB::select("UPDATE `tracks` SET client = '" . $trakclient . "' WHERE id = '" . $track_id . "'");
+
+				DB::update("UPDATE `tracks` SET client = ? WHERE id = ?", [$trakclient, $track_id]);
 			}else{
-			    DB::select("UPDATE `tracks` SET client = '' WHERE id = '" . $track_id . "'");
+			    DB::update("UPDATE `tracks` SET client = '' WHERE id = ?", [$track_id]);
 			}          
 
 			if ($request->has('featured_artist_1') && !empty($request->featured_artist_1)) {

@@ -111,7 +111,7 @@ class Admin extends Authenticatable
      * @GS
      */
 	public function deleteLogo($did){
-		$query = DB::select("select img from logos where id = '". $did ."'");  
+		$query = DB::select("select img from logos where id = ?", [$did]);
 		$data  = $query;
 		$imgUrl =  public_path("Logos/".$data[0]->img);
 		//echo $imgUrl;die('--');
@@ -133,10 +133,10 @@ class Admin extends Authenticatable
 
     public function getReview($reviewId)
     {
-        $query = DB::select("select *  from tracks_reviews 
+        $query = DB::select("select *  from tracks_reviews
 		 left join members on tracks_reviews.member = members.id
 		 	 left join tracks on tracks_reviews.track = tracks.id
-		 where tracks_reviews.id = '" . $reviewId . "'");
+		 where tracks_reviews.id = ?", [$reviewId]);
         $result['numRows']  = count($query);
         $result['data']  = $query;
         return  $result;
@@ -148,8 +148,8 @@ class Admin extends Authenticatable
      * @GS
      */
 	
-	public function unlinkCompanyLogo($did){		
-		$query = DB::select("select img from logos where id = '". $did ."'");  
+	public function unlinkCompanyLogo($did){
+		$query = DB::select("select img from logos where id = ?", [$did]);
 		$data  = $query;
 		if(!empty($data[0]->img)){
 		$imgUrl =  public_path("Logos/".$data[0]->img);		
@@ -291,7 +291,7 @@ class Admin extends Authenticatable
      * @GS
      */
 	public function getSubGenres($genreId){
-		$queryRes = DB::select("select subGenreId, subGenre from  genres_sub where genreId = '". $genreId ."' order by subGenre asc");
+		$queryRes = DB::select("select subGenreId, subGenre from  genres_sub where genreId = ? order by subGenre asc", [$genreId]);
 		
         $result['numRows'] = count($queryRes);
 
@@ -436,11 +436,11 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getTool($tool_id){
-		$queryRes = DB::select("select tool_tracks.tool_track_id, tool_tracks.tool_track_tittle, tool_tracks.added_on, admins.name from  tool_tracks 
+		$queryRes = DB::select("select tool_tracks.tool_track_id, tool_tracks.tool_track_tittle, tool_tracks.added_on, admins.name from  tool_tracks
 
 		 left join admins on tool_tracks.added_by = admins.id
 
-		 where tool_tracks.tool_track_id = '". $tool_id ."'");
+		 where tool_tracks.tool_track_id = ?", [$tool_id]);
 		
         $result['numRows'] = count($queryRes);
 		
@@ -455,7 +455,7 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getMp3($tool_id){
-		$queryRes = DB::select("select * from  tool_track_files where tool_track_id = '". $tool_id ."'");
+		$queryRes = DB::select("select * from  tool_track_files where tool_track_id = ?", [$tool_id]);
 		
         $result['numRows'] = count($queryRes);
 		
@@ -513,8 +513,8 @@ class Admin extends Authenticatable
      * @GS
      */
 	
-	public function unlinkDjToolFile($tool_id){		
-		$query = DB::select("select * from  tool_track_files where tool_track_id = '". $tool_id ."'");  
+	public function unlinkDjToolFile($tool_id){
+		$query = DB::select("select * from  tool_track_files where tool_track_id = ?", [$tool_id]);
 		$data  = $query;
 		if(!empty($data[0]->track_file)){
 			$trkFileUrl =  public_path("tools/".$data[0]->track_file);		
@@ -646,22 +646,22 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getMail($mailId){
-		
-		$queryRes = DB::select("select * from  mailouts where id = '". $mailId ."'");
+
+		$queryRes = DB::select("select * from  mailouts where id = ?", [$mailId]);
 
         $result['numRows'] = count($queryRes);
-		
+
 		$result['data'] = $queryRes;
-		
-		$query1 = DB::select("select * from  mails where mailout = '". $mailId ."'");
+
+		$query1 = DB::select("select * from  mails where mailout = ?", [$mailId]);
 
         $result['mailsSent'] = count($query1);
-		
-		$query2 = DB::select("select title from tracks where id = '". $result['data'][0]->track ."'");  
+
+		$query2 = DB::select("select title from tracks where id = ?", [$result['data'][0]->track]);
 
 		$result['track']  = $query2;
-		
-		$query3 = DB::select("select * from  mails where mailout = '". $mailId ."' AND received!='0000-00-00 00:00:00'");  
+
+		$query3 = DB::select("select * from  mails where mailout = ? AND received!='0000-00-00 00:00:00'", [$mailId]);  
 
 		$result['numReceived']  = $query3;
 		
@@ -675,8 +675,8 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTrackInfo($trackId){
-		
-	   $queryRes = DB::select("select * from  tracks  where id = '". $trackId ."'");
+
+	   $queryRes = DB::select("select * from  tracks  where id = ?", [$trackId]);
 		
 	   $result['numRows'] = count($queryRes);
 
@@ -690,8 +690,8 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTrackVersions($trackId){
-		
-	   $query = DB::select("select * from  tracks_mp3s  where track = '". $trackId ."'"); 
+
+	   $query = DB::select("select * from  tracks_mp3s  where track = ?", [$trackId]); 
 		
 	   $result['numRows'] = count($query);
 
@@ -705,8 +705,8 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTrackLogos($logoId){
-		
-	   $query = DB::select("SELECT * FROM logos WHERE id='".$logoId."'"); 
+
+	   $query = DB::select("SELECT * FROM logos WHERE id = ?", [$logoId]); 
 		
 	   $result['numRows'] = count($query);
 
@@ -720,8 +720,8 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTemplate($templateId){
-		
-	   $query = DB::select("select * from  templates  where id = '". $templateId ."'"); 
+
+	   $query = DB::select("select * from  templates  where id = ?", [$templateId]); 
 
 	   $result  = $query;
 
@@ -733,8 +733,8 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTrackContacts($trackId){
-		
-	   $query = DB::select("SELECT * FROM tracks_contacts WHERE track='".$trackId."'"); 
+
+	   $query = DB::select("SELECT * FROM tracks_contacts WHERE track = ?", [$trackId]); 
 		
 	   $result['numRows'] = count($query);
 
@@ -797,8 +797,8 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function closeMail($mailId){
-		
-		$query = DB::select("SELECT id FROM mails where mailout = '". $mailId ."'");
+
+		$query = DB::select("SELECT id FROM mails where mailout = ?", [$mailId]);
 		
 		$numRows  = count($query);
 		
@@ -1086,12 +1086,12 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function checkIfCountryExists($data){
-		
+
 		extract($data);
 		$contint = strtolower(trim($continent));
 		$contryCode = strtolower(trim($country_code));
-		$contry = strtolower(trim($country));		
-		$queryRes = DB::select("select * from  country WHERE LOWER(`continentId`)='$contint' AND LOWER(`abbr`)='$contryCode' AND LOWER(`country`)='$contry'");
+		$contry = strtolower(trim($country));
+		$queryRes = DB::select("select * from  country WHERE LOWER(`continentId`)= ? AND LOWER(`abbr`)= ? AND LOWER(`country`)= ?", [$contint, $contryCode, $contry]);
 		$result = count($queryRes);
 		return $result;
 	}
@@ -1136,9 +1136,9 @@ class Admin extends Authenticatable
 			->update($updateDta);  // update the record in the DB.
 		
 		$result['result'] = 1;
-		
-		$query1 = DB::select("select continent from continents where continentId = '$continent'");
-		
+
+		$query1 = DB::select("select continent from continents where continentId = ?", [$continent]);
+
 		$row = $query1;
 		
 		$result['continent'] = $row[0]->continent;
@@ -1199,8 +1199,8 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getSelectedCountries($continentId){
-		
-		$queryRes = DB::select("select countryId, country from  country where continentId = '". $continentId ."'");
+
+		$queryRes = DB::select("select countryId, country from  country where continentId = ?", [$continentId]);
 
         $result['numRows'] = count($queryRes);
 		
@@ -1215,10 +1215,10 @@ class Admin extends Authenticatable
      * @GS
      */		
 	public function addState($data){
-		
+
 		extract($data);
-		
-		$queryRes = DB::select("select * from  states where name = '$state'");
+
+		$queryRes = DB::select("select * from  states where name = ?", [$state]);
 
         $result = count($queryRes);
 		
@@ -1328,7 +1328,7 @@ class Admin extends Authenticatable
 	public function getPageText($id)
 	{
 
-	 $query = DB::select("select * from  dynamic_pages where  page_id = '". $id ."'");   
+	 $query = DB::select("select * from  dynamic_pages where  page_id = ?", [$id]);
 	 $result  = $query;
 	 return  $result;
 	}
@@ -1356,9 +1356,9 @@ class Admin extends Authenticatable
      * @GS
      */	
 	public function getBannerText($id){
-	 $query = DB::select("select * from  banners where  pageId = '". $id ."'");   
+	 $query = DB::select("select * from  banners where  pageId = ?", [$id]);
 	 $result  = $query;
-	 return  $result;		
+	 return  $result;
 	}
    /**
      * Get Value Using Meta
@@ -1366,9 +1366,9 @@ class Admin extends Authenticatable
      * @GS
      */
 	public function getContentUsingMeta($pageID, $metaKey){
-	 $query = DB::select("select * from  pages_meta where  pageId = '". $pageID ."' AND meta_key = '". $metaKey ."'");   
+	 $query = DB::select("select * from  pages_meta where  pageId = ? AND meta_key = ?", [$pageID, $metaKey]);
 	 $result  = $query;
-	 return  $result;		
+	 return  $result;
 	}
 	
 	public function updateContentUsingMeta($pageID, $content, $metaKey){
@@ -1450,9 +1450,9 @@ class Admin extends Authenticatable
 	}
 	
 	public function getPageLinks($pageId){
-	 $query = DB::select("select * from dynamic_links where pageId = '". $pageId ."' order by linkId asc");   
+	 $query = DB::select("select * from dynamic_links where pageId = ? order by linkId asc", [$pageId]);
 	 $result  = $query;
-	 return  $result;		
+	 return  $result;
 	}
 	
 	public function getTopLinks(){
@@ -1462,9 +1462,9 @@ class Admin extends Authenticatable
 	}
 	
 	public function getBanner($page_id){
-	 $query = DB::select("select banner_image, pCloudFileID from dynamic_pages where page_id = '". $page_id ."'");   
+	 $query = DB::select("select banner_image, pCloudFileID from dynamic_pages where page_id = ?", [$page_id]);
 	 $result  = $query;
-	 return  $result;		
+	 return  $result;
 	}
 	
 	public function updateTopLinks($data){
@@ -1589,8 +1589,8 @@ class Admin extends Authenticatable
 	
     public function getMembershipDetails($memberId, $start, $limit){
 
-        $query = DB::select("select *  from  member_subscriptions	where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit $start, $limit");
-        $query = DB::select("select *  from  member_subscriptions	where member_Id = '" . $memberId . "' and status = '1'");
+        $query = DB::select("select *  from  member_subscriptions	where member_Id = ? and status = '1' order by subscription_Id desc limit " . (int)$start . ", " . (int)$limit, [$memberId]);
+        $query = DB::select("select *  from  member_subscriptions	where member_Id = ? and status = '1'", [$memberId]);
         $result['numRows']  = count($query);
 
         $result['data']  = $query;
@@ -1622,7 +1622,7 @@ class Admin extends Authenticatable
 
         $today = date("Y-m-d");
 
-        $query1 = DB::select("select subscription_Id, endDate from  member_subscriptions where member_Id = '" . $memberId . "' and endDate > '" . $today . "' order by subscription_Id desc limit 0, 1");
+        $query1 = DB::select("select subscription_Id, endDate from  member_subscriptions where member_Id = ? and endDate > ? order by subscription_Id desc limit 0, 1", [$memberId, $today]);
         $result1 = count($query1);
 		
         if ($result1 < 1) {
@@ -1653,8 +1653,8 @@ class Admin extends Authenticatable
 	}
 	
 	public function getViewMemberInfo($memId){
-		
-       $query = DB::select("select * from  members left join members_dj_mixer on members.id = members_dj_mixer.member where members.id = '$memId'");
+
+       $query = DB::select("select * from  members left join members_dj_mixer on members.id = members_dj_mixer.member where members.id = ?", [$memId]);
 
         $result['numRows'] =  count($query);
 
@@ -1665,7 +1665,7 @@ class Admin extends Authenticatable
 	
 	public function adminChangeMemberPassword($password, $memberId){
 		$pas1=md5($password);
-		$query = DB::select("update `members` set pword = '" . $pas1 . "' where id = '" . $memberId . "'");
+		$query = DB::select("update `members` set pword = ? where id = ?", [$pas1, $memberId]);
 
         return $query;
 		
@@ -1677,8 +1677,8 @@ class Admin extends Authenticatable
 		
 		$artist = trim($phpObject['songArtist']);
 		$title = trim($phpObject['trackTitle']);
-		
-		$chk_qry = DB::select("SELECT id, title FROM `tracks` WHERE artist = '" . urlencode($artist) . "' AND title = '" . urlencode($title) . "' AND deleted=0");
+
+		$chk_qry = DB::select("SELECT id, title FROM `tracks` WHERE artist = ? AND title = ? AND deleted=0", [urlencode($artist), urlencode($title)]);
 		$result['numRows'] = count($chk_qry);
 		$result['data']  = $chk_qry;
         return json_encode($result);
@@ -1687,7 +1687,7 @@ class Admin extends Authenticatable
 	
 	public function checkDuplicateMemberEmail($data, $memberId){
         extract($data);
-        $query = DB::select("select id from members where (email= '" . urlencode(trim($email)) . "' OR email= '" . trim($email) . "') AND id !='".$memberId."'");
+        $query = DB::select("select id from members where (email= ? OR email= ?) AND id != ?", [urlencode(trim($email)), trim($email), $memberId]);
 		
 		if(count($query)>0){
             return 0;
@@ -1746,9 +1746,9 @@ class Admin extends Authenticatable
 
         if (!(isset($dob))) {
             $dob = '';
-        }      
+        }
 
-        $query = DB::select("update members set uname = '" . urlencode($userName) . "', fname = '" . urlencode($firstName) . "', lname = '" . urlencode($lastName) . "', stagename = '" . urlencode($stageName) . "', dob = '".$dob."', email = '" . urlencode(trim($email)) . "', address1 = '" . urlencode($address1) . "', address2 = '" . urlencode($address2) . "', city = '" . urlencode($city) . "', state = '" . urlencode($state) . "', country = '" . urlencode($country) . "', zip = '" . urlencode($zip) . "', phone = '" . urlencode($phone) . "',  dj_mixer='".$djMixer."', radio_station='".$radioStation."', edited = NOW(), editedby = '" . $adminId . "', sex = '" . urlencode($sex) . "', howheard = '" . $howheard . "', howheardvalue = '" . $howheardvalue . "' where id = '" . $memberId . "'");
+        $query = DB::select("update members set uname = ?, fname = ?, lname = ?, stagename = ?, dob = ?, email = ?, address1 = ?, address2 = ?, city = ?, state = ?, country = ?, zip = ?, phone = ?,  dj_mixer= ?, radio_station= ?, edited = NOW(), editedby = ?, sex = ?, howheard = ?, howheardvalue = ? where id = ?", [urlencode($userName), urlencode($firstName), urlencode($lastName), urlencode($stageName), $dob, urlencode(trim($email)), urlencode($address1), urlencode($address2), urlencode($city), urlencode($state), urlencode($country), urlencode($zip), urlencode($phone), $djMixer, $radioStation, $adminId, urlencode($sex), $howheard, $howheardvalue, $memberId]);
 
         if (!(isset($djtype_commercialreporting))) {
             $djtype_commercialreporting = 0;
@@ -2179,10 +2179,10 @@ class Admin extends Authenticatable
             $piratedj_varies = 0;
         }  
 
-        $clubdj_partytype = '';    
+        $clubdj_partytype = '';
 
-		
-        $managementQuery = DB::select("SELECT id FROM members_dj_mixer where member = '" . $memberId . "'");
+
+        $managementQuery = DB::select("SELECT id FROM members_dj_mixer where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
@@ -2462,7 +2462,7 @@ class Admin extends Authenticatable
 
 
 
-        $queryMemRadioDta = DB::select("SELECT id FROM members_radio_station where member = '" .$memberId. "'");
+        $queryMemRadioDta = DB::select("SELECT id FROM members_radio_station where member = ?", [$memberId]);
 
         $memRadioDtaRows = count($queryMemRadioDta);
 
@@ -2696,7 +2696,7 @@ class Admin extends Authenticatable
 
 
 
-        $managementQuery = DB::select("select id from members_mass_media where member = '" . $memberId . "'");
+        $managementQuery = DB::select("select id from members_mass_media where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
@@ -2726,7 +2726,7 @@ class Admin extends Authenticatable
 
 
 
-        $managementQuery = DB::select("select id from members_record_label where member = '" . $memberId . "'");
+        $managementQuery = DB::select("select id from members_record_label where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
@@ -2758,7 +2758,7 @@ class Admin extends Authenticatable
 
 
 
-        $managementQuery = DB::select("select id from members_management where member = '" . $memberId . "'");
+        $managementQuery = DB::select("select id from members_management where member = ?", [$memberId]);
 
         $managementRows = count($managementQuery);
 
@@ -2770,8 +2770,8 @@ class Admin extends Authenticatable
             DB::select("insert into `members_management` (`member`, `managementtype_artist`, `managementtype_tour`, `managementtype_personal`, `managementtype_finance`, `management_name`, `management_who`, `management_industry`) values ('" . $memberId . "', '" . $managementArtist . "', '" . $managementTour . "', '" . $managementPersonal . "', '" . $managementFinance . "', '" . $managementName . "', '" . $managementWho . "', '" . $managementIndustry . "')");
         } */
         // clothing
-		
-        $clothingQuery = DB::select("select id from members_clothing_apparel where member = '" . $memberId . "'");
+
+        $clothingQuery = DB::select("select id from members_clothing_apparel where member = ?", [$memberId]);
 
         $clothingRows = count($clothingQuery);
 
@@ -2801,7 +2801,7 @@ class Admin extends Authenticatable
             $promoterStreet = 0;
         }
 
-        $promoterQuery = DB::select("select id from members_promoter where member = '" . $memberId . "'");
+        $promoterQuery = DB::select("select id from members_promoter where member = ?", [$memberId]);
 
         $promoterRows = count($promoterQuery);
 
@@ -2830,7 +2830,7 @@ class Admin extends Authenticatable
             $specialOther = 0;
         }
 
-        $specialQuery = DB::select("select id from members_special_services where member = '" . $memberId . "'");
+        $specialQuery = DB::select("select id from members_special_services where member = ?", [$memberId]);
 
         $specialRows = count($specialQuery);
 
@@ -2857,7 +2857,7 @@ class Admin extends Authenticatable
             $productionSound = 0;
         }
 
-        $productionQuery = DB::select("select id from members_production_talent where member = '" . $memberId . "'");
+        $productionQuery = DB::select("select id from members_production_talent where member = ?", [$memberId]);
 
         $productionRows = count($productionQuery);
 
@@ -2872,12 +2872,12 @@ class Admin extends Authenticatable
         return $query;
     }
 
-	// Functions added by R-S starts here 
+	// Functions added by R-S starts here
     function getAdminModules($adminId)
 
     {
 
-        $query = DB::select("select moduleId  from   admin_modules where adminId = '" . $adminId . "'");
+        $query = DB::select("select moduleId  from   admin_modules where adminId = ?", [$adminId]);
 
         $result['numRows'] =  count($query);
 
@@ -2956,14 +2956,14 @@ class Admin extends Authenticatable
     {
 
         extract($data);
-        
+
         $admin_id = Auth::user()->id;
 
-        $query1 = DB::select("select *  from   admins where uname = '" . $username . "'");
+        $query1 = DB::select("select *  from   admins where uname = ?", [$username]);
 
         $userRows1 =  count($query1);
 
-        $query2 = DB::select("select *  from   admins where email = '" . $email . "'");
+        $query2 = DB::select("select *  from   admins where email = ?", [$email]);
 
         $userRows2 =  count($query2);
 
@@ -3057,7 +3057,7 @@ class Admin extends Authenticatable
     
         foreach($result['data'] as $row)
         {
-            $query1 = DB::select("select name from  clients where id = '". $row->client_id ."' ");  
+            $query1 = DB::select("select name from  clients where id = ?", [$row->client_id]);
     	    $result['client'][$row->id]  = $query1;
         }
 
@@ -3069,7 +3069,7 @@ class Admin extends Authenticatable
     function deleteLabel($did)
 	{
 
-            $result =  DB::select("delete from  client_contacts where id = '$did'");  
+            $result =  DB::select("delete from  client_contacts where id = ?", [$did]);  
 
             return $result;
 
@@ -3169,8 +3169,8 @@ class Admin extends Authenticatable
 
     function deleteAlbum($albumId)
     {
-        DB::select("UPDATE `tracks_album` SET `deleted` = '1' WHERE `id` = '" . $albumId . "'");
-        DB::select("UPDATE `tracks` SET `deleted` = '1' WHERE `albumid` = '" . $albumId . "'");
+        DB::select("UPDATE `tracks_album` SET `deleted` = '1' WHERE `id` = ?", [$albumId]);
+        DB::select("UPDATE `tracks` SET `deleted` = '1' WHERE `albumid` = ?", [$albumId]);
         return 1;
     }
 
@@ -3232,13 +3232,13 @@ class Admin extends Authenticatable
 
     function getStaffTracks($trackId)
     {
-        $query = DB::select("select sortOrder from  staff_selection where trackId = '$trackId' order by sortOrder desc limit 1");
+        $query = DB::select("select sortOrder from  staff_selection where trackId = ? order by sortOrder desc limit 1", [$trackId]);
         return count($query);
     }
 
     function getYouTracks($trackId)
     {
-        $query = DB::select("select sortOrder from  you_selection where trackId = '$trackId' order by sortOrder desc limit 1");
+        $query = DB::select("select sortOrder from  you_selection where trackId = ? order by sortOrder desc limit 1", [$trackId]);
         return count($query);
     }
 
@@ -3248,10 +3248,10 @@ class Admin extends Authenticatable
         $admin_id = Auth::user()->id;
         if (!empty($album)) {
            $query =  DB::select("UPDATE `tracks_album`
-                            SET `title` = '" . urlencode($album) . "', 
-                                `edited` = NOW(), 
-                                `editedby` = " . $admin_id . "
-                            WHERE id = " . $id);
+                            SET `title` = ?,
+                                `edited` = NOW(),
+                                `editedby` = ?
+                            WHERE id = ?", [urlencode($album), $admin_id, $id]);
         }
         
     }
@@ -3288,34 +3288,62 @@ class Admin extends Authenticatable
         }
 
         $query = DB::select("UPDATE `tracks`
-                                    SET `artist` = '" . urlencode($artist) . "', 
-                                        `album` = '" . urlencode($album) . "',
-                                        `time` = '" . urlencode($time) . "',
-                                        `label` = '" . urlencode($company) . "',
-                                        `link` = '" . urlencode($website) . "',
-                                        `moreinfo` = '" . urlencode($moreInfo) . "',
-                                        `producer` = '" . urlencode($producers) . "',
-										`writer` = '" . urlencode($writer) . "',
+                                    SET `artist` = ?,
+                                        `album` = ?,
+                                        `time` = ?,
+                                        `label` = ?,
+                                        `link` = ?,
+                                        `moreinfo` = ?,
+                                        `producer` = ?,
+										`writer` = ?,
                                         `edited` = NOW(),
-                                        `editedby` = '" . $admin_id . "',
-                                        `active` = '" . $availableMembers . "',
-                                        `review` = '" . $reviewable . "',
-                                        `logos` = '" . $logos . "',
-                                        `client` = '" . $client . "',
-                                        `whitelabel` = '" . $whiteLabel . "',
-                                        `videoURL` = '" . $video . "',
-                                        `embedvideoURL` = '" . $embedlink . "',
-                                        `graphicscomplete` =  '" . $graphics . "',
-                                        `albumType` =  '" . $albumType . "',
-                                        `link1` =  '" . $website1 . "',
-                                        `link2` =  '" . $website2 . "',
-                                        `bpm` =  '" . $bpm . "',
-                                        `facebookLink` =  '" . $facebookLink . "',
-                                        `twitterLink` =  '" . $twitterLink . "',
-                                        `instagramLink` =  '" . $instagramLink . "',
-                                        `genreId` =  '" . $genre . "',
-                                        `subGenreId` =  '" . $subGenre . "' 
-                                    WHERE `albumid` = '" . $albumId . "'");
+                                        `editedby` = ?,
+                                        `active` = ?,
+                                        `review` = ?,
+                                        `logos` = ?,
+                                        `client` = ?,
+                                        `whitelabel` = ?,
+                                        `videoURL` = ?,
+                                        `embedvideoURL` = ?,
+                                        `graphicscomplete` =  ?,
+                                        `albumType` =  ?,
+                                        `link1` =  ?,
+                                        `link2` =  ?,
+                                        `bpm` =  ?,
+                                        `facebookLink` =  ?,
+                                        `twitterLink` =  ?,
+                                        `instagramLink` =  ?,
+                                        `genreId` =  ?,
+                                        `subGenreId` =  ?
+                                    WHERE `albumid` = ?", [
+                                        urlencode($artist),
+                                        urlencode($album),
+                                        urlencode($time),
+                                        urlencode($company),
+                                        urlencode($website),
+                                        urlencode($moreInfo),
+                                        urlencode($producers),
+                                        urlencode($writer),
+                                        $admin_id,
+                                        $availableMembers,
+                                        $reviewable,
+                                        $logos,
+                                        $client,
+                                        $whiteLabel,
+                                        $video,
+                                        $embedlink,
+                                        $graphics,
+                                        $albumType,
+                                        $website1,
+                                        $website2,
+                                        $bpm,
+                                        $facebookLink,
+                                        $twitterLink,
+                                        $instagramLink,
+                                        $genre,
+                                        $subGenre,
+                                        $albumId
+                                    ]);
 
         
 
@@ -3330,25 +3358,25 @@ class Admin extends Authenticatable
 
     function updatePageImage($trackId, $img)
     {
-        $query =  DB::select("UPDATE `tracks` set  `imgpage` = '" . $img . "' where id = '" . $trackId . "'");
+        $query =  DB::select("UPDATE `tracks` set  `imgpage` = ? where id = ?", [$img, $trackId]);
         return 1;
     }
-    
+
     function updatePageImage_admin($trackId, $img, $pcloudFileId,$parentfolderid)
     {
-        $query =  DB::select("UPDATE `tracks` set  `imgpage` = '" . $img . "'  , pCloudFileID ='" .$pcloudFileId. "' , pCloudParentFolderID ='".$parentfolderid."' where id = '" . $trackId . "'");
+        $query =  DB::select("UPDATE `tracks` set  `imgpage` = ?, pCloudFileID = ?, pCloudParentFolderID = ? where id = ?", [$img, $pcloudFileId, $parentfolderid, $trackId]);
         return 1;
     }
-    
+
     function updatePageImage_in_album($albumId, $img)
     {
-        $query =  DB::select("UPDATE `tracks_album` set  `album_page_image` = '" . $img . "' where id = '" . $albumId . "'");
+        $query =  DB::select("UPDATE `tracks_album` set  `album_page_image` = ? where id = ?", [$img, $albumId]);
         return 1;
     }
-    
+
      function updatePageImage_in_album_admin($albumId, $img,$pcloudFileId,$parentfolderid)
     {
-        $query =  DB::select("UPDATE `tracks_album` set  `album_page_image` = '" . $img . "', pCloudFileID_album ='" .$pcloudFileId. "' , pCloudParentFolderID_album ='".$parentfolderid."' where id = '" . $albumId . "'");
+        $query =  DB::select("UPDATE `tracks_album` set  `album_page_image` = ?, pCloudFileID_album = ?, pCloudParentFolderID_album = ? where id = ?", [$img, $pcloudFileId, $parentfolderid, $albumId]);
         return 1;
     }
 
@@ -3448,10 +3476,10 @@ class Admin extends Authenticatable
         $trackFolder = base_path('AUDIO/');
         $imageFolder = base_path('ImagesUp/');
 
-        $query = DB::select("SELECT * FROM `tracks_mp3s` WHERE `track` = ". $trackId);
+        $query = DB::select("SELECT * FROM `tracks_mp3s` WHERE `track` = ?", [$trackId]);
         $trackMp3s = $query;
 
-        $query = DB::select("SELECT * FROM `tracks` WHERE `id` = ". $trackId);
+        $query = DB::select("SELECT * FROM `tracks` WHERE `id` = ?", [$trackId]);
         $track = $query;
 
         try {
@@ -3472,9 +3500,9 @@ class Admin extends Authenticatable
                     unlink($trackFolder . $trackMp3->location);
                 }
             }
-    
-            DB::select("DELETE FROM `tracks_mp3s` WHERE `track` = ". $trackId);
-            DB::select("DELETE FROM `tracks` WHERE `id` = ". $trackId);
+
+            DB::select("DELETE FROM `tracks_mp3s` WHERE `track` = ?", [$trackId]);
+            DB::select("DELETE FROM `tracks` WHERE `id` = ?", [$trackId]);
 
             return 1;
         } catch (Exception $e) {
@@ -3485,18 +3513,18 @@ class Admin extends Authenticatable
     function deleteTrackVersion($trackVersionId) {
         $trackFolder = base_path('AUDIO/');
 
-        $query = DB::select("SELECT * FROM `tracks_mp3s` WHERE `id` = ". $trackVersionId);
+        $query = DB::select("SELECT * FROM `tracks_mp3s` WHERE `id` = ?", [$trackVersionId]);
         $trackMp3s = $query;
 
         try {
-    
+
             foreach($trackMp3s as $trackMp3) {
                 if(file_exists($trackFolder . $trackMp3->location)) {
                     unlink($trackFolder . $trackMp3->location);
                 }
             }
-    
-            DB::select("DELETE FROM `tracks_mp3s` WHERE `id` = ". $trackVersionId);
+
+            DB::select("DELETE FROM `tracks_mp3s` WHERE `id` = ?", [$trackVersionId]);
 
             return 1;
         } catch (Exception $e) {
@@ -3506,15 +3534,15 @@ class Admin extends Authenticatable
 
     function addEmailImage($trackId, $img)
     {
-        $query = DB::select("UPDATE `tracks` set  `img` = '" . $img . "' where id = '" . $trackId . "'");
+        $query = DB::select("UPDATE `tracks` set  `img` = ? where id = ?", [$img, $trackId]);
         return 1;
     }
 
-   
+
 
     function getTrackMp3s($trackId)
     {
-        $query = DB::select("select id, version, location, preview, downloads, num_plays from tracks_mp3s where track = '" . $trackId . "'");
+        $query = DB::select("select id, version, location, preview, downloads, num_plays from tracks_mp3s where track = ?", [$trackId]);
         $result['numRows']  = count($query);
         $result['data']  = $query;
         return  $result;
@@ -3573,14 +3601,14 @@ class Admin extends Authenticatable
 
     function addPageImage($trackId, $img)
     {
-        $query = DB::select("UPDATE `tracks` set  `imgpage` = '" . $img . "' where id = '" . $trackId . "'");
+        $query = DB::select("UPDATE `tracks` set  `imgpage` = ? where id = ?", [$img, $trackId]);
         return 1;
     }
-    
-    
+
+
      function addPageImage_admin($trackId, $img, $pcloudFileId, $parentfolderid)
     {
-        $query = DB::select("UPDATE `tracks` set  `imgpage` = '" . $img . "' , pCloudFileID ='" .$pcloudFileId. "' , pCloudParentFolderID ='".$parentfolderid."' where id = '" . $trackId . "'");
+        $query = DB::select("UPDATE `tracks` set  `imgpage` = ?, pCloudFileID = ?, pCloudParentFolderID = ? where id = ?", [$img, $pcloudFileId, $parentfolderid, $trackId]);
         return 1;
     }
 
@@ -3628,10 +3656,10 @@ class Admin extends Authenticatable
      // New functions R-S
      function deleteTrack_trm($trackId)
      {
-          DB::select("update tracks set deleted = '1' where id = '" . $trackId . "'");
+          DB::select("update tracks set deleted = '1' where id = ?", [$trackId]);
          return 1;
      }
- 
+
      function changePriority_trm($check,$trackid)
      {
          if($check=='true'){
@@ -3639,10 +3667,10 @@ class Admin extends Authenticatable
          }else{
              $check=0;
          }
-         $query =  DB::select("UPDATE `tracks` set  `priority` = '" . $check . "' where id = '" . $trackid . "'");
+         $query =  DB::select("UPDATE `tracks` set  `priority` = ? where id = ?", [$check, $trackid]);
          return $query;
      }
- 
+
      function changeHottest_trm($check,$trackid)
      {
          if($check=='true'){
@@ -3650,37 +3678,37 @@ class Admin extends Authenticatable
          }else{
              $check=0;
          }
-         $query =  DB::select("UPDATE `tracks` set  `hottest` = '" . $check . "' where id = '" . $trackid . "'");
+         $query =  DB::select("UPDATE `tracks` set  `hottest` = ? where id = ?", [$check, $trackid]);
          return $query;
      }
  
      function changeTopStreaming_trm($check,$trackid)
-     {   
+     {
          if($check=='true'){
-             
-             $query =  DB::select("select * from  top_streaming_tracks  where trackId = '$trackid'");
+
+             $query =  DB::select("select * from  top_streaming_tracks  where trackId = ?", [$trackid]);
              if(count($query)==0){
- 
+
                  $max = DB::table('top_streaming_tracks')->max('position');
-                 
+
                  // $this->db->select_max('position');
-                 // $max = $this->db->get('top_streaming_tracks')->row();  
+                 // $max = $this->db->get('top_streaming_tracks')->row();
                  $max= $max+1;
- 
+
                  $insertData = array(
                      'trackId' => $trackid,
                      'position' => $max,
                  );
-         
+
                  $insertId = DB::table('top_streaming_tracks')->insertGetId($insertData);
                  return $insertId;
              }else{
                  return "Track already in Top Streaming";
              }
-             
-             
+
+
          }else{
-             $result =  DB::select("delete from top_streaming_tracks where trackId = '$trackid'");
+             $result =  DB::select("delete from top_streaming_tracks where trackId = ?", [$trackid]);
              return $result;
          }
      }
@@ -3688,16 +3716,16 @@ class Admin extends Authenticatable
      function changeTopStreamingOrder_trm($order){
          $countt=0;
          $order=explode(',',$order);
- 
+
          foreach($order as $a){
-             $query =  DB::select("UPDATE `top_streaming_tracks` set  `position` = '" . $countt . "' where trackId = '" . $a . "'");
+             $query =  DB::select("UPDATE `top_streaming_tracks` set  `position` = ? where trackId = ?", [$countt, $a]);
              $countt++;
          }
-         
+
      }
- 
+
      function changeLogosOrder_trm($order,$a){
-         $query =  DB::select("UPDATE `tracks` set  `logos` = '" . $order . "' where id = '" . $a . "'");
+         $query =  DB::select("UPDATE `tracks` set  `logos` = ? where id = ?", [$order, $a]);
          return 1;
      }
  
@@ -3724,10 +3752,10 @@ class Admin extends Authenticatable
  
      function removeStaff_trm($trackId)
      {
-         $query =  DB::select("DELETE FROM staff_selection WHERE trackId = '$trackId'");
+         $query =  DB::select("DELETE FROM staff_selection WHERE trackId = ?", [$trackId]);
          return $query;
      }
- 
+
      function assignYou_trm($trackId)
      {
          $query =  DB::select("select sortOrder from  you_selection order by sortOrder desc limit 1");
@@ -3737,21 +3765,21 @@ class Admin extends Authenticatable
          } else {
              $sortOrder = 1;
          }
- 
+
          $insertData = array(
              'trackId' => $trackid,
              'sortOrder' => $sortOrder,
              'addedOn' => NOW(),
          );
- 
+
          $insertId = DB::table('you_selection')->insertGetId($insertData);
-        
+
          return $insertId;
      }
- 
+
      function removeYou_trm($trackId)
      {
-         $query =  DB::select("DELETE FROM you_selection WHERE trackId = '$trackId'");
+         $query =  DB::select("DELETE FROM you_selection WHERE trackId = ?", [$trackId]);
          return $query;
      }
  
@@ -3800,24 +3828,24 @@ class Admin extends Authenticatable
  
      function getReviews_trm($trackId)
      {
-         $query =DB::select("select * from tracks_reviews where track = '" . $trackId . "'");
+         $query =DB::select("select * from tracks_reviews where track = ?", [$trackId]);
          $result['numRows']  = count($query);
         // dd(  $result['numRows'] );
          $result['data']  = $query;
          return  $result;
      }
- 
+
      function getLogos_trm($where)
-     {   
+     {
          $query = DB::select("select id, company, img, pCloudFileID_logo, pCloudParentFolderID_logo from  logos $where");
          $result['numRows'] =count($query);
          $result['data']  = $query;
          return $result;
      }
- 
+
      function deleteTrackAudio_trm($did)
      {
-         $result = DB::select("delete from tracks_mp3s where id = '$did'");
+         $result = DB::select("delete from tracks_mp3s where id = ?", [$did]);
          return $result;
      }
  
@@ -3829,7 +3857,7 @@ class Admin extends Authenticatable
              } else {
                  $setPreview = 0;
              }
-             $query =  DB::select("update `tracks_mp3s` set version = '" . addslashes($data['version' . $i]) . "', preview = '" . addslashes($setPreview) . "' where id = '" . $data['mp' . $i] . "' and track = '" . $trackId . "'");
+             $query =  DB::select("update `tracks_mp3s` set version = ?, preview = ? where id = ? and track = ?", [addslashes($data['version' . $i]), addslashes($setPreview), $data['mp' . $i], $trackId]);
          }
          return 1;
      }
@@ -3842,10 +3870,10 @@ class Admin extends Authenticatable
  
      function updateCoverImage_trm($trackId, $img,  $pcloudFileId,$parentfolderid)
      {
-         $query = DB::select("UPDATE `tracks` set  `coverimage` = '" . $img . "'  , pCloudFileID_cover ='" .$pcloudFileId. "' , pCloudParentFolderID_cover ='".$parentfolderid."' where id = '" . $trackId . "'");
+         $query = DB::select("UPDATE `tracks` set  `coverimage` = ?, pCloudFileID_cover = ?, pCloudParentFolderID_cover = ? where id = ?", [$img, $pcloudFileId, $parentfolderid, $trackId]);
          return 1;
      }
- 
+
      function addLogo_trm($company, $url)
      {
         $admin_id = Auth::user()->id;
@@ -3855,20 +3883,20 @@ class Admin extends Authenticatable
              'added' => NOW(),
              'addedby' => $admin_id,
          );
- 
+
          $insertId = DB::table('logos')->insertGetId($insertData);
          return  $insertId;
      }
- 
+
      function addLogoImage_trm($logoId, $image)
      {
-         $query = DB::select("update logos set img = '" . $image . "' where id = '" . $logoId . "'");
+         $query = DB::select("update logos set img = ? where id = ?", [$image, $logoId]);
          return $query;
      }
-     
+
       function addLogoImage_trm_admin($logoId, $image,$pcloudFileId,$parentfolderid)
      {
-         $query = DB::select("update logos set img = '" . $image . "' , pCloudFileID_logo ='" .$pcloudFileId. "' , pCloudParentFolderID_logo ='".$parentfolderid."' where id = '" . $logoId . "'");
+         $query = DB::select("update logos set img = ?, pCloudFileID_logo = ?, pCloudParentFolderID_logo = ? where id = ?", [$image, $pcloudFileId, $parentfolderid, $logoId]);
          return $query;
      }
  
@@ -3915,17 +3943,60 @@ class Admin extends Authenticatable
          }
  
  
-         $chk_qry = DB::select("SELECT id FROM `tracks` WHERE artist = '" . urlencode($artist) . "' AND title = '" . urlencode($title) . "' AND id !=  '" .$trackId."' AND deleted=0");
- 
+         $chk_qry = DB::select("SELECT id FROM `tracks` WHERE artist = ? AND title = ? AND id != ? AND deleted=0", [urlencode($artist), urlencode($title), $trackId]);
+
          $trcks = count($chk_qry);
          if($trcks > 0){
              return 'track_exists';
          }
  
-         $query = DB::select("update `tracks` set artist = '" . addslashes(urlencode($artist)) . "', title = '" . addslashes(urlencode($title)) . "', featured_artist_1 = '" . urlencode($featured_artist_1) . "', featured_artist_2 = '" . urlencode($featured_artist_2) . "', album = '" . urlencode($album) . "', time = '" . urlencode($time) . "', label = '" . urlencode($company) . "', link = '" . urlencode($website) . "',
-         moreinfo = '" . urlencode($moreInfo) . "',
-         notes = '" . urlencode($notes) . "',
-         producer = '" . urlencode($producers) . "', writer = '" . urlencode($writer) . "', edited = NOW(), editedby = '" . $admin_id . "', active = '" . $availableMembers . "', review = '" . $reviewable . "', logos = '" . $logos . "', whitelabel = '" . $whiteLabel . "',  videoURL = '" . $video . "', embedvideoURL = '" . $embedlink . "', graphicscomplete =  '" . $graphics . "', albumType =  '" . $albumType . "', link1 =  '" . $website1 . "', link2 =  '" . $website2 . "', bpm =  '" . $bpm . "', facebookLink =  '" . $facebookLink . "', twitterLink =  '" . $twitterLink . "', instagramLink =  '" . $instagramLink . "', tiktokLink =  '" . $tiktokLink . "', snapchatLink =  '" . $snapchatLink . "', othersLink =  '" . $othersLink . "', genreId =  '" . $genre . "', status = '" .$status."', memberPreviewAvailable = '" .$memberPreviewAvailable."', contact_name = '" .addslashes($contact_name)."', contact_email = '" .$contact_email."', contact_phone = '" .$contact_phone."', relationship_to_artist = '" .$relationship_to_artist."',feedback1_contact_email = '" .$second_contact_email."', feedback2_contact_email = '" .$third_contact_email."', feedback3_contact_email = '" .$fourth_contact_email."', songkey = '" .$songkey."', client = '".$client."' where id = '" . $trackId . "'");
+         $query = DB::table('tracks')
+            ->where('id', $trackId)
+            ->update([
+                'artist' => addslashes(urlencode($artist)),
+                'title' => addslashes(urlencode($title)),
+                'featured_artist_1' => urlencode($featured_artist_1),
+                'featured_artist_2' => urlencode($featured_artist_2),
+                'album' => urlencode($album),
+                'time' => urlencode($time),
+                'label' => urlencode($company),
+                'link' => urlencode($website),
+                'moreinfo' => urlencode($moreInfo),
+                'notes' => urlencode($notes),
+                'producer' => urlencode($producers),
+                'writer' => urlencode($writer),
+                'edited' => DB::raw('NOW()'),
+                'editedby' => $admin_id,
+                'active' => $availableMembers,
+                'review' => $reviewable,
+                'logos' => $logos,
+                'whitelabel' => $whiteLabel,
+                'videoURL' => $video,
+                'embedvideoURL' => $embedlink,
+                'graphicscomplete' => $graphics,
+                'albumType' => $albumType,
+                'link1' => $website1,
+                'link2' => $website2,
+                'bpm' => $bpm,
+                'facebookLink' => $facebookLink,
+                'twitterLink' => $twitterLink,
+                'instagramLink' => $instagramLink,
+                'tiktokLink' => $tiktokLink,
+                'snapchatLink' => $snapchatLink,
+                'othersLink' => $othersLink,
+                'genreId' => $genre,
+                'status' => $status,
+                'memberPreviewAvailable' => $memberPreviewAvailable,
+                'contact_name' => addslashes($contact_name),
+                'contact_email' => $contact_email,
+                'contact_phone' => $contact_phone,
+                'relationship_to_artist' => $relationship_to_artist,
+                'feedback1_contact_email' => $second_contact_email,
+                'feedback2_contact_email' => $third_contact_email,
+                'feedback3_contact_email' => $fourth_contact_email,
+                'songkey' => $songkey,
+                'client' => $client
+            ]);
 
          // $query = DB::select("update `tracks` set artist = '" . urlencode($artist) . "', title = '" . urlencode($title) . "', featured_artist_1 = '" . urlencode($featured_artist_1) . "', featured_artist_2 = '" . urlencode($featured_artist_2) . "', album = '" . urlencode($album) . "', time = '" . urlencode($time) . "', label = '" . urlencode($company) . "', link = '" . urlencode($website) . "',
          // moreinfo = '" . urlencode($moreInfo) . "',
@@ -3937,15 +4008,15 @@ class Admin extends Authenticatable
  
      function updateEmailImage_trm($trackId, $img)
      {
-         $query = DB::select("UPDATE `tracks` set  `img` = '" . $img . "' where id = '" . $trackId . "'");
+         $query = DB::select("UPDATE `tracks` set  `img` = ? where id = ?", [$img, $trackId]);
          return 1;
      }
- 
+
      function getTrackReps_trm($trackId, $clientId)
      {
-         $query = DB::select("select track_label_reps.label_rep_id, client_contacts.name, client_contacts.email from track_label_reps 
+         $query = DB::select("select track_label_reps.label_rep_id, client_contacts.name, client_contacts.email from track_label_reps
          left join client_contacts on track_label_reps.label_rep_id = client_contacts.id
-         where track_label_reps.client_id = '" . $clientId . "' and track_label_reps.track_id = '" . $trackId . "'");
+         where track_label_reps.client_id = ? and track_label_reps.track_id = ?", [$clientId, $trackId]);
          $result['numRows']  = count($query);
          $result['data']  = $query;
          return  $result;
@@ -3989,15 +4060,40 @@ class Admin extends Authenticatable
  
        /*  $query = DB::select("UPDATE `tracks` SET artist = '" . $artist . "', featured_artist_1 = '" .  $featured_artist_1 . "', featured_artist_2 = '" .  $featured_artist_2 . "', title = '" .  $title . "', albumType = '" . $albumType . "', album = '" . $album . "', time = '" . $time . "', label = '" . $company . "', moreinfo = '" . $moreInfo . "', producer = '" . $producers . "', writer = '" . $writer . "', addedby = '" . $_COOKIE['adminId'] . "', active = '" . $availableMembers . "', review = '" . $reviewable . "', client = '" . $client . "', whitelabel = '" . $whiteLabel . "', type = '" . $type . "', graphicscomplete = '" . $graphics . "', genreId = '" . $genre . "', subGenreId = '" . $subGenre . "', bpm = '" . $bpm . "', status = '" . $status . "'  WHERE id = '" . $track_id . "'"); */
        
-          $query = DB::select('UPDATE `tracks` SET artist = "'.$artist .'", featured_artist_1 = "'. $featured_artist_1  .'", featured_artist_2 = "'.  $featured_artist_2 .'", title = "'.  $title .'", albumType = "'. $albumType .'", album = "'. $album .'", time = "'.$time .'", label = "'. $company .'", moreinfo = "'. $moreInfo .'", producer = "'. $producers .'", writer = "'. $writer .'", addedby = "'. $admin_id.'", active = "'. $availableMembers .'", review = "'. $reviewable .'", client = "'. $client . '", whitelabel = "'. $whiteLabel .'", type = "'. $type .'", graphicscomplete = "'. $graphics .'", genreId = "'. $genre .'", subGenreId = "'. $subGenre .'", bpm ="'. $bpm .'", status = "'. $status .'"  WHERE id = "'. $track_id.'"');      
+          $query = DB::table('tracks')
+            ->where('id', $track_id)
+            ->update([
+                'artist' => $artist,
+                'featured_artist_1' => $featured_artist_1,
+                'featured_artist_2' => $featured_artist_2,
+                'title' => $title,
+                'albumType' => $albumType,
+                'album' => $album,
+                'time' => $time,
+                'label' => $company,
+                'moreinfo' => $moreInfo,
+                'producer' => $producers,
+                'writer' => $writer,
+                'addedby' => $admin_id,
+                'active' => $availableMembers,
+                'review' => $reviewable,
+                'client' => $client,
+                'whitelabel' => $whiteLabel,
+                'type' => $type,
+                'graphicscomplete' => $graphics,
+                'genreId' => $genre,
+                'subGenreId' => $subGenre,
+                'bpm' => $bpm,
+                'status' => $status
+            ]);      
          return $query;
          
      }
  
      function addCoverImage_trm($trackId, $img, $pcloudFileId, $parentfolderid)
      {
-        
-         $query = DB::select("UPDATE `tracks` set  `coverimage` = '" . $img . "' , pCloudFileID_cover ='" .$pcloudFileId. "' , pCloudParentFolderID_cover ='".$parentfolderid."' where id = '" . $trackId . "'");
+
+         $query = DB::select("UPDATE `tracks` set  `coverimage` = ?, pCloudFileID_cover = ?, pCloudParentFolderID_cover = ? where id = ?", [$img, $pcloudFileId, $parentfolderid, $trackId]);
          return 1;
      }
  
@@ -4116,7 +4212,7 @@ class Admin extends Authenticatable
          // '" . urlencode($producers) . "',
          // '" . urlencode($writer) . "', NOW(), '" . $_SESSION['adminId'] . "', '" . $availableMembers . "', '" . $reviewable . "', '" . $client . "', '" . $whiteLabel . "', '0', '" . $type . "', '" . $graphics . "', NOW(), '" . $genre . "', '" . $subGenre . "', '" . $bpm . "', '" . urlencode($status) . "','" . urlencode($memberPreviewAvailable) . "','" . urlencode($contact_name) . "','" . urlencode($contact_email) . "','" . urlencode($contact_phone) . "','" . urlencode($relationship_to_artist) . "','" . urlencode($songkey) . "')");
         
-        DB::select("UPDATE `tracks` SET order_position = '" . $insertId . "' WHERE id = '" . $insertId . "'");
+        DB::select("UPDATE `tracks` SET order_position = ? WHERE id = ?", [$insertId, $insertId]);
          return $insertId;
      }
  
@@ -4130,14 +4226,14 @@ class Admin extends Authenticatable
          } else {
              $logos = '';
          }
-          $query = DB::select("UPDATE `tracks` SET link = '" . $website . "', link1 = '" . $website1 . "', link2 = '" . $website2 . "', videoURL = '" . $video . "', embedvideoURL = '" . $embedlink . "', facebookLink = '" . $facebook . "', twitterLink = '" . $twitter . "', instagramLink = '" . $instagram . "', tiktokLink = '" . $tiktok . "', snapchatLink = '" . $snapchat . "', othersLink = '" . $others . "', logos = '" . $logos . "' WHERE id = '" . $track_id . "'");
+          $query = DB::select("UPDATE `tracks` SET link = ?, link1 = ?, link2 = ?, videoURL = ?, embedvideoURL = ?, facebookLink = ?, twitterLink = ?, instagramLink = ?, tiktokLink = ?, snapchatLink = ?, othersLink = ?, logos = ? WHERE id = ?", [$website, $website1, $website2, $video, $embedlink, $facebook, $twitter, $instagram, $tiktok, $snapchat, $others, $logos, $track_id]);
  
          return $query;
      }
  
      function deleteSubmittedTrack_trm($trackId)
      {
-         DB::select("update tracks_submitted set deleted = '1' where id = '" . $trackId . "'");
+         DB::select("update tracks_submitted set deleted = '1' where id = ?", [$trackId]);
          return 1;
      }
  
@@ -4178,9 +4274,9 @@ class Admin extends Authenticatable
  
      function approveSubTrack_trm($trackSubId)
      {
-         $approveQuery =DB::select("update tracks_submitted set approved = '1' where approved = '0' and id = '$trackSubId'");
+         $approveQuery =DB::select("update tracks_submitted set approved = '1' where approved = '0' and id = ?", [$trackSubId]);
          
-         $query =DB::select("select * from  tracks_submitted where id = '$trackSubId' order by id desc");
+         $query =DB::select("select * from  tracks_submitted where id = ? order by id desc", [$trackSubId]);
          $result['numRows'] = count($query);
          $result['data']  = $query;
  
@@ -4234,7 +4330,7 @@ class Admin extends Authenticatable
      
              $trackId = DB::table('tracks')->insertGetId($insertData);
              
-             DB::select("update tracks set order_position = '$trackId' where id = '$trackId'");
+             DB::select("update tracks set order_position = ? where id = ?", [$trackId, $trackId]);
  
              // $query =DB::select("insert into tracks (`artist`, `title`, `albumType`, `album`, `time`, `label`, `link`, `link1`, `link2`, `moreinfo`, `producer`, `imgpage`, `thumb`, `added`,  `edited`,  `active`, `review`, `client`, `approved`, `deleted`, `madeAvailable`, `trackSubmittedId`, `release_date`, `genreId`, `subGenreId`, `bpm`, `facebookLink`, `twitterLink`, `instagramLink`) values ('" . $result['data'][0]->artist . "', '" . $result['data'][0]->title . "', '" . $result['data'][0]->albumType . "', '" . $result['data'][0]->album . "', '" . $result['data'][0]->time . "', '" . $result['data'][0]->label . "', '" . $result['data'][0]->link . "', '" . $result['data'][0]->link1 . "', '" . $result['data'][0]->link2 . "', '" . $result['data'][0]->moreinfo . "', '" . $result['data'][0]->producers . "', '" . $result['data'][0]->imgpage . "', '" . $result['data'][0]->thumb . "', NOW(), NOW(), '1', '0', '" . $result['data'][0]->client . "', '" . $result['data'][0]->approved . "', '0', NOW(), '" . $trackSubId . "', '" . $release_date[0] . "', '" . $result['data'][0]->genreId . "', '" . $result['data'][0]->subGenreId . "', '" . $result['data'][0]->bpm . "', '" . $result['data'][0]->facebookLink . "', '" . $result['data'][0]->twitterLink . "', '" . $result['data'][0]->instagramLink . "')");
              // $trackId = $this->db->insert_id();
@@ -4371,37 +4467,37 @@ class Admin extends Authenticatable
      function updateSubmittedTrack_trm($data, $trackId)
      {
          extract($data);
-         $query = DB::select("update `tracks_submitted` set artist = '" . urlencode($artist) . "', title = '" . urlencode($title) . "', producers = '" . urlencode($producers) . "', time = '" . $time . "', bpm = '" . $bpm . "', album = '" . urlencode($album) . "', link = '" . urlencode($website) . "', moreinfo = '" . urlencode($moreInfo) . "',  genreId = '" . $genre . "', subGenreId = '" . $subGenre . "', label = '" . urlencode($company) . "', albumType = '" . urlencode($albumType) . "', link1 = '" . $website1 . "', link2 = '" . $website2 . "', facebookLink = '" . $facebookLink . "', twitterLink = '" . $twitterLink . "', instagramLink = '" . $instagramLink . "', contact_email = '" . $contact_email . "' where id = '" . $trackId . "'");
+         $query = DB::select("update `tracks_submitted` set artist = ?, title = ?, producers = ?, time = ?, bpm = ?, album = ?, link = ?, moreinfo = ?,  genreId = ?, subGenreId = ?, label = ?, albumType = ?, link1 = ?, link2 = ?, facebookLink = ?, twitterLink = ?, instagramLink = ?, contact_email = ? where id = ?", [urlencode($artist), urlencode($title), urlencode($producers), $time, $bpm, urlencode($album), urlencode($website), urlencode($moreInfo), $genre, $subGenre, urlencode($company), urlencode($albumType), $website1, $website2, $facebookLink, $twitterLink, $instagramLink, $contact_email, $trackId]);
          return $query;
      }
  
      function updateSubmittedPageImage_trm($trackId, $img, $pcloudFileId, $parentfolderid)
      {
-         $query = DB::select("UPDATE `tracks_submitted` set  `imgpage` = '" . $img . "' , pCloudFileID ='" .$pcloudFileId. "' , pCloudParentFolderID ='".$parentfolderid."' where id = '" . $trackId . "'");
+         $query = DB::select("UPDATE `tracks_submitted` set  `imgpage` = ? , pCloudFileID = ? , pCloudParentFolderID = ? where id = ?", [$img, $pcloudFileId, $parentfolderid, $trackId]);
          return 1;
      }
  
      function addClientTrackAmr1($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr1 = '" . $amrFile . "', version1 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr1 = ?, version1 = ? where id = ?", [$amrFile, $version, $id]);
          return 1;
      }
  
      function addClientTrackAmr2($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr2 = '" . $amrFile . "', version2 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr2 = ?, version2 = ? where id = ?", [$amrFile, $version, $id]);
          return 1;
      }
  
      function addClientTrackAmr3($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr3 = '" . $amrFile . "', version3 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr3 = ?, version3 = ? where id = ?", [$amrFile, $version, $id]);
          return 1;
      }
  
      function addClientTrackAmr4($id, $amrFile, $version)
      {
-         $query = DB::select("update `tracks_submitted` set amr4 = '" . $amrFile . "', version4 = '" . $version . "' where id = '" . $id . "'");
+         $query = DB::select("update `tracks_submitted` set amr4 = ?, version4 = ? where id = ?", [$amrFile, $version, $id]);
          return 1;
      }
  
@@ -4493,7 +4589,7 @@ class Admin extends Authenticatable
 
         }
 
-        $query = DB::select("SELECT * FROM tracks_reviews where member = '" . $get_member_id . "' and track = '" . $tid . "'");
+        $query = DB::select("SELECT * FROM tracks_reviews where member = ? and track = ?", [$get_member_id, $tid]);
 
         $result['numRows'] = count($query);
 
@@ -4580,7 +4676,7 @@ class Admin extends Authenticatable
 
             // Check whether already downloaded or not
 
-            $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = '" . $get_member_id . "' and track_id = '" . $tid . "' and type_id = '1'");
+            $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = ? and track_id = ? and type_id = '1'", [$get_member_id, $tid]);
 
             $digi_coins_numRows = count($digi_coins);
 
@@ -4588,7 +4684,7 @@ class Admin extends Authenticatable
 
                 // caliculate dj ponints for review
 
-                $query1 = DB::select("SELECT added FROM tracks where id = '" . $tid . "'");
+                $query1 = DB::select("SELECT added FROM tracks where id = ?", [$tid]);
 
                 $added_result  = $query1;
 
@@ -4612,7 +4708,7 @@ class Admin extends Authenticatable
                     $points = 2;
                 }
 
-                DB::select("insert into member_digicoins (`member_id`, `track_id`, `type_id`, `points`, `date_time`) values ('" . $get_member_id . "', '" . $tid . "', '1', '" . $points . "', NOW())");
+                DB::select("insert into member_digicoins (`member_id`, `track_id`, `type_id`, `points`, `date_time`) values (?, ?, '1', ?, NOW())", [$get_member_id, $tid, $points]);
 
                 $digicoin_id = $this->db->insert_id();
 
