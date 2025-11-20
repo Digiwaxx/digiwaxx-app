@@ -25,7 +25,7 @@ class MemberAllDB extends Model
 
     left join members_dj_mixer on members.id = members_dj_mixer.member
 
-   where members.id = '$memberId'");
+   where members.id = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -48,7 +48,7 @@ class MemberAllDB extends Model
 	
 	public function getMemberProductionInfo($memberId){
 
-        $queryRes = DB::select("SELECT productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name FROM  members_production_talent where member = '$memberId'");
+        $queryRes = DB::select("SELECT productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name FROM  members_production_talent where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -58,7 +58,7 @@ class MemberAllDB extends Model
     }
   	public function getMemberSpecialInfo($memberId){
 		
-        $queryRes = DB::select("SELECT servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website FROM  members_special_services where member = '$memberId'");
+        $queryRes = DB::select("SELECT servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website FROM  members_special_services where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -68,7 +68,7 @@ class MemberAllDB extends Model
     }
   	public function getMemberPromoterInfo($memberId){
 
-        $queryRes = DB::select("SELECT promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website FROM members_promoter where member = '$memberId'");
+        $queryRes = DB::select("SELECT promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website FROM members_promoter where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -78,7 +78,7 @@ class MemberAllDB extends Model
     }
    	public function getMemberClothingInfo($memberId){
 
-        $queryRes = DB::select("SELECT clothing_name, clothing_department FROM members_clothing_apparel where member = '$memberId'");
+        $queryRes = DB::select("SELECT clothing_name, clothing_department FROM members_clothing_apparel where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -88,7 +88,7 @@ class MemberAllDB extends Model
     }
    	public function getMemberManagementInfo($memberId){
 
-        $queryRes = DB::select("SELECT managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry FROM members_management where member = '$memberId'");
+        $queryRes = DB::select("SELECT managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry FROM members_management where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -98,7 +98,7 @@ class MemberAllDB extends Model
     }
     public function getMemberRecordInfo($memberId){
 
-        $queryRes = DB::select("SELECT labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department FROM members_record_label where member = '$memberId'");
+        $queryRes = DB::select("SELECT labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department FROM members_record_label where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -108,7 +108,7 @@ class MemberAllDB extends Model
     }
     public function getMemberMediaInfo($memberId){
 
-        $queryRes = DB::select("SELECT mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department FROM members_mass_media where member = '$memberId'");
+        $queryRes = DB::select("SELECT mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department FROM members_mass_media where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -118,7 +118,7 @@ class MemberAllDB extends Model
     }
     public function getMemberRadioInfo($memberId){
 
-        $queryRes = DB::select("SELECT * FROM members_radio_station where member = '$memberId'");
+        $queryRes = DB::select("SELECT * FROM members_radio_station where member = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -128,7 +128,7 @@ class MemberAllDB extends Model
     }
     public function getMemberSocialInfo($memberId){
 
-        $queryRes = DB::select("SELECT * FROM  member_social_media where memberId = '$memberId'");
+        $queryRes = DB::select("SELECT * FROM  member_social_media where memberId = ?", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -155,7 +155,7 @@ class MemberAllDB extends Model
 
         // plays and downloads
 
-        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = '" . $trackId . "' order by preview desc");
+        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = ? order by preview desc", [$trackId]);
 
         $numRows = count($query);
 
@@ -177,7 +177,7 @@ class MemberAllDB extends Model
 
         // rating
 
-        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = '" . $trackId . "' order by id desc");
+        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = ? order by id desc", [$trackId]);
 
         $ratingRows = count($query);
 
@@ -202,7 +202,7 @@ class MemberAllDB extends Model
 	
     public function getClientTrackReview($tid, $memId){
 
-        $queryRes = DB::select("SELECT * FROM tracks_reviews where member = '" . $memId . "' and track = '" . $tid . "'");
+        $queryRes = DB::select("SELECT * FROM tracks_reviews where member = '?' and track = '?'", [$memId, $tid]);
 
         $result['numRows'] = count($queryRes);
 
@@ -213,7 +213,7 @@ class MemberAllDB extends Model
 	
     public function getTrackMp3s($trackId){
 
-        $queryRes = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.preview, tracks_mp3s.location FROM tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = '$trackId' order by tracks_mp3s.preview desc");
+        $queryRes = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.preview, tracks_mp3s.location FROM tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = ? order by tracks_mp3s.preview desc", [$trackId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -226,7 +226,7 @@ class MemberAllDB extends Model
 
         $queryRes = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.location FROM
 
-   tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = '$trackId' order by tracks_mp3s.preview desc");
+   tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = ? order by tracks_mp3s.preview desc", [$trackId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -250,7 +250,7 @@ class MemberAllDB extends Model
 	
 	public function getYouSelectedTracks1($memberId, $start, $limit){
 		//pArr($memberId);die('--YSYS');
-		$query1 = DB::select("SELECT DISTINCT track_member_downloads.trackId, track_member_downloads.mp3Id, tracks_mp3s.version, track_member_downloads.downloadId  FROM track_member_downloads left join tracks_mp3s on track_member_downloads.mp3Id = tracks_mp3s.id where track_member_downloads.memberId = '" . $memberId . "' order by track_member_downloads.downloadId desc limit $start, $limit");
+		$query1 = DB::select("SELECT DISTINCT track_member_downloads.trackId, track_member_downloads.mp3Id, tracks_mp3s.version, track_member_downloads.downloadId  FROM track_member_downloads left join tracks_mp3s on track_member_downloads.mp3Id = tracks_mp3s.id where track_member_downloads.memberId = ? order by track_member_downloads.downloadId desc limit $start, $limit", [$memberId]);
 
 			$numRows1 = count($query1);
 
@@ -312,7 +312,7 @@ class MemberAllDB extends Model
 	
 	public function getMemberUnreadInbox($memberId){
 		
-        $queryRes = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = '" . $memberId . "')  AND latest = '0' AND unread = '0' order by messageId desc");
+        $queryRes = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = ?)  AND latest = '0' AND unread = '0' order by messageId desc", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -323,7 +323,7 @@ class MemberAllDB extends Model
 	}	
 	public function getMemberUnreadInboxTotalCount($memberId){
 		
-        $queryRes = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = '" . $memberId . "')  AND latest = '0' AND unread = '0' order by messageId desc");
+        $queryRes = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = ?)  AND latest = '0' AND unread = '0' order by messageId desc", [$memberId]);
 
         $result = count($queryRes);       
 
@@ -332,7 +332,7 @@ class MemberAllDB extends Model
 	}
 	public function getMemberUnreadInboxAll($memberId, $start, $limit){
 		
-        $queryRes = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = '" . $memberId . "')  AND latest = '0' AND unread = '0' order by messageId desc limit $start, $limit");
+        $queryRes = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = ?)  AND latest = '0' AND unread = '0' order by messageId desc limit $start, $limit", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -343,7 +343,7 @@ class MemberAllDB extends Model
 	}	
 	public function getMemberSubscriptionStatus($memberId){
 		
-        $queryRes = DB::select("SELECT status, package_Id, subscription_Id FROM member_subscriptions where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit 1");
+        $queryRes = DB::select("SELECT status, package_Id, subscription_Id FROM member_subscriptions where member_Id = ? and status = '1' order by subscription_Id desc limit 1", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -354,7 +354,7 @@ class MemberAllDB extends Model
 	}
 	public function getMemberSubscription($memberId){
 		
-        $queryRes = DB::select("SELECT package_Id, subscribed_date_time FROM member_subscriptions where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit 1");
+        $queryRes = DB::select("SELECT package_Id, subscribed_date_time FROM member_subscriptions where member_Id = ? and status = '1' order by subscription_Id desc limit 1", [$memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -385,7 +385,7 @@ class MemberAllDB extends Model
 	
 	public function getMemberInboxTotalCount($memberId){
 		
-       $queryRes = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '" . $memberId . "') OR (senderType = '2' AND senderId = '" . $memberId . "')) AND latest = '0' order by messageId desc");
+       $queryRes = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '?') OR (senderType = '2' AND senderId = '?')) AND latest = '0' order by messageId desc", [$memberId, $memberId]);
 
         $result = count($queryRes);
 
@@ -394,7 +394,7 @@ class MemberAllDB extends Model
 		
 	public function getMemberInbox($memberId){
 		
-       $queryRes = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '" . $memberId . "') OR (senderType = '2' AND senderId = '" . $memberId . "')) AND latest = '0' order by messageId desc");
+       $queryRes = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '?') OR (senderType = '2' AND senderId = '?')) AND latest = '0' order by messageId desc", [$memberId, $memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -405,7 +405,7 @@ class MemberAllDB extends Model
 			
 	public function getMemberAllInbox($memberId, $start, $limit){
 		
-       $queryRes = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '" . $memberId . "') OR (senderType = '2' AND senderId = '" . $memberId . "')) AND latest = '0' order by messageId desc limit $start, $limit");
+       $queryRes = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '?') OR (senderType = '2' AND senderId = '?')) AND latest = '0' order by messageId desc limit $start, $limit", [$memberId, $memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -445,7 +445,7 @@ class MemberAllDB extends Model
  	
 	public function getClientInfo($clientId){
 		
-       $queryRes = DB::select("SELECT * FROM  clients where id = '$clientId'");
+       $queryRes = DB::select("SELECT * FROM  clients where id = ?", [$clientId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -456,7 +456,7 @@ class MemberAllDB extends Model
   	
 	public function getClientImage($clientId){
 		
-       $queryRes = DB::select("SELECT * FROM  client_images where clientId = '$clientId' order by imageId desc limit 1");
+       $queryRes = DB::select("SELECT * FROM  client_images where clientId = ? order by imageId desc limit 1", [$clientId]);
 
         $result['numRows'] = count($queryRes);
         if(!empty($queryRes[0]->pCloudFileID_client_image)){
@@ -475,7 +475,7 @@ class MemberAllDB extends Model
 
    left join chat_messages_starred on chat_messages.messageId = chat_messages_starred.messageId
 
-   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "')) AND chat_messages_starred.userType = '2' AND chat_messages_starred.userId = '" . $memberId . "' AND chat_messages.message != '' order by chat_messages_starred.messageId desc");
+   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '?') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '?')) AND chat_messages_starred.userType = '2' AND chat_messages_starred.userId = '?' AND chat_messages.message != '' order by chat_messages_starred.messageId desc", [$memberId, $memberId, $memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -489,7 +489,7 @@ class MemberAllDB extends Model
 
    left join chat_messages_starred on chat_messages.messageId = chat_messages_starred.messageId
 
-   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "')) AND chat_messages_starred.userType = '2' AND chat_messages_starred.userId = '" . $memberId . "' AND chat_messages.message != '' order by chat_messages_starred.messageId desc");
+   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '?') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '?')) AND chat_messages_starred.userType = '2' AND chat_messages_starred.userId = '?' AND chat_messages.message != '' order by chat_messages_starred.messageId desc", [$memberId, $memberId, $memberId]);
 
         $result = count($queryRes);
 
@@ -501,7 +501,7 @@ class MemberAllDB extends Model
 
    left join chat_messages_starred on chat_messages.messageId = chat_messages_starred.messageId
 
-   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "')) AND chat_messages_starred.userType = '2' AND chat_messages_starred.userId = '" . $memberId . "' AND chat_messages.message != '' order by chat_messages_starred.messageId desc LIMIT $start, $limit");
+   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '?') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '?')) AND chat_messages_starred.userType = '2' AND chat_messages_starred.userId = '?' AND chat_messages.message != '' order by chat_messages_starred.messageId desc LIMIT $start, $limit", [$memberId, $memberId, $memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -515,7 +515,7 @@ class MemberAllDB extends Model
 
    left join chat_messages_archived on chat_messages.messageId = chat_messages_archived.messageId
 
-   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "')) AND chat_messages_archived.userType = '2' AND chat_messages_archived.userId = '" . $memberId . "' AND chat_messages.message != ''  order by chat_messages_archived.messageId desc");
+   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '?') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '?')) AND chat_messages_archived.userType = '2' AND chat_messages_archived.userId = '?' AND chat_messages.message != ''  order by chat_messages_archived.messageId desc", [$memberId, $memberId, $memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -529,7 +529,7 @@ class MemberAllDB extends Model
 
    left join chat_messages_archived on chat_messages.messageId = chat_messages_archived.messageId
 
-   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "')) AND chat_messages_archived.userType = '2' AND chat_messages_archived.userId = '" . $memberId . "' AND chat_messages.message != ''  order by chat_messages_archived.messageId desc");
+   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '?') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '?')) AND chat_messages_archived.userType = '2' AND chat_messages_archived.userId = '?' AND chat_messages.message != ''  order by chat_messages_archived.messageId desc", [$memberId, $memberId, $memberId]);
 
         $result = count($queryRes);
 
@@ -541,7 +541,7 @@ class MemberAllDB extends Model
 
    left join chat_messages_archived on chat_messages.messageId = chat_messages_archived.messageId
 
-   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '" . $memberId . "') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '" . $memberId . "')) AND chat_messages_archived.userType = '2' AND chat_messages_archived.userId = '" . $memberId . "' AND chat_messages.message != ''  order by chat_messages_archived.messageId desc LIMIT $start, $limit");
+   where ((chat_messages.receiverType = '2' AND chat_messages.receiverId = '?') OR (chat_messages.senderType = '2' AND chat_messages.senderId = '?')) AND chat_messages_archived.userType = '2' AND chat_messages_archived.userId = '?' AND chat_messages.message != ''  order by chat_messages_archived.messageId desc LIMIT $start, $limit", [$memberId, $memberId, $memberId]);
 
         $result['numRows'] = count($queryRes);
 
@@ -693,7 +693,7 @@ class MemberAllDB extends Model
 	}
 
  	public function getClientSocialInfo($clientId){
-		$query = DB::select("SELECT * FROM  client_social_media where clientId = '$clientId'");
+		$query = DB::select("SELECT * FROM  client_social_media where clientId = ?", [$clientId]);
 		 
 		 $result['numRows'] = count($query);
          $result['data']  = $query;
@@ -721,7 +721,7 @@ class MemberAllDB extends Model
 	
 
  	public function get_member_available_digicoins($member_id){
-		$query = DB::select("SELECT available_points FROM member_digicoins_available where member_id = '" . $member_id . "' order by member_digicoin_available_id desc");
+		$query = DB::select("SELECT available_points FROM member_digicoins_available where member_id = ? order by member_digicoin_available_id desc", [$member_id]);
 		 
 		 $result['numRows'] = count($query);
          $result['data']  = $query;
@@ -767,7 +767,7 @@ class MemberAllDB extends Model
 	
 	public function buyNow($member_id, $data){
 
-        $query = DB::select("SELECT available_points FROM member_digicoins_available where member_id = '" . $member_id . "'");
+        $query = DB::select("SELECT available_points FROM member_digicoins_available where member_id = ?", [$member_id]);
 
         $row['numRows'] = count($query);
 
@@ -807,7 +807,7 @@ class MemberAllDB extends Model
 
                 $remaining_points = ($result['available_points']) - ($data['final_price']);
 
-                DB::select("update member_digicoins_available set available_points = '" . $remaining_points . "', latest_date_time = NOW() where member_id = '" . $member_id . "'");
+                DB::select("update member_digicoins_available set available_points = '?', latest_date_time = NOW() where member_id = '?'", [$remaining_points, $member_id]);
 
                 $result['remaining_points'] = $remaining_points;
             } else {
@@ -823,9 +823,9 @@ class MemberAllDB extends Model
 
         $query = DB::select("SELECT *  FROM  product_text_answers
 
-   where product_text_answers.product_id = '" . $product_id . "' and product_text_answers.member_id = '" . $member_id . "'
+   where product_text_answers.product_id = '?' and product_text_answers.member_id = '?'
 
-   order by product_text_answers.product_text_answer_id ASC");
+   order by product_text_answers.product_text_answer_id ASC", [$product_id, $member_id]);
 
         $result['text']['numRows'] = count($query);
 
@@ -837,7 +837,7 @@ class MemberAllDB extends Model
 
    left join product_answers on  product_questions_answered.answer_id = product_answers.answer_id
 
-   where product_questions_answered.product_id = '" . $product_id . "' and product_questions_answered.member_id = '" . $member_id . "'  order by product_questions_answered.answer_id ASC");
+   where product_questions_answered.product_id = '?' and product_questions_answered.member_id = '?'  order by product_questions_answered.answer_id ASC", [$product_id, $member_id]);
 
         $result['options']['numRows'] = count($query1);
 
@@ -874,7 +874,7 @@ class MemberAllDB extends Model
 
    left join product_questions on product_product_questions.question_id = product_questions.question_id
 
-   where product_product_questions.product_id = '" . $pid . "'  order by product_product_questions.order ASC");
+   where product_product_questions.product_id = ?  order by product_product_questions.order ASC", [$pid]);
 
         $result['numRows'] = count($query);
 
@@ -891,7 +891,7 @@ class MemberAllDB extends Model
 
    left join product_answers on product_question_answers.answer_id = product_answers.answer_id
 
-   where product_question_answers.product_id = '" . $pid . "' and product_question_answers.question_id = '" . $qid . "'  order by product_answers.answer ASC");
+   where product_question_answers.product_id = '?' and product_question_answers.question_id = '?'  order by product_answers.answer ASC", [$pid, $qid]);
 
         $result['numRows'] = count($query);
 
@@ -1035,7 +1035,7 @@ class MemberAllDB extends Model
      {   
          $member_session_id = Session::get('memberId');
  
-         $query = DB::select("SELECT * FROM tracks_reviews where member = '" . $member_session_id . "' and track = '" . $tid . "'");
+         $query = DB::select("SELECT * FROM tracks_reviews where member = '?' and track = '?'", [$member_session_id, $tid]);
  
          $result['numRows'] = count($query);
  
@@ -1050,7 +1050,7 @@ class MemberAllDB extends Model
  
          $query = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.location FROM
  
-    tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = '$trackId' order by tracks_mp3s.preview desc");
+    tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = ? order by tracks_mp3s.preview desc", [$trackId]);
  
          $result['numRows'] = count($query);
  
@@ -1086,7 +1086,7 @@ class MemberAllDB extends Model
  
          // plays and downloads
  
-         $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = '" . $trackId . "' order by preview desc");
+         $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = ? order by preview desc", [$trackId]);
  
          $numRows = count($query);
  
@@ -1108,7 +1108,7 @@ class MemberAllDB extends Model
  
          // rating
  
-         $query = DB::select("SELECT whatrate FROM tracks_reviews where track = '" . $trackId . "' order by id desc");
+         $query = DB::select("SELECT whatrate FROM tracks_reviews where track = ? order by id desc", [$trackId]);
  
          $ratingRows = count($query);
  
@@ -1160,7 +1160,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = '" . $memberId . "')  AND latest = '0' AND unread = '0' order by messageId desc");
+         $query = DB::select("SELECT * FROM chat_messages where (receiverType = '2' AND receiverId = ?)  AND latest = '0' AND unread = '0' order by messageId desc", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -1174,7 +1174,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT status, package_Id, subscription_Id FROM member_subscriptions where member_Id = '" . $memberId . "' and status = '1' order by subscription_Id desc limit 1");
+         $query = DB::select("SELECT status, package_Id, subscription_Id FROM member_subscriptions where member_Id = ? and status = '1' order by subscription_Id desc limit 1", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -1185,7 +1185,7 @@ class MemberAllDB extends Model
  
      function getBannerads($user_type, $position)
      {
-         $query = DB::select("SELECT banner_ad FROM  banner_ads where user_type = '" . $user_type . "' and ad_position = '" . $position . "'");
+         $query = DB::select("SELECT banner_ad FROM  banner_ads where user_type = '?' and ad_position = '?'", [$user_type, $position]);
          $result['numRows'] = count($query);
          $result['data']  = $query;
          return $result;
@@ -1197,7 +1197,7 @@ class MemberAllDB extends Model
  
          $query = DB::select("SELECT tracks_mp3s.id, tracks.client, tracks.artist, tracks.title, tracks_mp3s.version, tracks_mp3s.preview, tracks_mp3s.location FROM
  
-    tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = '$trackId' order by tracks_mp3s.preview desc ");
+    tracks left join tracks_mp3s ON tracks.id = tracks_mp3s.track where tracks_mp3s.track = ? order by tracks_mp3s.preview desc ", [$trackId]);
  
          $result['numRows'] = count($query);
  
@@ -1215,9 +1215,9 @@ class MemberAllDB extends Model
  
          left join tracks_mp3s on track_member_downloads.mp3Id = tracks_mp3s.id
  
-         where track_member_downloads.memberId = '" . $memberId . "'
+         where track_member_downloads.memberId = ?
  
-         order by track_member_downloads.downloadId desc limit $start, $limit");
+         order by track_member_downloads.downloadId desc limit $start, $limit", [$memberId]);
  
                  $numRows1 = count($query1);
  
@@ -1381,7 +1381,7 @@ class MemberAllDB extends Model
  
              // Check whether already downloaded or not
  
-             $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = '" . $member_session_id . "' and track_id = '" . $tid . "' and type_id = '1'");
+             $digi_coins = DB::select("SELECT member_digicoin_id FROM member_digicoins where member_id = '?' and track_id = '?' and type_id = '1'", [$member_session_id, $tid]);
  
              $digi_coins_numRows = count($digi_coins);
  
@@ -1389,7 +1389,7 @@ class MemberAllDB extends Model
  
                  // caliculate dj ponints for review
  
-                 $query1 = DB::select("SELECT added FROM tracks where id = '" . $tid . "'");
+                 $query1 = DB::select("SELECT added FROM tracks where id = ?", [$tid]);
  
                  $added_result  = $query1;
  
@@ -1431,7 +1431,7 @@ class MemberAllDB extends Model
  
                  if ($digicoin_id > 0) {
  
-                     $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = '" . $member_session_id . "' order by member_digicoin_available_id desc");
+                     $available_coins = DB::select("SELECT available_points FROM member_digicoins_available where member_id = ? order by member_digicoin_available_id desc", [$member_session_id]);
  
                      $available_coins_numRows = count($available_coins);
  
@@ -1441,7 +1441,7 @@ class MemberAllDB extends Model
  
                          $available_digicoins_increment = ($available_digicoins[0]->available_points) + $points;
  
-                         DB::select("update member_digicoins_available set available_points = '" . $available_digicoins_increment . "', latest_date_time = NOW() where member_id = '" . $member_session_id . "'");
+                         DB::select("update member_digicoins_available set available_points = '?', latest_date_time = NOW() where member_id = '?'", [$available_digicoins_increment, $member_session_id]);
                      } else {
  
  
@@ -1637,7 +1637,7 @@ class MemberAllDB extends Model
      function getClientSocialInfo_fem($clientId)
      {
  
-         $query = DB::select("SELECT * FROM  client_social_media where clientId = '$clientId'");
+         $query = DB::select("SELECT * FROM  client_social_media where clientId = ?", [$clientId]);
  
          $result['numRows'] = count($query);
  
@@ -1649,7 +1649,7 @@ class MemberAllDB extends Model
 //   function getMemberSocialInfo_fem($mem_id)
 //      {
  
-//          $query = DB::select("SELECT * FROM  member_social_media where memberId = '$mem_id'");
+//          $query = DB::select("SELECT * FROM  member_social_media where memberId = ?", [$mem_id]);
  
 //          $result['numRows'] = count($query);
  
@@ -1661,7 +1661,7 @@ class MemberAllDB extends Model
      function getMemberDetails($memberId)
      {
          $result['id'] = 0;
-         $query = DB::select("SELECT id, uname, fname,age FROM members where id = '" . $memberId . "'");
+         $query = DB::select("SELECT id, uname, fname,age FROM members where id = ?", [$memberId]);
          $numRows = count($query);
          $data  = $query;
          if ($numRows > 0) {
@@ -1671,7 +1671,7 @@ class MemberAllDB extends Model
              $result['age'] = $data[0]->age;
          }
  
-         $query1 = DB::select("SELECT image FROM member_images where memberId = '" . $memberId . "' order by imageId desc limit 1");
+         $query1 = DB::select("SELECT image FROM member_images where memberId = ? order by imageId desc limit 1", [$memberId]);
          $numRows1 = count($query1);
          $data1  = $query1;
          if ($numRows1 > 0) {
@@ -1887,7 +1887,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query =  DB::select("SELECT autoId FROM chat_messages_starred where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");
+         $query =  DB::select("SELECT autoId FROM chat_messages_starred where userType = '2' and userId = '?' and messageId = '?'", [$memberId, $messageId]);
  
          return count($query);
      }
@@ -1897,7 +1897,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query =  DB::select("SELECT autoId FROM chat_messages_archived where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");
+         $query =  DB::select("SELECT autoId FROM chat_messages_archived where userType = '2' and userId = '?' and messageId = '?'", [$memberId, $messageId]);
  
          return count($query);
      }
@@ -1907,7 +1907,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query =  DB::select("update chat_messages set unread = '1' where (receiverType = '2' AND receiverId = '" . $memberId . "') AND (senderType = '1' AND senderId = '" . $clientId . "') AND unread = '0'");
+         $query =  DB::select("update chat_messages set unread = '1' where (receiverType = '2' AND receiverId = '?') AND (senderType = '1' AND senderId = '?') AND unread = '0'", [$memberId, $clientId]);
  
          return $query;
      }
@@ -1924,9 +1924,9 @@ class MemberAllDB extends Model
  
    (senderType = '1' AND senderId = '" . $cid . "' AND receiverType = '2' AND receiverId = '" . $memberId . "')"); */
    
-		$query1 =  DB::select("SELECT * FROM chat_messages where senderType = '2' AND senderId = '" . $memberId . "' AND receiverType = '1' AND receiverId = '" . $cid . "'");
+		$query1 =  DB::select("SELECT * FROM chat_messages where senderType = '2' AND senderId = '?' AND receiverType = '1' AND receiverId = '?'", [$memberId, $cid]);
 		
-		$query2 =  DB::select("SELECT * FROM chat_messages where senderType = '1' AND senderId = '" . $cid . "' AND receiverType = '2' AND receiverId = '" . $memberId . "'");
+		$query2 =  DB::select("SELECT * FROM chat_messages where senderType = '1' AND senderId = '?' AND receiverType = '2' AND receiverId = '?'", [$cid, $memberId]);
 		
 		$updateData = array(
 			'latest' => '1'
@@ -1974,13 +1974,13 @@ class MemberAllDB extends Model
  
      {
  
-         $query =  DB::select("SELECT autoId FROM chat_messages_archived where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");
+         $query =  DB::select("SELECT autoId FROM chat_messages_archived where userType = '2' and userId = '?' and messageId = '?'", [$memberId, $messageId]);
 
        $numRows = count($query);
 
        if ($numRows > 0) {
 
-           //$query1 =  DB::select("delete FROM  chat_messages_archived where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");
+           //$query1 =  DB::select("delete FROM  chat_messages_archived where userType = '2' and userId = '?' and messageId = '?'", [$memberId, $messageId]);
            $query1 = DB::table('chat_messages_archived')->where('userType', '2')->where('userId', $memberId)->where('messageId', $messageId)->delete();
 
            $result['result'] = $query1;
@@ -2010,13 +2010,13 @@ class MemberAllDB extends Model
  
      {
 		//pArr("SELECT autoId FROM chat_messages_starred where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");die();
-         $query =  DB::select("SELECT autoId FROM chat_messages_starred where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");
+         $query =  DB::select("SELECT autoId FROM chat_messages_starred where userType = '2' and userId = '?' and messageId = '?'", [$memberId, $messageId]);
 
        $numRows = count($query);
 
        if ($numRows > 0) {
 
-           //$query1 =  DB::select("delete FROM  chat_messages_starred where userType = '2' and userId = '" . $memberId . "' and messageId = '" . $messageId . "'");
+           //$query1 =  DB::select("delete FROM  chat_messages_starred where userType = '2' and userId = '?' and messageId = '?'", [$memberId, $messageId]);
 		   
 		   $query1 = DB::table('chat_messages_starred')->where('userType', '2')->where('userId', $memberId)->where('messageId', $messageId)->delete();
 
@@ -2034,7 +2034,7 @@ class MemberAllDB extends Model
  
         $insertId = DB::table('chat_messages_starred')->insertGetId($insert_data);
 
-        //    $query2 =  DB::select("insert into chat_messages_starred (`userType`, `userId`, `messageId`) values ('2', '" . $memberId . "', '" . $messageId . "')");
+        //    $query2 =  DB::select("insert into chat_messages_starred (`userType`, `userId`, `messageId`) values ('2', '?', '?')", [$memberId, $messageId]);
 
         //    $result['result'] = $this->db->insert_id();
 
@@ -2050,7 +2050,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query =  DB::select("SELECT * FROM  clients where id = '$clientId'");
+         $query =  DB::select("SELECT * FROM  clients where id = ?", [$clientId]);
  
          $result['numRows'] = count($query);
  
@@ -2063,7 +2063,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query =  DB::select("SELECT * FROM  client_images where clientId = '$clientId' order by imageId desc limit 1");
+         $query =  DB::select("SELECT * FROM  client_images where clientId = ? order by imageId desc limit 1", [$clientId]);
  
          $result['numRows'] = count($query);
  
@@ -2081,7 +2081,7 @@ class MemberAllDB extends Model
  
         //  $password = bcrypt($password);
  
-         $query = DB::select("SELECT * FROM members where id = '" . $memberId_from_session . "' and ( pword = '" . $rpass . "' OR pword = '" . $password . "')");
+         $query = DB::select("SELECT * FROM members where id = '?' and ( pword = '?' OR pword = '?')", [$memberId_from_session, $rpass, $password]);
  
          return count($query);
      }
@@ -2097,7 +2097,7 @@ class MemberAllDB extends Model
          //                 ->update(['pword' => bcrypt($password)]);
  
          $password = md5($password);
-         $query = DB::select("update members set pword = '" . $password . "' where id = '" . $memberId_from_session . "'");
+         $query = DB::select("update members set pword = '?' where id = '?'", [$password, $memberId_from_session]);
  
          return $query;
      }
@@ -2109,7 +2109,7 @@ class MemberAllDB extends Model
  
      left join members_dj_mixer on members.id = members_dj_mixer.member
  
-    where members.id = '$memberId'");
+    where members.id = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -2134,7 +2134,7 @@ class MemberAllDB extends Model
  
          $insert_id = DB::table('member_images')->insertGetId($insert_data);
  
-         // $query = DB::select("INSERT INTO `member_images` (`memberId`, `image`, `dateTime`) VALUES ('" . $memberId . "', '" . $image . "', NOW())");
+         // $query = DB::select("INSERT INTO `member_images` (`memberId`, `image`, `dateTime`) VALUES ('?', '?', NOW())", [$memberId, $image]);
          // $insertId = $this->db->insert_id();
  
          return  $insert_id;
@@ -3537,7 +3537,7 @@ class MemberAllDB extends Model
          }
          
  
-         $managementQuery = DB::select("SELECT id FROM members_radio_station where member = '" . $memberId . "'");
+         $managementQuery = DB::select("SELECT id FROM members_radio_station where member = ?", [$memberId]);
  
          $managementRows = count($managementQuery);
  
@@ -3687,13 +3687,13 @@ class MemberAllDB extends Model
              $massName = '';
          }
  
-         $managementQuery = DB::select("SELECT id FROM members_mass_media where member = '" . $memberId . "'");
+         $managementQuery = DB::select("SELECT id FROM members_mass_media where member = ?", [$memberId]);
  
          $managementRows = count($managementQuery);
  
          if ($managementRows > 0) {
  
-             DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = '" . $memberId . "'");
+             DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = ?", [$memberId]);
          } else {
  
              DB::select("insert into `members_mass_media` (`member`, `mediatype_tvfilm`, `mediatype_publication`, `mediatype_newmedia`, `mediatype_newsletter`, `media_name`, `media_website`, `media_department`) values ('" . $memberId . "', '" . $massTv . "', '" . $massPublication . "', '" . $massDotcom . "', '" . $massNewsletter . "', '" . $massName . "', '" . $massWebsite . "', '" . $massDepartment . "')");
@@ -3796,13 +3796,13 @@ class MemberAllDB extends Model
              $managementName = '';
          }
  
-         $managementQuery = DB::select("SELECT id FROM members_record_label where member = '" . $memberId . "'");
+         $managementQuery = DB::select("SELECT id FROM members_record_label where member = ?", [$memberId]);
  
          $managementRows = count($managementQuery);
  
          if ($managementRows > 0) {
  
-             DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = '" . $memberId . "'");
+             DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = ?", [$memberId]);
          } else {
  
              DB::select("insert into `members_record_label` (`member`, `labeltype_major`, `labeltype_indy`, `labeltype_distribution`, `label_name`, `label_department`) values ('" . $memberId . "', '" . $recordMajor . "', '" . $recordIndy . "', '" . $recordDistribution . "', '" . $recordName . "', '" . $recordDepartment . "')");
@@ -3891,13 +3891,13 @@ class MemberAllDB extends Model
              $promoterWebsite = '';
          }
  
-         $managementQuery = DB::select("SELECT id FROM members_management where member = '" . $memberId . "'");
+         $managementQuery = DB::select("SELECT id FROM members_management where member = ?", [$memberId]);
  
          $managementRows = count($managementQuery);
  
          if ($managementRows > 0) {
  
-             DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = '" . $memberId . "'");
+             DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = ?", [$memberId]);
          } else {
  
              DB::select("insert into `members_management` (`member`, `managementtype_artist`, `managementtype_tour`, `managementtype_personal`, `managementtype_finance`, `management_name`, `management_who`, `management_industry`) values ('" . $memberId . "', '" . $managementArtist . "', '" . $managementTour . "', '" . $managementPersonal . "', '" . $managementFinance . "', '" . $managementName . "', '" . $managementWho . "', '" . $managementIndustry . "')");
@@ -3905,16 +3905,16 @@ class MemberAllDB extends Model
  
          // clothing
  
-         $clothingQuery = DB::select("SELECT id FROM members_clothing_apparel where member = '" . $memberId . "'");
+         $clothingQuery = DB::select("SELECT id FROM members_clothing_apparel where member = ?", [$memberId]);
  
          $clothingRows = count($clothingQuery);
  
          if ($clothingRows > 0) {
  
-             DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = '" . $memberId . "'");
+             DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = ?", [$memberId]);
          } else {
  
-             DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('" . $memberId . "', '" . $clothingName . "', '" . $clothingDepartment . "')");
+             DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('?', '?', '?')", [$memberId, $clothingName, $clothingDepartment]);
          }
  
          // promoter
@@ -3935,13 +3935,13 @@ class MemberAllDB extends Model
              $promoterStreet = 0;
          }
  
-         $promoterQuery = DB::select("SELECT id FROM members_promoter where member = '" . $memberId . "'");
+         $promoterQuery = DB::select("SELECT id FROM members_promoter where member = ?", [$memberId]);
  
          $promoterRows = count($promoterQuery);
  
          if ($promoterRows > 0) {
  
-             DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = '" . $memberId . "'");
+             DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = ?", [$memberId]);
          } else {
  
              DB::select("insert into `members_promoter` (`member`, `promotertype_indy`, `promotertype_club`, `promotertype_event`, `promotertype_street`, `promoter_name`, `promoter_department`, `promoter_website`) values ('" . $memberId . "', '" . $promoterIndy . "', '" . $promoterClub . "', '" . $promoterSpecial . "', '" . $promoterStreet . "', '" . $promoterName . "', '" . $promoterDepartment . "', '" . $promoterWebsite . "')");
@@ -3965,13 +3965,13 @@ class MemberAllDB extends Model
              $specialOther = 0;
          }
  
-         $specialQuery = DB::select("SELECT id FROM members_special_services where member = '" . $memberId . "'");
+         $specialQuery = DB::select("SELECT id FROM members_special_services where member = ?", [$memberId]);
  
          $specialRows = count($specialQuery);
  
          if ($specialRows > 0) {
  
-             DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = '" . $memberId . "'");
+             DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = ?", [$memberId]);
          } else {
  
              DB::select("insert into `members_special_services` (`member`, `servicestype_corporate`, `servicestype_graphicdesign`, `servicestype_webdesign`, `servicestype_other`, `services_name`, `services_website`) values ('" . $memberId . "', '" . $specialCorporate . "', '" . $specialGraphic . "', '" . $specialWeb . "', '" . $specialOther . "', '" . $specialName . "', '" . $specialWebsite . "')");
@@ -3995,13 +3995,13 @@ class MemberAllDB extends Model
              $productionSound = 0;
          }
  
-         $productionQuery = DB::select("SELECT id FROM members_production_talent where member = '" . $memberId . "'");
+         $productionQuery = DB::select("SELECT id FROM members_production_talent where member = ?", [$memberId]);
  
          $productionRows = count($productionQuery);
  
          if ($productionRows > 0) {
  
-             DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = '" . $memberId . "'");
+             DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = ?", [$memberId]);
          } else {
  
              DB::select("insert into `members_production_talent` (`member`, `productiontype_artist`, `productiontype_producer`, `productiontype_choreographer`, `productiontype_sound`, `production_name`) values ('" . $memberId . "', '" . $productionArtist . "', '" . $productionProducer . "', '" . $productionChoregrapher . "', '" . $productionSound . "', '" . $productionName . "')");
@@ -4014,7 +4014,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name FROM  members_production_talent where member = '$memberId'");
+         $query = DB::select("SELECT productiontype_artist, productiontype_producer, productiontype_choreographer, productiontype_sound, production_name FROM  members_production_talent where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4028,7 +4028,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website FROM  members_special_services where member = '$memberId'");
+         $query = DB::select("SELECT servicestype_corporate, servicestype_graphicdesign, servicestype_webdesign, servicestype_other, services_name, services_website FROM  members_special_services where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4041,7 +4041,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website FROM members_promoter where member = '$memberId'");
+         $query = DB::select("SELECT promotertype_indy, promotertype_club, promotertype_event, promotertype_street, promoter_name, promoter_department, promoter_website FROM members_promoter where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4054,7 +4054,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT clothing_name, clothing_department FROM members_clothing_apparel where member = '$memberId'");
+         $query = DB::select("SELECT clothing_name, clothing_department FROM members_clothing_apparel where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4067,7 +4067,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry FROM members_management where member = '$memberId'");
+         $query = DB::select("SELECT managementtype_artist, managementtype_tour, managementtype_personal, managementtype_finance, management_name, management_who, management_industry FROM members_management where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4080,7 +4080,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department FROM members_record_label where member = '$memberId'");
+         $query = DB::select("SELECT labeltype_major, labeltype_indy, labeltype_distribution, label_name, label_department FROM members_record_label where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4093,7 +4093,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department FROM members_mass_media where member = '$memberId'");
+         $query = DB::select("SELECT mediatype_tvfilm, mediatype_publication, mediatype_newmedia, mediatype_newsletter, media_name, media_website, media_department FROM members_mass_media where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4106,7 +4106,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT * FROM members_radio_station where member = '$memberId'");
+         $query = DB::select("SELECT * FROM members_radio_station where member = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4125,7 +4125,7 @@ class MemberAllDB extends Model
  
     left join  clients on client_subscriptions.clientId = clients.id
  
-    where client_payments_paypal.txn_id = '$txn_id'");
+    where client_payments_paypal.txn_id = ?", [$txn_id]);
  
          $result['numRows'] = count($query);
  
@@ -4144,7 +4144,7 @@ class MemberAllDB extends Model
  
     left join  clients on client_subscriptions.clientId = clients.id
  
-    where client_payments_paypal.txn_id = '$txn_id'");
+    where client_payments_paypal.txn_id = ?", [$txn_id]);
  
          $result['numRows'] = count($query);
  
@@ -4158,7 +4158,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT * FROM  member_social_media where memberId = '$memberId'");
+         $query = DB::select("SELECT * FROM  member_social_media where memberId = ?", [$memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4193,7 +4193,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '" . $memberId . "') OR (senderType = '2' AND senderId = '" . $memberId . "')) AND latest = '0' order by messageId desc");
+         $query = DB::select("SELECT * FROM chat_messages where ((receiverType = '2' AND receiverId = '?') OR (senderType = '2' AND senderId = '?')) AND latest = '0' order by messageId desc", [$memberId, $memberId]);
  
          $result['numRows'] = count($query);
  
@@ -4265,7 +4265,7 @@ class MemberAllDB extends Model
              
              if($rid) {
                 
-                $result = DB::select("update tracks_reviews set request_additional_things = '" . $request_additional_things . "' where track = '" . $tid . "' and id = '" . $rid . "'");
+                $result = DB::select("update tracks_reviews set request_additional_things = '?' where track = '?' and id = '?'", [$request_additional_things, $tid, $rid]);
      
                  return $result;
              }
@@ -4280,7 +4280,7 @@ class MemberAllDB extends Model
  
      {
  
-         $query = DB::select("SELECT * FROM  tracks where id = '$trackId'");
+         $query = DB::select("SELECT * FROM  tracks where id = ?", [$trackId]);
  
          $result['numRows'] = count($query);
  
@@ -4500,7 +4500,7 @@ function getMemberSubscriptionInfo_fem($memberId = NULL, $subscriptionId = NULL)
                                 ON a.duration_id = c.duration_id
                                 LEFT JOIN member_packages_price AS d
                                 ON a.package_Id = d.package_Id AND a.duration_Id = d.duration_Id
-                                WHERE a.member_Id = '" . $memberId . "' AND a.subscription_Id = '" . $subscriptionId . "'");
+                                WHERE a.member_Id = '?' AND a.subscription_Id = '?'", [$memberId, $subscriptionId]);
 
     $result['numRows'] = count($query);
 
@@ -4756,7 +4756,7 @@ function getMemberSubscriptionInfo_fem($memberId = NULL, $subscriptionId = NULL)
 
     {
 
-        $query = DB::select("SELECT packageId FROM client_subscriptions where subscriptionId = '$clientSubscriptionId'");
+        $query = DB::select("SELECT packageId FROM client_subscriptions where subscriptionId = ?", [$clientSubscriptionId]);
 
         $result['numRows'] = count($query);
 
@@ -4769,7 +4769,7 @@ function getMemberSubscriptionInfo_fem($memberId = NULL, $subscriptionId = NULL)
 
     {
 
-        $query =  DB::select("SELECT * FROM client_subscriptions where clientId = '" . $clientId . "' and subscriptionId = '" . $subscriptionId . "'");
+        $query =  DB::select("SELECT * FROM client_subscriptions where clientId = '?' and subscriptionId = '?'", [$clientId, $subscriptionId]);
 
         $result['numRows'] = count($query);
 
