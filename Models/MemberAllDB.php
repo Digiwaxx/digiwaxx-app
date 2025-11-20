@@ -2038,11 +2038,11 @@ class MemberAllDB extends Model
          $memberId_from_session = Session::get('memberId');
          $rpass = $password;
         $password = md5($password);
- 
+
         //  $password = bcrypt($password);
- 
-         $query = DB::select("SELECT * FROM members where id = '" . $memberId_from_session . "' and ( pword = '" . $rpass . "' OR pword = '" . $password . "')");
- 
+
+         $query = DB::select("SELECT * FROM members where id = ? and ( pword = ? OR pword = ?)", [$memberId_from_session, $rpass, $password]);
+
          return count($query);
      }
  
@@ -2057,7 +2057,7 @@ class MemberAllDB extends Model
          //                 ->update(['pword' => bcrypt($password)]);
  
          $password = md5($password);
-         $query = DB::select("update members set pword = '" . $password . "' where id = '" . $memberId_from_session . "'");
+         $query = DB::select("update members set pword = ? where id = ?", [$password, $memberId_from_session]);
  
          return $query;
      }
