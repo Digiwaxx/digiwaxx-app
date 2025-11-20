@@ -48,10 +48,17 @@ class ClientAllDB extends Model
 	}
 
 	public function getRightTracks($cId){
-		
+
 		//echo "SELECT * FROM  tracks  where client = '" . $cId . "' order by id desc limit 0, 5";die();
-		
-        $query = DB::select("SELECT * FROM  tracks  where client = '" . $cId . "' AND deleted = '0' order by id desc limit 0, 5");
+
+        // SECURITY FIX: SQL injection prevention - use query builder
+        $query = DB::table('tracks')
+            ->where('client', $cId)
+            ->where('deleted', '0')
+            ->orderBy('id', 'desc')
+            ->limit(5)
+            ->get()
+            ->toArray();
 
         $result['numRows'] = count($query);
 
@@ -63,8 +70,13 @@ class ClientAllDB extends Model
 	public function getTrackPlays($trackId){
 
         // plays and downloads
-
-        $query = DB::select("SELECT downloads, num_plays FROM tracks_mp3s where track = '" . $trackId . "' order by preview desc");
+        // SECURITY FIX: SQL injection prevention - use query builder
+        $query = DB::table('tracks_mp3s')
+            ->select(['downloads', 'num_plays'])
+            ->where('track', $trackId)
+            ->orderBy('preview', 'desc')
+            ->get()
+            ->toArray();
 
         $numRows = count($query);
 
@@ -85,8 +97,13 @@ class ClientAllDB extends Model
         }
 
         // rating
-
-        $query = DB::select("SELECT whatrate FROM tracks_reviews where track = '" . $trackId . "' order by id desc");
+        // SECURITY FIX: SQL injection prevention - use query builder
+        $query = DB::table('tracks_reviews')
+            ->select(['whatrate'])
+            ->where('track', $trackId)
+            ->orderBy('id', 'desc')
+            ->get()
+            ->toArray();
 
         $ratingRows = count($query);
 
