@@ -420,7 +420,8 @@ class MemberRegisterController extends Controller
         	        
         	        $code = md5(time());
         	        $string = array('id'=>$mem_id, 'code'=>$code,'type'=>'1');
-        	        $encode_string=base64_encode(serialize($string));
+        	        // SECURITY FIX: Use json_encode instead of serialize to prevent RCE
+        	        $encode_string=base64_encode(json_encode($string));
         	        
         	        $update_token=DB::table('members')->where('id','=',$mem_id)->update(['veri_token'=>$code]); 
 
@@ -632,26 +633,52 @@ class MemberRegisterController extends Controller
 	
 	///verify mail
 	public function verify_mail($mtoken){
-        $data = unserialize(base64_decode($mtoken));
+        // SECURITY FIX: CRITICAL RCE - Replace unserialize with json_decode
+        // Previous code used unserialize() which allows Remote Code Execution
+        try {
+            $data = json_decode(base64_decode($mtoken), true);
+
+            // Validate data structure
+            if (!$data || !is_array($data)) {
+                abort(400, 'Invalid verification token');
+            }
+
+            if (!isset($data['type'], $data['id'], $data['code'])) {
+                abort(400, 'Invalid token format');
+            }
+
+            // Validate data types
+            if (!is_numeric($data['id']) || !is_string($data['code']) || !in_array($data['type'], ['1', '2'])) {
+                abort(400, 'Invalid token data');
+            }
+
+            $id = (int) $data['id'];
+            $code = $data['code'];
+
+        } catch (Exception $e) {
+            \Log::warning('Email verification failed', ['token' => substr($mtoken, 0, 20), 'error' => $e->getMessage()]);
+            abort(400, 'Invalid verification token');
+        }
+
 	   if($data['type']=='1'){
-	       
-	       $check=DB::table('members')->where('id','=',$data['id'])->where('veri_token','=',$data['code'])->update(['active'=>1]);
+
+	       $check=DB::table('members')->where('id','=',$id)->where('veri_token','=',$code)->update(['active'=>1]);
 	       if($check){
-	           $clear_token=DB::table('members')->where('id','=',$data['id'])->where('veri_token','=',$data['code'])->update(['veri_token'=>'']);
+	           $clear_token=DB::table('members')->where('id','=',$id)->where('veri_token','=',$code)->update(['veri_token'=>'']);
 	            return redirect()->intended('login?success=1');
 	       }else{
 	           //return redirect('forget-password');
 	            return redirect()->intended("forgot-password?verify=2");
 	       }
-	       
-	       
+
+
 	   }
-	   
+
 	    if($data['type']=='2'){
-	       
-	       $check=DB::table('clients')->where('id','=',$data['id'])->where('veri_token','=',$data['code'])->update(['active'=>1]);
+
+	       $check=DB::table('clients')->where('id','=',$id)->where('veri_token','=',$code)->update(['active'=>1]);
 	       if($check){
-	           $clear_token=DB::table('clients')->where('id','=',$data['id'])->where('veri_token','=',$data['code'])->update(['veri_token'=>'']);
+	           $clear_token=DB::table('clients')->where('id','=',$data['id'])->where('veri_token','=',$code)->update(['veri_token'=>'']);
 	           return redirect()->intended('login?success=1');
 	       }else{
 	           //return redirect('forget-password');

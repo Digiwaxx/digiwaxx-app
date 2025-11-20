@@ -81,7 +81,15 @@ class ClientRegisterController extends Controller
                 }
 				if($result > 0){
 					Session::put('newClientId', $result);
-					mkdir("../client_images/".$result);
+					// SECURITY FIX: Path traversal prevention - validate and sanitize directory name
+					$clientId = (int) $result; // Ensure it's an integer
+					$targetDir = base_path("client_images/{$clientId}");
+					// Verify the path doesn't escape the intended directory
+					if (strpos(realpath(dirname($targetDir)), base_path("client_images")) === 0) {
+						if (!file_exists($targetDir)) {
+							mkdir($targetDir, 0755, true);
+						}
+					}
 				}
 			}
 			
@@ -414,7 +422,8 @@ class ClientRegisterController extends Controller
                 	       
                 	        $code = md5(time());
                 	        $string = array('id'=>$clientId, 'code'=>$code,'type'=>'2');
-                	        $encode_string=base64_encode(serialize($string));
+                	        // SECURITY FIX: Use json_encode instead of serialize to prevent RCE
+                	        $encode_string=base64_encode(json_encode($string));
                 	        
                 	        $update_token=DB::table('clients')->where('id','=',$clientId)->update(['veri_token'=>$code]);
                 	        $my_ver_link= route("verify_mail",['mtoken'=>$encode_string]);
