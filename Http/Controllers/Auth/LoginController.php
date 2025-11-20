@@ -849,65 +849,6 @@ class LoginController extends Controller
 	  Session::flush();
       return redirect('login');
     }
-    
-    public function testWebLogin(){
-        global $username, $password; 
-        $username = 'aa@yopmail.com'; // tester1234
-        $password = 'p!Nao$GH'; 
-        
-        ## MEMBER
-        
-        //$username = 'SgTechGs 123'; // SgTechGs gurpreet@orientaloutsourcing.com
-        //$password = 'he7PIF@9';
-        
-/*		$users = DB::table('clients')
-			->where(function($query) {
-				global $username;				
-				$query->where('uname', urlencode($username))
-					  ->orWhere('email', urlencode($username))
-					  ->orWhere('uname',$username)
-					  ->orWhere('email',$username);
-			})
-			->Where(function($query) {
-				global $password;
-				$query->where('pword', md5($password))
-					  ->orWhere('pword','=',$password);
-			})
-			->where('deleted',0)
-			->get()->toArray(); */
-			
-/* 		$users = DB::table('members')
-			->where(function($query) {
-				global $username;				
-				$query->where('uname', urlencode($username))
-					  ->orWhere('email', urlencode($username))
-					  ->orWhere('uname',$username)
-					  ->orWhere('email',$username);
-					 
-			})
-			->Where(function($query) {
-				global $password;
-				$query->where('pword', md5($password))
-					  ->orWhere('pword',$password);
-			})
-			->where('deleted',0)
-			->get()->toArray(); */
-		echo "SELECT * FROM `members` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "' ) 
-                                            AND (`pword` = '" . trim($password) . "' OR MD5(pword) = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'";	
-			
-       $users = DB::select("SELECT * FROM `members` 
-                                        WHERE (LOWER(`uname`) = '" . urlencode(strtolower(trim($username))) . "' OR `email` = '" . urlencode(trim($username)) . "' OR  LOWER(`uname`) = '" . strtolower(trim($username)) . "' OR `email` = '" . trim($username) . "' ) 
-                                            AND (`pword` = '" . trim($password) . "' OR pword = '" . md5(trim($password)) . "' ) 
-                                            AND `deleted` = '0'");			
-		if(!empty($users) && count($users)>0){
-				$result['type'] = 2;
-				$result['numRows'] = count($users);
-				$result['data'] = $users;		   
-		echo'<pre>';print_r($result);die();
-		}
-				
-    }
 
+    // SECURITY: testWebLogin function removed - debug code should never be in production
 }
