@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SecurityEventLogger::class, // SECURITY: Log security events
+            \App\Http\Middleware\AutoRateLimiting::class, // SECURITY: Automatic rate limiting for all routes
         ],
 
         'api' => [
