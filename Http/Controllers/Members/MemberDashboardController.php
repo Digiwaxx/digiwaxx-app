@@ -6774,9 +6774,18 @@ $getArray = array(); $urlString = '?';
 
 		// add review
 
+		// SECURITY FIX: Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+		// Ensure your form includes @csrf token
 		if(isset($_POST['submitReview']))
 
 		{
+         // SECURITY FIX: Validate track ID
+         if(!isset($_GET['tid']) || !is_numeric($_GET['tid'])){
+             return redirect()->back()->with('error', 'Invalid track ID');
+         }
+
+         $trackId = (int)$_GET['tid'];
+
          // echo '<pre>';print_r($_POST);die;
 		 $countryCode = '';
 
@@ -6855,7 +6864,7 @@ $getArray = array(); $urlString = '?';
 		// }
 
 
-					$result = $this->memberAllDB_model->addReview($_POST,$_GET['tid'],$countryName,$countryCode);
+					$result = $this->memberAllDB_model->addReview($_POST, $trackId, $countryName, $countryCode);
 
 
 
@@ -6863,7 +6872,7 @@ $getArray = array(); $urlString = '?';
 
 				/* *Sending mail to client when member reviews the track login - ANGAD */
 
-				$tID = $_GET['tid'];
+				$tID = $trackId; // Use validated track ID
 				$memID = Session::get('memberId');
 				$member_details = DB::table("members")->where("id", $memID)->first();
 				$member_socialMed = DB::table("member_social_media")->where("memberId", $memID)->first();
@@ -10188,7 +10197,12 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 	   
 
-	   $output['cid'] = $_GET['cid'];
+	   // SECURITY FIX: Validate client ID from GET parameter (used for display, not state change)
+	   if(!isset($_GET['cid']) || !is_numeric($_GET['cid'])){
+	       return redirect()->back()->with('error', 'Invalid client ID');
+	   }
+
+	   $output['cid'] = (int)$_GET['cid'];
 
 	   $headerOutput['pageTitle'] = 'Digiwax Member Info';
 
@@ -10196,11 +10210,25 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 	   // save message
 
-	   if(isset($_GET['message']) && isset($_GET['cid']))
+	   // SECURITY FIX: Changed from GET to POST to prevent CSRF and message exposure
+	   // Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+	   if(isset($_POST['message']) && isset($_POST['cid']))
 
 	   {
 
-	   $result = $this->memberAllDB_model->sendMemberMessage($memberId_from_session,$_GET['cid'],$_GET['message']); 
+	   // SECURITY FIX: Validate and sanitize inputs
+	   if(!is_numeric($_POST['cid'])){
+	       return response()->json(['error' => 'Invalid client ID'], 400);
+	   }
+
+	   $clientId = (int)$_POST['cid'];
+	   $message = trim($_POST['message']);
+
+	   if(empty($message)){
+	       return response()->json(['error' => 'Message cannot be empty'], 400);
+	   }
+
+	   $result = $this->memberAllDB_model->sendMemberMessage($memberId_from_session, $clientId, $message); 
 
 	   $date = date('M d, Y');
 
@@ -12794,15 +12822,20 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 	  // add review
 
+	  // SECURITY FIX: Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+	  // Ensure your form includes @csrf token
 	  if(isset($_POST['submitReview']))
 
 	  {
 
-	  
+	  // SECURITY FIX: Validate track ID
+	  if(!isset($_GET['tid']) || !is_numeric($_GET['tid'])){
+	      return redirect()->back()->with('error', 'Invalid track ID');
+	  }
 
-	  
+	  $trackId = (int)$_GET['tid'];
 
-		   $result = $this->memberAllDB_model->addReview($_POST,$_GET['tid']); 
+		   $result = $this->memberAllDB_model->addReview($_POST, $trackId); 
 
 		   
 
@@ -12810,7 +12843,7 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 		   {
 
-			  header("location: ".url("Member_track_download_front_end?tid=".$_GET['tid']."&reviewAdded=1"));   exit;
+			  return redirect(url("Member_track_download_front_end?tid=".$trackId."&reviewAdded=1"));
 
 		   
 

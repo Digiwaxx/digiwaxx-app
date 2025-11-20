@@ -831,17 +831,24 @@ class ClientDashboardController extends Controller
 	
 		// remove comment
 
-		 if(isset($_GET['removeComment']) && isset($_GET['commentId'])){	
+		 // SECURITY FIX: Changed from GET to POST to prevent CSRF
+		 // Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+		 if(isset($_POST['removeComment']) && isset($_POST['commentId'])){
 
 		 	$sessClientId = Session::get('clientId');
 
-		    $result = $this->clientAllDB_model->removeTrackComment($_GET['commentId'], $sessClientId);			
+		 	// SECURITY FIX: Validate comment ID
+		 	if(!is_numeric($_POST['commentId'])){
+		 	    return response()->json(['error' => 'Invalid comment ID'], 400);
+		 	}
+
+		 	$commentId = (int)$_POST['commentId'];
+
+		    $result = $this->clientAllDB_model->removeTrackComment($commentId, $sessClientId);
 
 			$arr = array('status' => $result);
 
-			echo json_encode($arr);		
-
-			exit;
+			return response()->json($arr);
 		 }
 		 
 		// reviwe info
@@ -6325,12 +6332,26 @@ if ($_GET['page'] > $numPages && $numPages > 0) {
 			
 			
 			// send message
-			
-			if(isset($_GET['message']) && isset($_GET['mid']))
-			
+
+			// SECURITY FIX: Changed from GET to POST to prevent CSRF and message exposure
+			// Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+			if(isset($_POST['message']) && isset($_POST['mid']))
+
 			{
-			
-			$result = $this->clientAllDB_model->sendClientMessage_cld($clientId,$_GET['message'],$_GET['mid']); 
+
+			// SECURITY FIX: Validate and sanitize inputs
+			if(!is_numeric($_POST['mid'])){
+			    return response()->json(['error' => 'Invalid member ID'], 400);
+			}
+
+			$memberId = (int)$_POST['mid'];
+			$message = trim($_POST['message']);
+
+			if(empty($message)){
+			    return response()->json(['error' => 'Message cannot be empty'], 400);
+			}
+
+			$result = $this->clientAllDB_model->sendClientMessage_cld($clientId, $message, $memberId); 
 			
 			$date = date('M d, Y');
 			
@@ -7938,22 +7959,26 @@ if ($_GET['page'] > $numPages && $numPages > 0) {
 
 		 // remove comment
 
-		 if(isset($_GET['removeComment']) && isset($_GET['commentId']))
+		 // SECURITY FIX: Changed from GET to POST to prevent CSRF
+		 // Laravel automatically validates CSRF token via VerifyCsrfToken middleware
+		 if(isset($_POST['removeComment']) && isset($_POST['commentId']))
 
 		 {
 
-		 
+		 	$sessClientId = Session::get('clientId');
 
-		    $result = $this->clientAllDB_model->removeTrackComment($_GET['commentId'],$_SESSION['clientId']); 
-		
+		 	// SECURITY FIX: Validate comment ID
+		 	if(!is_numeric($_POST['commentId'])){
+		 	    return response()->json(['error' => 'Invalid comment ID'], 400);
+		 	}
+
+		 	$commentId = (int)$_POST['commentId'];
+
+		    $result = $this->clientAllDB_model->removeTrackComment($commentId, $sessClientId);
 
 			$arr = array('status' => $result);
 
-			echo json_encode($arr);
-
-			
-
-			exit;		 
+			return response()->json($arr);
 
 		 }
 

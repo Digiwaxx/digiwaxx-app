@@ -730,9 +730,10 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTrackLogos($logoId){
-		
-	   $query = DB::select("SELECT * FROM logos WHERE id='".$logoId."'"); 
-		
+
+	   // SECURITY FIX: Use Query Builder to prevent SQL injection
+	   $query = DB::table('logos')->where('id', $logoId)->get()->toArray();
+
 	   $result['numRows'] = count($query);
 
 	   $result['data']  = $query;
@@ -758,9 +759,10 @@ class Admin extends Authenticatable
 	* @GS
 	*/	
 	public function getTrackContacts($trackId){
-		
-	   $query = DB::select("SELECT * FROM tracks_contacts WHERE track='".$trackId."'"); 
-		
+
+	   // SECURITY FIX: Use Query Builder to prevent SQL injection
+	   $query = DB::table('tracks_contacts')->where('track', $trackId)->get()->toArray();
+
 	   $result['numRows'] = count($query);
 
 	   $result['data']  = $query;
@@ -3194,8 +3196,9 @@ class Admin extends Authenticatable
 
     function deleteAlbum($albumId)
     {
-        DB::select("UPDATE `tracks_album` SET `deleted` = '1' WHERE `id` = '" . $albumId . "'");
-        DB::select("UPDATE `tracks` SET `deleted` = '1' WHERE `albumid` = '" . $albumId . "'");
+        // SECURITY FIX: Use Query Builder to prevent SQL injection
+        DB::table('tracks_album')->where('id', $albumId)->update(['deleted' => '1']);
+        DB::table('tracks')->where('albumid', $albumId)->update(['deleted' => '1']);
         return 1;
     }
 
@@ -4141,7 +4144,8 @@ class Admin extends Authenticatable
          // '" . urlencode($producers) . "',
          // '" . urlencode($writer) . "', NOW(), '" . $_SESSION['adminId'] . "', '" . $availableMembers . "', '" . $reviewable . "', '" . $client . "', '" . $whiteLabel . "', '0', '" . $type . "', '" . $graphics . "', NOW(), '" . $genre . "', '" . $subGenre . "', '" . $bpm . "', '" . urlencode($status) . "','" . urlencode($memberPreviewAvailable) . "','" . urlencode($contact_name) . "','" . urlencode($contact_email) . "','" . urlencode($contact_phone) . "','" . urlencode($relationship_to_artist) . "','" . urlencode($songkey) . "')");
         
-        DB::select("UPDATE `tracks` SET order_position = '" . $insertId . "' WHERE id = '" . $insertId . "'");
+        // SECURITY FIX: Use Query Builder to prevent SQL injection
+        DB::table('tracks')->where('id', $insertId)->update(['order_position' => $insertId]);
          return $insertId;
      }
  
@@ -6207,21 +6211,24 @@ return $question_id;
       return  $response;
   }
   function checkIfApprovedClient($clientId){
-	  $result = DB::select("SELECT * FROM clients WHERE active != '1' AND id = '" . $clientId . "'");
+	  // SECURITY FIX: Use Query Builder to prevent SQL injection
+	  $result = DB::table('clients')->where('active', '!=', '1')->where('id', $clientId)->get();
 	  $response['numRows'] = count($result);
 	  $response['data'] = $result;
 	  return $response;
   } 
   function checkIfApprovedMember($memId){
-	  $result = DB::select("SELECT * FROM members WHERE active != '1' AND id = '" . $memId . "'");
+	  // SECURITY FIX: Use Query Builder to prevent SQL injection
+	  $result = DB::table('members')->where('active', '!=', '1')->where('id', $memId)->get();
 	  $response['numRows'] = count($result);
 	  $response['data'] = $result;
 	  return $response;
   }
   function adc_changeClientPassword($password, $clientId)
   {
-      $query = DB::select("update `clients` set pword = '" . $password . "' where id = '" . $clientId . "'");
-      return $query;
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      DB::table('clients')->where('id', $clientId)->update(['pword' => $password]);
+      return 1;
   }
   function adc_updateClient($data, $clientId)
   {
@@ -6557,7 +6564,12 @@ return $question_id;
 
   function ad_mem_removeMembership($memberId, $subscriptionId)
   {
-      return DB::select("DELETE FROM member_subscriptions WHERE member_Id = '" . $memberId . "' AND subscription_Id = '" . $subscriptionId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      DB::table('member_subscriptions')
+          ->where('member_Id', $memberId)
+          ->where('subscription_Id', $subscriptionId)
+          ->delete();
+      return 1;
   }
 
 
