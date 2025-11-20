@@ -1197,41 +1197,68 @@ class ClientAllDB extends Model
         }
     
         function getConversation_cld($memberId, $clientId)
-    
+
         {
-    
-            $query = DB::select("SELECT * FROM chat_messages where
-    
-       (senderType = '2' AND senderId = '" . $memberId . "' AND receiverType = '1' AND receiverId = '" . $clientId . "')
-    
-       OR
-    
-       (senderType = '1' AND senderId = '" . $clientId . "' AND receiverType = '2' AND receiverId = '" . $memberId . "')
-    
-       order by messageId desc");
-    
+
+            // SECURITY FIX: Verify logged-in client owns this conversation
+            $loggedInClientId = Session::get('clientId');
+            if ($clientId != $loggedInClientId) {
+                // Client trying to read someone else's messages - deny access
+                $result['numRows'] = 0;
+                $result['data'] = [];
+                return $result;
+            }
+
+            // SECURITY FIX: Use Query Builder to prevent SQL injection
+            $query = DB::table('chat_messages')
+                ->where(function($q) use ($memberId, $clientId) {
+                    $q->where('senderType', 2)
+                      ->where('senderId', $memberId)
+                      ->where('receiverType', 1)
+                      ->where('receiverId', $clientId);
+                })
+                ->orWhere(function($q) use ($memberId, $clientId) {
+                    $q->where('senderType', 1)
+                      ->where('senderId', $clientId)
+                      ->where('receiverType', 2)
+                      ->where('receiverId', $memberId);
+                })
+                ->orderBy('messageId', 'desc')
+                ->get()
+                ->toArray();
+
             $result['numRows'] = count($query);
-    
-            $result['data']  = $query;
-    
+
+            $result['data'] = $query;
+
             return $result;
         }
     
         function isClientStarred_cld($clientId, $messageId)
-    
+
         {
-    
-            $query = DB::select("SELECT autoId FROM chat_messages_starred where userType = '1' and userId = '" . $clientId . "' and messageId = '" . $messageId . "'");
-    
+
+            // SECURITY FIX: Use Query Builder to prevent SQL injection
+            $query = DB::table('chat_messages_starred')
+                ->where('userType', 1)
+                ->where('userId', $clientId)
+                ->where('messageId', $messageId)
+                ->get();
+
             return count($query);
         }
-    
+
         function isClientArchived_cld($clientId, $messageId)
-    
+
         {
-    
-            $query = DB::select("SELECT autoId FROM chat_messages_archived where userType = '1' and userId = '" . $clientId . "' and messageId = '" . $messageId . "'");
-    
+
+            // SECURITY FIX: Use Query Builder to prevent SQL injection
+            $query = DB::table('chat_messages_archived')
+                ->where('userType', 1)
+                ->where('userId', $clientId)
+                ->where('messageId', $messageId)
+                ->get();
+
             return count($query);
         }
     

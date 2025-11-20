@@ -53,10 +53,35 @@ class MemberRegisterController extends Controller
 
 		if($request->input('addMember'))
 		{
-			//echo '---TSTSTST';die('uiui');
+			// SECURITY FIX: Add comprehensive validation
+			$validated = $request->validate([
+				'firstName' => 'required|string|max:100',
+				'lastName' => 'required|string|max:100',
+				'email' => [
+					'required',
+					'email',
+					'max:255',
+					'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+				],
+				'username' => 'required|string|min:3|max:50|regex:/^[a-zA-Z0-9_]+$/',
+				'password' => [
+					'required',
+					'string',
+					'min:8',
+					'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/' // At least 1 lowercase, 1 uppercase, 1 number
+				],
+				'phone' => 'nullable|string|max:20',
+				'dob' => 'required|date|before:today',
+				'package_id' => 'required|integer'
+			], [
+				'password.regex' => 'Password must contain at least one lowercase letter, one uppercase letter, and one number.',
+				'username.regex' => 'Username can only contain letters, numbers, and underscores.',
+				'email.regex' => 'Please enter a valid email address.',
+			]);
+
 			$errorString = "&package_id=".$request->input('package_id')."&firstName=".$request->input('firstName')."&lastName=".$request->input('lastName')."&phone=".$request->input('phone')."&dob=".$request->input('dob')."&email=".$request->input('email')."&username=".$request->input('username')."&password=".base64_encode($request->input('password'));
-			
-			/* START Mailchimp Integration Code 
+
+			/* START Mailchimp Integration Code
 		    $emailaddress = $request->input('email');
 		    $list_id = '5b0f660d11';
         	$result = $this->mailchimp->post("lists/$list_id/members", [
@@ -65,7 +90,7 @@ class MemberRegisterController extends Controller
                 'status'        => 'subscribed',
             ]); */
 			/* END Mailchimp Integration Code */
-			
+
 			if ($request->input('firstName')) {
 				Session::put('sess-member-firstName', $request->input('firstName'));
 			}
