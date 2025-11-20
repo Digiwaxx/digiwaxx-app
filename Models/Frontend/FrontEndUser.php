@@ -38,7 +38,7 @@ class FrontEndUser extends Model
 	 public static function getClientInfo($clientId)
 	{
 
-		$queryRes = DB::select("SELECT * FROM  clients where id = '$clientId'");
+		$queryRes = DB::select("SELECT * FROM  clients where id = ?", [$clientId]);
 
 		$result['numRows'] = count($queryRes);
 
@@ -76,7 +76,7 @@ class FrontEndUser extends Model
 	}
 	
 	public static function isExpiredConfirmCode($code){
-		$query = DB::select("SELECT userId, userType  FROM   forgot_password where code = '$code' and status = '0'");
+		$query = DB::select("SELECT userId, userType  FROM   forgot_password where code = ? and status = '0'", [$code]);
 		
 		$result['numRows'] = count($query);
 		$result['data']  = $query;
@@ -237,7 +237,7 @@ class FrontEndUser extends Model
 				
 				$insertId = DB::table('client_social_media')->insert($socialMedData);
 
-				$queryResDta = DB::select("SELECT id, ccontact, email FROM  clients where id = '$newClientId'");
+				$queryResDta = DB::select("SELECT id, ccontact, email FROM  clients where id = ?", [$newClientId]);
 
 				$result['numRows'] = count($queryResDta);
 
@@ -292,7 +292,7 @@ class FrontEndUser extends Model
 				
 				$insertId = DB::table('client_social_media')->insert($socialMedData);
 
-				$queryResDta = DB::select("SELECT id, ccontact, email FROM  clients where id = '$newClientId'");
+				$queryResDta = DB::select("SELECT id, ccontact, email FROM  clients where id = ?", [$newClientId]);
 
 				$result['numRows'] = count($queryResDta);
 
@@ -444,7 +444,7 @@ class FrontEndUser extends Model
 				
 			$insertId = DB::table('member_social_media')->insert($socialMedData);
 
-				$queryResDta = DB::select("SELECT id, fname, email FROM  members where id = '$newMemberId'");
+				$queryResDta = DB::select("SELECT id, fname, email FROM  members where id = ?", [$newMemberId]);
 
 				$result['numRows'] = count($queryResDta);
 
@@ -1146,13 +1146,13 @@ class FrontEndUser extends Model
 
 			$resultDjMixer = array();
 
-			$queryMemRadioDta = DB::select("SELECT id FROM members_radio_station where member = '$newMemberId'");
+			$queryMemRadioDta = DB::select("SELECT id FROM members_radio_station where member = ?", [$newMemberId]);
 
 			$resultMemRadio['numRows'] = count($queryMemRadioDta);
 
 			$resultMemRadio['data']  = $queryMemRadioDta;
 
-			$queryMemDjMixDta = DB::select("SELECT id FROM members_dj_mixer where member = '$newMemberId'");
+			$queryMemDjMixDta = DB::select("SELECT id FROM members_dj_mixer where member = ?", [$newMemberId]);
 
 			$resultDjMixer['numRows'] = count($queryMemDjMixDta);
 
@@ -1543,7 +1543,7 @@ class FrontEndUser extends Model
 				
 			
 				
-			$queryResDta = DB::select("SELECT id, fname, email FROM  members where id = '$newMemberId'");
+			$queryResDta = DB::select("SELECT id, fname, email FROM  members where id = ?", [$newMemberId]);
 
 			$result['numRows'] = count($queryResDta);
 
@@ -1607,7 +1607,7 @@ class FrontEndUser extends Model
 		}
 		
 		public static function resetPassword($password, $code){
-			$queryResDta = DB::select("SELECT userId, userType  FROM forgot_password where code = '$code' and status = '0'");
+			$queryResDta = DB::select("SELECT userId, userType  FROM forgot_password where code = ? and status = '0'", [$code]);
 			$result['numRows'] = count($queryResDta);
 			$data  = $queryResDta;
 			
@@ -1652,7 +1652,7 @@ class FrontEndUser extends Model
 		}
 		
 		public function getBanner($page_id){
-		 $query = DB::select("select banner_image,pCloudFileID from dynamic_pages where page_id = '". $page_id ."'");   
+		 $query = DB::select("select banner_image,pCloudFileID from dynamic_pages where page_id = ?", [$page_id]);   
 		 $result  = $query;
 		 return  $result;		
 		}
@@ -1662,13 +1662,13 @@ class FrontEndUser extends Model
 		* @GS
 		*/	
 		public function getBannerText($id){
-			$query = DB::select("select * from  banners where  pageId = '". $id ."'");   
+			$query = DB::select("select * from  banners where  pageId = ?", [$id]);   
 			$result  = $query;
 			return  $result;		
 		}
 		
 		public function getPageLinks($pageId){
-		 $query = DB::select("select * from dynamic_links where pageId = '". $pageId ."' order by linkId asc");   
+		 $query = DB::select("select * from dynamic_links where pageId = ? order by linkId asc", [$pageId]);   
 		 $result  = $query;
 		 return  $result;		
 		}
@@ -1696,12 +1696,12 @@ class FrontEndUser extends Model
 		public function getPageText($id)
 		{
 
-		 $query = DB::select("select * from  dynamic_pages where  page_id = '". $id ."'");   
+		 $query = DB::select("select * from  dynamic_pages where  page_id = ?", [$id]);   
 		 $result  = $query;
 		 return  $result;
 		}
 		public function getContentUsingMeta($pageID, $metaKey){
-		 $query = DB::select("select * from  pages_meta where  pageId = '". $pageID ."' AND meta_key = '". $metaKey ."'");   
+		 $query = DB::select("select * from  pages_meta where  pageId = '?' AND meta_key = '?'", [$pageID, $metaKey]);   
 		 $result  = $query;
 		 return  $result;		
 		}
@@ -1752,7 +1752,7 @@ class FrontEndUser extends Model
 			 return $query;
 		 }		
 		public function getPageMeta_trm($id){
-			$query =  DB::select("SELECT meta_tittle, meta_keywords, meta_description FROM  dynamic_pages where  page_id = '" . $id . "'");
+			$query =  DB::select("SELECT meta_tittle, meta_keywords, meta_description FROM  dynamic_pages where  page_id = ?", [$id]);
 			$result['numRows'] = count($query);
 			$result['data']  = $query;
 
@@ -1844,7 +1844,7 @@ class FrontEndUser extends Model
 			 }
 			public function getSubscriptionStatus($clientId){
 
-				$query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = '" . $clientId . "' and status = '1' order by subscriptionId desc limit 1");
+				$query = DB::select("SELECT status, packageId FROM client_subscriptions where clientId = ? and status = '1' order by subscriptionId desc limit 1", [$clientId]);
 
 				$result['numRows'] =  count($query);
 
@@ -1855,7 +1855,7 @@ class FrontEndUser extends Model
 		
 		  public function getBannerText_trm($id){
 
-			$query =  DB::select("SELECT * FROM  banners where  pageId = '" . $id . "'");
+			$query =  DB::select("SELECT * FROM  banners where  pageId = ?", [$id]);
 
 			$result  = $query;
 			//dd($result);
@@ -1915,7 +1915,7 @@ class FrontEndUser extends Model
 						->limit(1)
 						->update($updateArr);
 						
-					$query3 = DB::select("SELECT user_id, package_id FROM buy_digicoins where payment_type = '1' and payment_id = '" . $insertId . "' and buy_id = '" . $buyId . "'");
+					$query3 = DB::select("SELECT user_id, package_id FROM buy_digicoins where payment_type = '1' and payment_id = '?' and buy_id = '?'", [$insertId, $buyId]);
 
 					$row3['numRows'] = count($query3);
 	
@@ -2020,7 +2020,7 @@ class FrontEndUser extends Model
 						->limit(1)
 						->update($updateArr);
 						
-					$query3 = DB::select("SELECT user_id, package_id FROM buy_digicoins where payment_type = '1' and payment_id = '" . $insertId . "' and buy_id = '" . $buyId . "'");
+					$query3 = DB::select("SELECT user_id, package_id FROM buy_digicoins where payment_type = '1' and payment_id = '?' and buy_id = '?'", [$insertId, $buyId]);
 
 					$row3['numRows'] = count($query3);
 	
@@ -2108,11 +2108,11 @@ class FrontEndUser extends Model
             }
         }
 		
-        $query = DB::select("update `members` set address1 = '$address1', city = '$city', state =  '$state', country = '$countryName', continent = '$continent', zip = '$postalCode' where id = '$memberId'");
+        $query = DB::select("update `members` set address1 = '$address1', city = '$city', state =  '$state', country = '$countryName', continent = '$continent', zip = '$postalCode' where id = ?", [$memberId]);
 
         $result = 1;
 
-        $social_query = DB::select("SELECT memberSocialId FROM member_social_media where memberId = '$memberId'");
+        $social_query = DB::select("SELECT memberSocialId FROM member_social_media where memberId = ?", [$memberId]);
 
         $social_num_rows = count($social_query);
 
@@ -2674,7 +2674,7 @@ class FrontEndUser extends Model
             $piratedj_varies = 0;
         }
 
-        $managementQuery = DB::select("SELECT id FROM members_dj_mixer where member = '" . $newMemberId . "'");
+        $managementQuery = DB::select("SELECT id FROM members_dj_mixer where member = ?", [$newMemberId]);
 
         $managementRows = count($managementQuery);
 
@@ -3173,7 +3173,7 @@ class FrontEndUser extends Model
             $radioIt = 0;
         }
 
-        $managementQuery = DB::select("SELECT id FROM members_radio_station where member = '" . $newMemberId . "'");
+        $managementQuery = DB::select("SELECT id FROM members_radio_station where member = ?", [$newMemberId]);
 
         $managementRows = count($managementQuery);
 /*         if (strpos($programTime, "'") !== false)       $programTime = str_replace("'", "\'", $programTime);
@@ -3296,13 +3296,13 @@ class FrontEndUser extends Model
             $massNewsletter = 0;
         }
 
-        $managementQuery = DB::select("SELECT id FROM members_mass_media where member = '" . $newMemberId . "'");
+        $managementQuery = DB::select("SELECT id FROM members_mass_media where member = ?", [$newMemberId]);
 
         $managementRows = count($managementQuery);
 
         /* if ($managementRows > 0) {
 
-            DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = '" . $newMemberId . "'");
+            DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = ?", [$newMemberId]);
         } else {
 
             DB::select("insert into `members_mass_media` (`member`, `mediatype_tvfilm`, `mediatype_publication`, `mediatype_newmedia`, `mediatype_newsletter`, `media_name`, `media_website`, `media_department`) values ('" . $newMemberId . "', '" . $massTv . "', '" . $massPublication . "', '" . $massDotcom . "', '" . $massNewsletter . "', '" . $massName . "', '" . $massWebsite . "', '" . $massDepartment . "')");
@@ -3322,13 +3322,13 @@ class FrontEndUser extends Model
             $recordDistribution = 0;
         }
 
-        $managementQuery = DB::select("SELECT id FROM members_record_label where member = '" . $newMemberId . "'");
+        $managementQuery = DB::select("SELECT id FROM members_record_label where member = ?", [$newMemberId]);
 
         $managementRows = count($managementQuery);
 
         /* if ($managementRows > 0) {
 
-            DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = '" . $newMemberId . "'");
+            DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = ?", [$newMemberId]);
         } else {
 
             DB::select("insert into `members_record_label` (`member`, `labeltype_major`, `labeltype_indy`, `labeltype_distribution`, `label_name`, `label_department`) values ('" . $newMemberId . "', '" . $recordMajor . "', '" . $recordIndy . "', '" . $recordDistribution . "', '" . $recordName . "', '" . $recordDepartment . "')");
@@ -3352,13 +3352,13 @@ class FrontEndUser extends Model
             $managementFinance = 0;
         }
 
-        $managementQuery = DB::select("SELECT id FROM members_management where member = '" . $newMemberId . "'");
+        $managementQuery = DB::select("SELECT id FROM members_management where member = ?", [$newMemberId]);
 
         $managementRows = count($managementQuery);
 
         /* if ($managementRows > 0) {
 
-            DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = '" . $newMemberId . "'");
+            DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = ?", [$newMemberId]);
         } else {
 
             DB::select("insert into `members_management` (`member`, `managementtype_artist`, `managementtype_tour`, `managementtype_personal`, `managementtype_finance`, `management_name`, `management_who`, `management_industry`) values ('" . $newMemberId . "', '" . $managementArtist . "', '" . $managementTour . "', '" . $managementPersonal . "', '" . $managementFinance . "', '" . $managementName . "', '" . $managementWho . "', '" . $managementIndustry . "')");
@@ -3366,16 +3366,16 @@ class FrontEndUser extends Model
 
         // clothing
 
-        $clothingQuery = DB::select("SELECT id FROM members_clothing_apparel where member = '" . $newMemberId . "'");
+        $clothingQuery = DB::select("SELECT id FROM members_clothing_apparel where member = ?", [$newMemberId]);
 
         $clothingRows = count($clothingQuery);
 
         /* if ($clothingRows > 0) {
 
-            DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = '" . $newMemberId . "'");
+            DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = ?", [$newMemberId]);
         } else {
 
-            DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('" . $newMemberId . "', '" . $clothingName . "', '" . $clothingDepartment . "')");
+            DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('?', '?', '?')", [$newMemberId, $clothingName, $clothingDepartment]);
         } */
 
         // promoter
@@ -3396,7 +3396,7 @@ class FrontEndUser extends Model
             $promoterStreet = 0;
         }
 
-        $promoterQuery = DB::select("SELECT id FROM members_promoter where member = '" . $newMemberId . "'");
+        $promoterQuery = DB::select("SELECT id FROM members_promoter where member = ?", [$newMemberId]);
 
         $promoterRows = count($promoterQuery);
 
@@ -3404,7 +3404,7 @@ class FrontEndUser extends Model
 
         /* if ($promoterRows > 0) {
 
-            DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = '" . $newMemberId . "'");
+            DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = ?", [$newMemberId]);
 
             //$this->db->query("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$this->db->escape($promoterName)', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = '". $newMemberId . "'");
         } else {
@@ -3432,13 +3432,13 @@ class FrontEndUser extends Model
             $specialOther = 0;
         }
 
-        $specialQuery = DB::select("SELECT id FROM members_special_services where member = '" . $newMemberId . "'");
+        $specialQuery = DB::select("SELECT id FROM members_special_services where member = ?", [$newMemberId]);
 
         $specialRows = count($specialQuery);
 
         /* if ($specialRows > 0) {
 
-            DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = '" . $newMemberId . "'");
+            DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = ?", [$newMemberId]);
         } else {
 
             DB::select("insert into `members_special_services` (`member`, `servicestype_corporate`, `servicestype_graphicdesign`, `servicestype_webdesign`, `servicestype_other`, `services_name`, `services_website`) values ('" . $newMemberId . "', '" . $specialCorporate . "', '" . $specialGraphic . "', '" . $specialWeb . "', '" . $specialOther . "', '" . $specialName . "', '" . $specialWebsite . "')");
@@ -3462,13 +3462,13 @@ class FrontEndUser extends Model
             $productionSound = 0;
         }
 
-        $productionQuery = DB::select("SELECT id FROM members_production_talent where member = '" . $newMemberId . "'");
+        $productionQuery = DB::select("SELECT id FROM members_production_talent where member = ?", [$newMemberId]);
 
         $productionRows = count($productionQuery);
 
         /* if ($productionRows > 0) {
 
-            DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = '" . $newMemberId . "'");
+            DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = ?", [$newMemberId]);
         } else {
 
            DB::select("insert into `members_production_talent` (`member`, `productiontype_artist`, `productiontype_producer`, `productiontype_choreographer`, `productiontype_sound`, `production_name`) values ('" . $newMemberId . "', '" . $productionArtist . "', '" . $productionProducer . "', '" . $productionChoregrapher . "', '" . $productionSound . "', '" . $productionName . "')");
