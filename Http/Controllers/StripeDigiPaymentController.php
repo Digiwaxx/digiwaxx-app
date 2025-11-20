@@ -285,10 +285,10 @@ class StripeDigiPaymentController extends Controller
 // 	----------------------------------------------------------------------------------------
 
 	public function package_payment(Request $request){
-		
+
 
 		$token = $request->stripeToken;
-			
+
 			if(!empty($token)){
 				try{
 				 // SECURITY FIX: Use environment variable instead of hardcoded API key
@@ -300,10 +300,33 @@ class StripeDigiPaymentController extends Controller
 					 throw new \Exception('Stripe API key not configured');
 				 }
 
+				 // SECURITY FIX: Get package price from server-side (database), not client POST
+				 $packageId = Session::get('package_id');
+				 if (empty($packageId)) {
+					 throw new \Exception('No package selected');
+				 }
+
+				 $package = DB::table('manage_packages')->where('id', $packageId)->first();
+				 if (!$package) {
+					 throw new \Exception('Invalid package');
+				 }
+
+				 $serverAmount = $package->package_price; // TRUSTED server-side price
+
+				 // Optional: Log if client amount doesn't match (fraud detection)
+				 if (isset($_POST['amount']) && abs($_POST['amount'] - $serverAmount) > 0.01) {
+					 \Log::warning('Payment amount mismatch', [
+						 'client_sent' => $_POST['amount'],
+						 'server_price' => $serverAmount,
+						 'package_id' => $packageId,
+						 'ip' => $request->ip()
+					 ]);
+				 }
+
 				 Stripe\Stripe::setApiKey($stripeSecret);
-				 
+
 				 		 $newCustomer = 0;
-		 
+
 						$customers = Stripe\Customer::all();
 						foreach ($customers->autoPagingIterator() as $customer) {
 
@@ -313,7 +336,7 @@ class StripeDigiPaymentController extends Controller
 							 $customerId =  $customer['id'];
 							 $newCustomer = 1;
 						  }
-						 
+
 						}
 					if($newCustomer==0){
 						// Create a Customer:
@@ -322,20 +345,20 @@ class StripeDigiPaymentController extends Controller
 						  "source" => $token,
 						));
 						$customerId = $customer->id;
-						
+
 						$charge = Stripe\Charge::create(array(
 						"customer" => $customerId,
-						"amount" => $_POST['amount']*100, // Amount in cents
+						"amount" => $serverAmount*100, // SECURITY FIX: Use server-side price
 						"currency" => "inr", //usd
-						"description" => "Example charge",
+						"description" => "Package #" . $packageId . " - " . $package->package_name,
 						));
-						
+
 					}else{
 							$charge = Stripe\Charge::create(array(
 							"customer" => $customerId,
-							"amount" => $_POST['amount']*100, // Amount in cents
+							"amount" => $serverAmount*100, // SECURITY FIX: Use server-side price
 							"currency" => "inr", // usd
-							"description" => "Example charge",
+							"description" => "Package #" . $packageId . " - " . $package->package_name,
 							));
 					}
 					
@@ -366,10 +389,10 @@ class StripeDigiPaymentController extends Controller
 // 	----------------------------------------------
 
     public function package_payment_client(Request $request){
-        	
+
 
 		$token = $request->stripeToken;
-			
+
 			if(!empty($token)){
 				try{
 				 // SECURITY FIX: Use environment variable instead of hardcoded API key
@@ -381,10 +404,33 @@ class StripeDigiPaymentController extends Controller
 					 throw new \Exception('Stripe API key not configured');
 				 }
 
+				 // SECURITY FIX: Get package price from server-side (database), not client POST
+				 $packageId = Session::get('package_id');
+				 if (empty($packageId)) {
+					 throw new \Exception('No package selected');
+				 }
+
+				 $package = DB::table('manage_packages')->where('id', $packageId)->first();
+				 if (!$package) {
+					 throw new \Exception('Invalid package');
+				 }
+
+				 $serverAmount = $package->package_price; // TRUSTED server-side price
+
+				 // Optional: Log if client amount doesn't match (fraud detection)
+				 if (isset($_POST['amount']) && abs($_POST['amount'] - $serverAmount) > 0.01) {
+					 \Log::warning('Payment amount mismatch - Client', [
+						 'client_sent' => $_POST['amount'],
+						 'server_price' => $serverAmount,
+						 'package_id' => $packageId,
+						 'ip' => $request->ip()
+					 ]);
+				 }
+
 				 Stripe\Stripe::setApiKey($stripeSecret);
-				 
+
 				 		 $newCustomer = 0;
-		 
+
 						$customers = Stripe\Customer::all();
 						foreach ($customers->autoPagingIterator() as $customer) {
 
@@ -394,7 +440,7 @@ class StripeDigiPaymentController extends Controller
 							 $customerId =  $customer['id'];
 							 $newCustomer = 1;
 						  }
-						 
+
 						}
 					if($newCustomer==0){
 						// Create a Customer:
@@ -403,20 +449,20 @@ class StripeDigiPaymentController extends Controller
 						  "source" => $token,
 						));
 						$customerId = $customer->id;
-						
+
 						$charge = Stripe\Charge::create(array(
 						"customer" => $customerId,
-						"amount" => $_POST['amount']*100, // Amount in cents
+						"amount" => $serverAmount*100, // SECURITY FIX: Use server-side price
 						"currency" => "inr", //usd
-						"description" => "Example charge",
+						"description" => "Package #" . $packageId . " - " . $package->package_name,
 						));
-						
+
 					}else{
 							$charge = Stripe\Charge::create(array(
 							"customer" => $customerId,
-							"amount" => $_POST['amount']*100, // Amount in cents
+							"amount" => $serverAmount*100, // SECURITY FIX: Use server-side price
 							"currency" => "inr", // usd
-							"description" => "Example charge",
+							"description" => "Package #" . $packageId . " - " . $package->package_name,
 							));
 					}
 					

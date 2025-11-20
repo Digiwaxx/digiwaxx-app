@@ -188,28 +188,44 @@ class ClientDashboardController extends Controller
 
 					$profileImage = $request->file('profileImage') ;
 
+					// SECURITY FIX: Validate MIME type FIRST to prevent PHP shell uploads
+					$allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+					$fileMimeType = $profileImage->getMimeType();
+
+					if (!in_array($fileMimeType, $allowedMimes)) {
+						return redirect()->back()->with('error', 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
+					}
+
+					// SECURITY FIX: Validate file extension
+					$allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+					$fileExtension = strtolower($profileImage->getClientOriginalExtension());
+
+					if (!in_array($fileExtension, $allowedExtensions)) {
+						return redirect()->back()->with('error', 'Invalid file extension.');
+					}
+
 					//Display File Name
 					$filename = $profileImage->getClientOriginalName();
 					// echo 'File Name: '.$filename;
-				  
-					
+
+
 					//Display File Extension
-					$file_extension = $profileImage->getClientOriginalExtension();
+					$file_extension = $fileExtension; // Use validated extension
 					// echo 'File Extension: '.$file_extension;
-				  
-					
+
+
 					//Display File Real Path
 					$real_path = $profileImage->getRealPath();
 					// echo 'File Real Path: '.$real_path;
-				  
-					
+
+
 					//Display File Size
 					$file_size = $profileImage->getSize();
 					// echo 'File Size: '.$file_size;
-				  
-					
+
+
 					//Display File Mime Type
-					$file_mime_type = $profileImage->getMimeType();
+					$file_mime_type = $fileMimeType; // Use already validated MIME
 					// echo 'File Mime Type: '.$file_mime_type;
 				  
 					$destination_path = base_path("./client_images/".$clientId."/");

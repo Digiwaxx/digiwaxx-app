@@ -135,7 +135,25 @@ class AlbumsController extends Controller
                 if ($request->hasFile('pageImage')) {
 
                     $image = $request->file('pageImage');
-                    $imageName = $image->getClientOriginalName();
+
+                    // SECURITY FIX: Validate MIME type to prevent PHP shell uploads
+                    $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                    $fileMime = $image->getMimeType();
+
+                    if (!in_array($fileMime, $allowedMimes)) {
+                        return redirect()->back()->with('error', 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
+                    }
+
+                    // SECURITY FIX: Validate file extension
+                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                    $fileExtension = strtolower($image->getClientOriginalExtension());
+
+                    if (!in_array($fileExtension, $allowedExtensions)) {
+                        return redirect()->back()->with('error', 'Invalid file extension.');
+                    }
+
+                    // SECURITY FIX: Generate safe filename (prevent path traversal attacks)
+                    $imageName = 'album_' . $albumid . '_' . uniqid() . '.' . $fileExtension;
                     $filepath = $image->getRealPath();
 
                     $pcloudFolder = new Folder($this->pCloudApp);
@@ -339,7 +357,25 @@ class AlbumsController extends Controller
             if ($request->hasFile('pageImage')) {
 
                 $image = $request->file('pageImage');
-                $imageName = $image->getClientOriginalName();
+
+                // SECURITY FIX: Validate MIME type to prevent PHP shell uploads
+                $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                $fileMime = $image->getMimeType();
+
+                if (!in_array($fileMime, $allowedMimes)) {
+                    return redirect()->back()->with('error', 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
+                }
+
+                // SECURITY FIX: Validate file extension
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                $fileExtension = strtolower($image->getClientOriginalExtension());
+
+                if (!in_array($fileExtension, $allowedExtensions)) {
+                    return redirect()->back()->with('error', 'Invalid file extension.');
+                }
+
+                // SECURITY FIX: Generate safe filename (prevent path traversal attacks)
+                $imageName = 'album_' . $albumid . '_' . uniqid() . '.' . $fileExtension;
                 $filepath = $image->getRealPath();
 
                 $pcloudFolder = new Folder($this->pCloudApp);
@@ -780,9 +816,27 @@ class AlbumsController extends Controller
 
 
                 if ($request->hasFile('logoImage')) {
-                    echo ('Yes Image');
+                    // SECURITY FIX: Removed debug echo statement
                     $image = $request->file('logoImage');
-                    $imageName = $image->getClientOriginalName();
+
+                    // SECURITY FIX: Validate MIME type to prevent PHP shell uploads
+                    $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                    $fileMime = $image->getMimeType();
+
+                    if (!in_array($fileMime, $allowedMimes)) {
+                        return redirect()->back()->with('error', 'Invalid file type. Only JPEG, PNG, and GIF images are allowed.');
+                    }
+
+                    // SECURITY FIX: Validate file extension
+                    $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                    $fileExtension = strtolower($image->getClientOriginalExtension());
+
+                    if (!in_array($fileExtension, $allowedExtensions)) {
+                        return redirect()->back()->with('error', 'Invalid file extension.');
+                    }
+
+                    // SECURITY FIX: Generate safe filename (prevent path traversal attacks)
+                    $imageName = 'logo_track_' . $Tracks->id . '_' . uniqid() . '.' . $fileExtension;
                     $filepath = $image->getRealPath();
 
                     $pcloudFolder = new Folder($this->pCloudApp);
@@ -830,9 +884,9 @@ class AlbumsController extends Controller
 
 
 
-            if ($flag = 1) {
+            if ($flag === 1) { // BUGFIX: Changed assignment (=) to comparison (===)
 
-                $responseRet = array('status' => 1, 'message' => 'Form Submited Successfully');
+                $responseRet = array('status' => 1, 'message' => 'Form Submitted Successfully');
 
                 return response()->json($responseRet);
             }
