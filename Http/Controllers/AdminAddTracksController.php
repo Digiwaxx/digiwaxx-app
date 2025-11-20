@@ -200,8 +200,30 @@ class AdminAddTracksController extends Controller
 
 				if ($request->hasFile('pageImage')) {
 
+					// SECURITY FIX: Validate file upload properly
 					$image = $request->file('pageImage');
-					$imageName = $image->getClientOriginalName();
+
+					// Validate file type - only allow images
+					$allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+					$allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+					if (!in_array($image->getMimeType(), $allowedMimes)) {
+						throw new \Exception('Invalid file type. Only images are allowed.');
+					}
+
+					// Validate file extension
+					$extension = strtolower($image->getClientOriginalExtension());
+					if (!in_array($extension, $allowedExtensions)) {
+						throw new \Exception('Invalid file extension.');
+					}
+
+					// Validate file size (max 5MB)
+					if ($image->getSize() > 5242880) {
+						throw new \Exception('File size must be less than 5MB.');
+					}
+
+					// Generate secure random filename instead of using client-provided name
+					$imageName = uniqid('track_') . '_' . time() . '.' . $extension;
 					$filepath = $image->getRealPath();
 
 					$pcloudFolder = new Folder($this->pCloudApp);
@@ -429,7 +451,26 @@ class AdminAddTracksController extends Controller
 			$files =  $request->file('files');
 
 			foreach ($files as $file) {
-				$filename = $file->getClientOriginalName();
+				// SECURITY FIX: Validate audio files
+				$allowedAudioMimes = ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/aac'];
+				$allowedAudioExtensions = ['mp3', 'wav', 'aac'];
+
+				if (!in_array($file->getMimeType(), $allowedAudioMimes)) {
+					throw new \Exception('Invalid audio file type. Only MP3, WAV, and AAC files are allowed.');
+				}
+
+				$extension = strtolower($file->getClientOriginalExtension());
+				if (!in_array($extension, $allowedAudioExtensions)) {
+					throw new \Exception('Invalid audio file extension.');
+				}
+
+				// Validate file size (max 50MB for audio)
+				if ($file->getSize() > 52428800) {
+					throw new \Exception('Audio file size must be less than 50MB.');
+				}
+
+				// Generate secure filename
+				$filename = uniqid('audio_') . '_' . time() . '.' . $extension;
 
 				// pcloud
 				$filepath = $file->getRealPath();
@@ -1191,8 +1232,30 @@ class AdminAddTracksController extends Controller
 
 				if ($request->hasFile('pageImage')) {
 
+					// SECURITY FIX: Validate file upload properly
 					$image = $request->file('pageImage');
-					$imageName = $image->getClientOriginalName();
+
+					// Validate file type - only allow images
+					$allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+					$allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+					if (!in_array($image->getMimeType(), $allowedMimes)) {
+						throw new \Exception('Invalid file type. Only images are allowed.');
+					}
+
+					// Validate file extension
+					$extension = strtolower($image->getClientOriginalExtension());
+					if (!in_array($extension, $allowedExtensions)) {
+						throw new \Exception('Invalid file extension.');
+					}
+
+					// Validate file size (max 5MB)
+					if ($image->getSize() > 5242880) {
+						throw new \Exception('File size must be less than 5MB.');
+					}
+
+					// Generate secure random filename instead of using client-provided name
+					$imageName = uniqid('track_') . '_' . time() . '.' . $extension;
 					$filepath = $image->getRealPath();
 
 					$pcloudFolder = new Folder($this->pCloudApp);

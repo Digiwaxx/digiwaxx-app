@@ -349,54 +349,62 @@ public function track_review_members_list(Request $request){
 
 	$where = '';
 
-	$trkid = $request->get('tid');
-	$graphId = $request->get('graphId');
-	$label = $request->get('label');
+	// SECURITY FIX: Validate and sanitize all user inputs
+	$trkid = (int) $request->get('tid'); // Cast to integer for safety
+	$graphId = (int) $request->get('graphId');
+	$label = htmlspecialchars($request->get('label'), ENT_QUOTES, 'UTF-8');
 	$valIs = $request->get('val');
 
+	// SECURITY FIX: Build query using array conditions instead of string concatenation
+	$whereConditions = ['track' => $trkid];
+
         if ($graphId == 1) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.whatrate = '" . $valIs . "'";
+            $whereConditions['whatrate'] = $valIs;
             $pageTitle[1] = 'Members list who choose ' . $label . ' for - WHAT DO YOU THINK ABOUT THIS SONG?';
         } else if ($graphId == 2) {
             $value = explode('-OR-', $valIs);
-            $where = "tracks_reviews.track = '" . $trkid . "'";
-            $where .= " AND (tracks_reviews.whereheard = '" . $value[0] . "' OR tracks_reviews.whereheard = '" . $value[1] . "')";
+            // Pass as array for OR condition handling in model
+            $whereConditions['whereheard_or'] = [$value[0], $value[1]];
             $pageTitle[2] = 'Members list who choose ' . $label . ' for - WHERE DID YOU HEAR THIS SONG FIRST?';
         } else if ($graphId == 3) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.alreadyhave = '" . $valIs . "'";
+            $whereConditions['alreadyhave'] = $valIs;
             $pageTitle[3] = 'Members list who choose ' . $label . ' for - DO YOU ALREADY HAVE THIS SONG?';
         } else if ($graphId == 4) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.willplay = '" . $valIs . "'";
+            $whereConditions['willplay'] = $valIs;
             $pageTitle[4] = 'Members list who choose ' . $label . ' for - WILL YOU PLAY THIS SONG?';
         } else if ($graphId == 5) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.howsoon = '" . $valIs . "'";
+            $whereConditions['howsoon'] = $valIs;
             $pageTitle[5] = 'Members list who choose ' . $label . ' for - WILL YOU PLAY THIS SONG?';
         } else if ($graphId == 6) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.howmanyplays = '" . $valIs . "'";
+            $whereConditions['howmanyplays'] = $valIs;
             $pageTitle[6] = 'Members list who choose ' . $label . ' for - HOW MANY TIMES WILL YOU PLAY THIS SONG (per week)?';
         } else if ($graphId == 7) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews." . $valIs . " = '1'";
+            // SECURITY: Whitelist allowed column names to prevent SQL injection
+            $allowedColumns = ['format1', 'format2', 'format3', 'format4', 'format5'];
+            if (in_array($valIs, $allowedColumns)) {
+                $whereConditions[$valIs] = '1';
+            }
             $pageTitle[7] = 'Members list who choose ' . $label . ' for - WHAT FORMATS DO YOU THINK WILL HELP BREAK THIS SONG IN YOUR MARKET(check all that apply)?';
         } else if ($graphId == 8) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.godistance = '" . $valIs . "'";
+            $whereConditions['godistance'] = $valIs;
             $pageTitle[8] = 'Members list who choose ' . $label . ' for - DO YOU THINK THIS RECORD WILL GET ANY SUPPORT?';
         } else if ($graphId == 9) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.labelsupport = '" . $valIs . "'";
+            $whereConditions['labelsupport'] = $valIs;
             $pageTitle[9] = 'Members list who choose ' . $label . ' for - HOW SHOULD THE LABEL SUPPORT THIS PROJECT?';
         } else if ($graphId == 10) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.howsupport = '" . $valIs . "'";
+            $whereConditions['howsupport'] = $valIs;
             $pageTitle[10] = 'Members list who choose ' . $label . ' for - HOW WILL YOU SUPPORT THIS PROJECT?';
         } else if ($graphId == 11) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.likerecord = '" . $valIs . "'";
+            $whereConditions['likerecord'] = $valIs;
             $pageTitle[11] = 'Members list who choose ' . $label . ' for - WHAT DO YOU LIKE MOST ABOUT THIS RECORD?';
         } else if ($graphId == 12) {
-            $where = "tracks_reviews.track = '" . $trkid . "' and tracks_reviews.anotherformat = '" . $valIs . "'";
+            $whereConditions['anotherformat'] = $valIs;
             $pageTitle[12] = 'Members list who choose ' . $label . ' for - DO YOU WANT THIS SONG IN ANOTHER FORMAT?';
-        }	
+        }
 
-        $output['members'] = $this->admin_model->getReviewMembers($where);
+        $output['members'] = $this->admin_model->getReviewMembers($whereConditions, $graphId);
 
-        $output['pageTitle'] = $pageTitle[$_GET['graphId']];
+        $output['pageTitle'] = $pageTitle[$graphId]; // SECURITY FIX: Use validated $graphId
         $output['tid'] = $trkid;
         $output['graphId'] = $graphId;
         $output['val'] = $valIs;

@@ -42,12 +42,16 @@ class StripeDigiPaymentController extends Controller
 			
 			if(!empty($token)){
 				try{
-				 //Stripe\Stripe::setApiKey('sk_test_tR3PYbcVNZZ796tH88S4VQ2u');
+				 // SECURITY FIX: Use environment variable instead of hardcoded API key
+				 // CRITICAL: Rotate the exposed API key immediately!
 				 $stripeSecret = env('STRIPE_SECRET');
-				 $stripeCurrency = env('STRIPE_CURRENCY');
-				 
-				/*  echo $stripeSecret.'--'.$stripeCurrency.'--'.$_POST['amount']; die('--INNN'); */
-				 Stripe\Stripe::setApiKey("sk_test_51JmHVaSFsniFu3P5ETo2bYcYLHquxF8HlAN9hq4NaGF9azIYPQmA4veCFpepeybSnhBs9J57Hcgrn0qGOxhCNbh1005uyDIFcZ");
+				 $stripeCurrency = env('STRIPE_CURRENCY', 'usd');
+
+				 if (empty($stripeSecret)) {
+					 throw new \Exception('Stripe API key not configured');
+				 }
+
+				 Stripe\Stripe::setApiKey($stripeSecret);
 				 
 				 		 $newCustomer = 0;
 		 
@@ -70,19 +74,32 @@ class StripeDigiPaymentController extends Controller
 						));
 						$customerId = $customer->id;
 						
+						// SECURITY FIX: Verify amount server-side, never trust client input
+						// Get the actual package price from session (set when user selects package)
+						$serverAmount = Session::get('digicoin_package_stripe_price');
+						if (empty($serverAmount) || $serverAmount != $request->input('amount')) {
+							throw new \Exception('Payment amount mismatch - possible tampering detected');
+						}
+
 						$charge = Stripe\Charge::create(array(
 						"customer" => $customerId,
-						"amount" => $_POST['amount'], // Amount in cents
-						"currency" => "inr", //usd
-						"description" => "Example charge",
+						"amount" => $serverAmount, // Use server-side validated amount
+						"currency" => $stripeCurrency,
+						"description" => "Digicoin Package Purchase",
 						));
 						
 					}else{
+							// SECURITY FIX: Verify amount server-side for existing customers too
+							$serverAmount = Session::get('digicoin_package_stripe_price');
+							if (empty($serverAmount) || $serverAmount != $request->input('amount')) {
+								throw new \Exception('Payment amount mismatch - possible tampering detected');
+							}
+
 							$charge = Stripe\Charge::create(array(
 							"customer" => $customerId,
-							"amount" => $_POST['amount'], // Amount in cents
-							"currency" => "inr", // usd
-							"description" => "Example charge",
+							"amount" => $serverAmount, // Use server-side validated amount
+							"currency" => $stripeCurrency,
+							"description" => "Digicoin Package Purchase",
 							));
 					}
 				 //echo '<pre>';print_r($_POST); die('--INNN');
@@ -274,12 +291,16 @@ class StripeDigiPaymentController extends Controller
 			
 			if(!empty($token)){
 				try{
-				 //Stripe\Stripe::setApiKey('sk_test_tR3PYbcVNZZ796tH88S4VQ2u');
+				 // SECURITY FIX: Use environment variable instead of hardcoded API key
+				 // CRITICAL: Rotate the exposed API key immediately!
 				 $stripeSecret = env('STRIPE_SECRET');
-				 $stripeCurrency = env('STRIPE_CURRENCY');
-				 
-				/*  echo $stripeSecret.'--'.$stripeCurrency.'--'.$_POST['amount']; die('--INNN'); */
-				 Stripe\Stripe::setApiKey("sk_test_51JmHVaSFsniFu3P5ETo2bYcYLHquxF8HlAN9hq4NaGF9azIYPQmA4veCFpepeybSnhBs9J57Hcgrn0qGOxhCNbh1005uyDIFcZ");
+				 $stripeCurrency = env('STRIPE_CURRENCY', 'usd');
+
+				 if (empty($stripeSecret)) {
+					 throw new \Exception('Stripe API key not configured');
+				 }
+
+				 Stripe\Stripe::setApiKey($stripeSecret);
 				 
 				 		 $newCustomer = 0;
 		 
@@ -351,12 +372,16 @@ class StripeDigiPaymentController extends Controller
 			
 			if(!empty($token)){
 				try{
-				 //Stripe\Stripe::setApiKey('sk_test_tR3PYbcVNZZ796tH88S4VQ2u');
+				 // SECURITY FIX: Use environment variable instead of hardcoded API key
+				 // CRITICAL: Rotate the exposed API key immediately!
 				 $stripeSecret = env('STRIPE_SECRET');
-				 $stripeCurrency = env('STRIPE_CURRENCY');
-				 
-				/*  echo $stripeSecret.'--'.$stripeCurrency.'--'.$_POST['amount']; die('--INNN'); */
-				 Stripe\Stripe::setApiKey("sk_test_51JmHVaSFsniFu3P5ETo2bYcYLHquxF8HlAN9hq4NaGF9azIYPQmA4veCFpepeybSnhBs9J57Hcgrn0qGOxhCNbh1005uyDIFcZ");
+				 $stripeCurrency = env('STRIPE_CURRENCY', 'usd');
+
+				 if (empty($stripeSecret)) {
+					 throw new \Exception('Stripe API key not configured');
+				 }
+
+				 Stripe\Stripe::setApiKey($stripeSecret);
 				 
 				 		 $newCustomer = 0;
 		 
@@ -430,12 +455,16 @@ class StripeDigiPaymentController extends Controller
 			
 			if(!empty($token)){
 				try{
-				 //Stripe\Stripe::setApiKey('sk_test_tR3PYbcVNZZ796tH88S4VQ2u');
+				 // SECURITY FIX: Use environment variable instead of hardcoded API key
+				 // CRITICAL: Rotate the exposed API key immediately!
 				 $stripeSecret = env('STRIPE_SECRET');
-				 $stripeCurrency = env('STRIPE_CURRENCY');
-				 
-				/*  echo $stripeSecret.'--'.$stripeCurrency.'--'.$_POST['amount']; die('--INNN'); */
-				 Stripe\Stripe::setApiKey("sk_test_51JmHVaSFsniFu3P5ETo2bYcYLHquxF8HlAN9hq4NaGF9azIYPQmA4veCFpepeybSnhBs9J57Hcgrn0qGOxhCNbh1005uyDIFcZ");
+				 $stripeCurrency = env('STRIPE_CURRENCY', 'usd');
+
+				 if (empty($stripeSecret)) {
+					 throw new \Exception('Stripe API key not configured');
+				 }
+
+				 Stripe\Stripe::setApiKey($stripeSecret);
 				 
 				 		 $newCustomer = 0;
 		 
