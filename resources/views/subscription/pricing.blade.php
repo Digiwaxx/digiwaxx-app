@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pageTitle ?? 'Digiwaxx - Pricing Plans' }}</title>
+    <title>{{ $pageTitle ?? __('Digiwaxx - Pricing Plans') }}</title>
     <style>
         * {
             margin: 0;
@@ -419,9 +419,14 @@
 </head>
 <body>
     <div class="pricing-page">
+        {{-- Language Switcher --}}
+        <div style="text-align: right; margin-bottom: 20px;">
+            <x-language-switcher />
+        </div>
+
         <div class="pricing-header">
-            <h1>Choose Your Plan</h1>
-            <p>Upload your music and get real DJ validation. Start free, upgrade anytime.</p>
+            <h1>{{ __('Choose Your Plan') }}</h1>
+            <p>{{ __('Upload your music and get real DJ validation. Start free, upgrade anytime.') }}</p>
 
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -437,17 +442,17 @@
 
             @if(!$isLoggedIn)
                 <div class="login-prompt">
-                    Already have an account? <a href="/login">Log in</a> to manage your subscription.
+                    {{ __('Already have an account?') }} <a href="/login">{{ __('Log in') }}</a> {{ __('to manage your subscription.') }}
                 </div>
             @endif
 
             <!-- Billing Toggle -->
             <div class="billing-toggle">
                 <div class="toggle-container">
-                    <button type="button" class="toggle-btn active" data-billing="monthly" onclick="setBilling('monthly')">Monthly</button>
-                    <button type="button" class="toggle-btn" data-billing="annual" onclick="setBilling('annual')">Annual</button>
+                    <button type="button" class="toggle-btn active" data-billing="monthly" onclick="setBilling('monthly')">{{ __('Monthly') }}</button>
+                    <button type="button" class="toggle-btn" data-billing="annual" onclick="setBilling('annual')">{{ __('Annual') }}</button>
                 </div>
-                <span class="save-badge">Save up to 33%</span>
+                <span class="save-badge">{{ __('Save up to 33%') }}</span>
             </div>
         </div>
 
@@ -456,70 +461,70 @@
             <div class="pricing-card free">
                 <div class="card-header">
                     @if($currentTier === 'free')
-                        <span class="current-plan-badge">Current Plan</span>
+                        <span class="current-plan-badge">{{ __('Current Plan') }}</span>
                     @endif
-                    <h3>Free</h3>
-                    <div class="target">{{ $tiers['free']['target'] }}</div>
+                    <h3>{{ __('Free') }}</h3>
+                    <div class="target">{{ __($tiers['free']['target']) }}</div>
                     <div class="price monthly-price">
                         <span class="amount">$0</span>
-                        <span class="period">/month</span>
+                        <span class="period">{{ __('/month') }}</span>
                     </div>
                     <div class="price annual-price">
                         <span class="amount">$0</span>
-                        <span class="period">/month</span>
+                        <span class="period">{{ __('/month') }}</span>
                     </div>
                 </div>
                 <div class="card-body">
                     <ul class="features">
                         @foreach($tiers['free']['features'] as $feature)
-                            <li>{{ $feature }}</li>
+                            <li>{{ __($feature) }}</li>
                         @endforeach
                     </ul>
                     @if($currentTier === 'free')
-                        <button class="btn-subscribe secondary" disabled>Current Plan</button>
+                        <button class="btn-subscribe secondary" disabled>{{ __('Current Plan') }}</button>
                     @else
-                        <a href="{{ $isLoggedIn ? route('subscribe.checkout', ['tier' => 'free', 'billing' => 'monthly']) : '/register' }}" class="btn-subscribe secondary">Get Started Free</a>
+                        <a href="{{ $isLoggedIn ? route('subscribe.checkout', ['tier' => 'free', 'billing' => 'monthly']) : '/register' }}" class="btn-subscribe secondary">{{ __('Get Started Free') }}</a>
                     @endif
-                    <p class="card-note">No credit card required</p>
+                    <p class="card-note">{{ __('No credit card required') }}</p>
                 </div>
             </div>
 
             <!-- ARTIST PLAN -->
             <div class="pricing-card artist popular">
-                <div class="popular-badge">Most Popular</div>
+                <div class="popular-badge">{{ __('Most Popular') }}</div>
                 <div class="card-header">
                     @if($currentTier === 'artist')
-                        <span class="current-plan-badge">Current Plan</span>
+                        <span class="current-plan-badge">{{ __('Current Plan') }}</span>
                     @endif
-                    <h3>Artist</h3>
-                    <div class="target">{{ $tiers['artist']['target'] }}</div>
+                    <h3>{{ __('Artist') }}</h3>
+                    <div class="target">{{ __($tiers['artist']['target']) }}</div>
                     <div class="price monthly-price">
                         <span class="amount">${{ $tiers['artist']['price_monthly'] }}</span>
-                        <span class="period">/month</span>
+                        <span class="period">{{ __('/month') }}</span>
                     </div>
                     <div class="price annual-price">
                         <span class="amount">${{ intval($tiers['artist']['price_annual'] / 12) }}</span>
-                        <span class="period">/month</span>
-                        <span class="billed">Billed annually (${{ $tiers['artist']['price_annual'] }}/year)</span>
+                        <span class="period">{{ __('/month') }}</span>
+                        <span class="billed">{{ __('Billed annually') }} (${{ $tiers['artist']['price_annual'] }}{{ __('/year') }})</span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="savings-highlight annual-price">
-                        Save ${{ $tiers['artist']['savings_annual'] }}/year with annual billing!
+                        {{ __('Save :amount/year with annual billing!', ['amount' => '$' . $tiers['artist']['savings_annual']]) }}
                     </div>
                     <ul class="features">
                         @foreach($tiers['artist']['features'] as $feature)
-                            <li>{{ $feature }}</li>
+                            <li>{{ __($feature) }}</li>
                         @endforeach
                     </ul>
                     @if($currentTier === 'artist')
-                        <button class="btn-subscribe primary" disabled>Current Plan</button>
+                        <button class="btn-subscribe primary" disabled>{{ __('Current Plan') }}</button>
                     @else
                         <a href="{{ $isLoggedIn ? route('subscribe.checkout', ['tier' => 'artist', 'billing' => 'monthly']) : '/register' }}" class="btn-subscribe primary monthly-btn">
-                            Subscribe Monthly
+                            {{ __('Subscribe Monthly') }}
                         </a>
                         <a href="{{ $isLoggedIn ? route('subscribe.checkout', ['tier' => 'artist', 'billing' => 'annual']) : '/register' }}" class="btn-subscribe primary annual-btn" style="display: none;">
-                            Subscribe Annual - Save $60/year
+                            {{ __('Subscribe Annual') }} - {{ __('Save :amount/year with annual billing!', ['amount' => '$60']) }}
                         </a>
                     @endif
                 </div>
@@ -529,37 +534,37 @@
             <div class="pricing-card label">
                 <div class="card-header">
                     @if($currentTier === 'label')
-                        <span class="current-plan-badge">Current Plan</span>
+                        <span class="current-plan-badge">{{ __('Current Plan') }}</span>
                     @endif
-                    <h3>Label</h3>
-                    <div class="target">{{ $tiers['label']['target'] }}</div>
+                    <h3>{{ __('Label') }}</h3>
+                    <div class="target">{{ __($tiers['label']['target']) }}</div>
                     <div class="price monthly-price">
                         <span class="amount">${{ $tiers['label']['price_monthly'] }}</span>
-                        <span class="period">/month</span>
+                        <span class="period">{{ __('/month') }}</span>
                     </div>
                     <div class="price annual-price">
                         <span class="amount">${{ intval($tiers['label']['price_annual'] / 12) }}</span>
-                        <span class="period">/month</span>
-                        <span class="billed">Billed annually (${{ number_format($tiers['label']['price_annual']) }}/year)</span>
+                        <span class="period">{{ __('/month') }}</span>
+                        <span class="billed">{{ __('Billed annually') }} (${{ number_format($tiers['label']['price_annual']) }}{{ __('/year') }})</span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="savings-highlight annual-price">
-                        Save ${{ $tiers['label']['savings_annual'] }}/year with annual billing!
+                        {{ __('Save :amount/year with annual billing!', ['amount' => '$' . $tiers['label']['savings_annual']]) }}
                     </div>
                     <ul class="features">
                         @foreach($tiers['label']['features'] as $feature)
-                            <li>{{ $feature }}</li>
+                            <li>{{ __($feature) }}</li>
                         @endforeach
                     </ul>
                     @if($currentTier === 'label')
-                        <button class="btn-subscribe label-btn" disabled>Current Plan</button>
+                        <button class="btn-subscribe label-btn" disabled>{{ __('Current Plan') }}</button>
                     @else
                         <a href="{{ $isLoggedIn ? route('subscribe.checkout', ['tier' => 'label', 'billing' => 'monthly']) : '/register' }}" class="btn-subscribe label-btn monthly-btn">
-                            Subscribe Monthly
+                            {{ __('Subscribe Monthly') }}
                         </a>
                         <a href="{{ $isLoggedIn ? route('subscribe.checkout', ['tier' => 'label', 'billing' => 'annual']) : '/register' }}" class="btn-subscribe label-btn annual-btn" style="display: none;">
-                            Subscribe Annual - Save $600/year
+                            {{ __('Subscribe Annual') }} - {{ __('Save :amount/year with annual billing!', ['amount' => '$600']) }}
                         </a>
                     @endif
                 </div>
@@ -568,36 +573,36 @@
 
         <!-- FAQ Section -->
         <div class="pricing-faq">
-            <h2>Frequently Asked Questions</h2>
+            <h2>{{ __('Frequently Asked Questions') }}</h2>
 
             <div class="faq-item">
-                <h4>What happens if I exceed my monthly upload limit?</h4>
-                <p>You can upgrade to a higher tier anytime to increase your monthly upload limit. Uploads reset at the beginning of each calendar month.</p>
+                <h4>{{ __('What happens if I exceed my monthly upload limit?') }}</h4>
+                <p>{{ __('You can upgrade to a higher tier anytime to increase your monthly upload limit. Uploads reset at the beginning of each calendar month.') }}</p>
             </div>
 
             <div class="faq-item">
-                <h4>Can I switch between monthly and annual billing?</h4>
-                <p>Yes! You can upgrade to annual billing anytime to save 25-33%. When you switch, the change takes effect at your next billing cycle and you'll be credited for any unused time.</p>
+                <h4>{{ __('Can I switch between monthly and annual billing?') }}</h4>
+                <p>{{ __('Yes! You can upgrade to annual billing anytime to save 25-33%. When you switch, the change takes effect at your next billing cycle and you\'ll be credited for any unused time.') }}</p>
             </div>
 
             <div class="faq-item">
-                <h4>What happens when I cancel?</h4>
-                <p>You'll retain access to all features until the end of your current billing period. Your uploaded tracks and their analytics remain accessible. You can resubscribe anytime.</p>
+                <h4>{{ __('What happens when I cancel?') }}</h4>
+                <p>{{ __('You\'ll retain access to all features until the end of your current billing period. Your uploaded tracks and their analytics remain accessible. You can resubscribe anytime.') }}</p>
             </div>
 
             <div class="faq-item">
-                <h4>Do unused uploads roll over to the next month?</h4>
-                <p>No, upload limits reset each month. Make sure to use your monthly allocation! This ensures our DJ network can provide timely feedback on all submissions.</p>
+                <h4>{{ __('Do unused uploads roll over to the next month?') }}</h4>
+                <p>{{ __('No, upload limits reset each month. Make sure to use your monthly allocation! This ensures our DJ network can provide timely feedback on all submissions.') }}</p>
             </div>
 
             <div class="faq-item">
-                <h4>What payment methods do you accept?</h4>
-                <p>We accept all major credit and debit cards (Visa, Mastercard, American Express, Discover) processed securely through Stripe. Your payment information is never stored on our servers.</p>
+                <h4>{{ __('What payment methods do you accept?') }}</h4>
+                <p>{{ __('We accept all major credit and debit cards (Visa, Mastercard, American Express, Discover) processed securely through Stripe. Your payment information is never stored on our servers.') }}</p>
             </div>
 
             <div class="faq-item">
-                <h4>Is there a free trial for paid plans?</h4>
-                <p>The Free plan lets you test the platform with 1 upload per month. This gives you a complete feel for how Digiwaxx works before committing to a paid plan.</p>
+                <h4>{{ __('Is there a free trial for paid plans?') }}</h4>
+                <p>{{ __('The Free plan lets you test the platform with 1 upload per month. This gives you a complete feel for how Digiwaxx works before committing to a paid plan.') }}</p>
             </div>
         </div>
     </div>

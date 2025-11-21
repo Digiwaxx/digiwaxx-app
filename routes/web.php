@@ -17,6 +17,15 @@ use App\Http\Controllers\StripeWebhookController;
 
 /*
 |--------------------------------------------------------------------------
+| ENGLISH ROUTES (DEFAULT - NO PREFIX)
+|--------------------------------------------------------------------------
+| These are the original routes. They remain UNCHANGED for backward
+| compatibility. All URLs without a language prefix serve English content.
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
 | Subscription & Pricing Routes
 |--------------------------------------------------------------------------
 */
@@ -83,3 +92,43 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
     // Get subscription tier info
     Route::get('/subscription-info', [SubscriptionController::class, 'subscriptionInfo'])->name('api.subscription-info');
 });
+
+/*
+|--------------------------------------------------------------------------
+| LOCALIZED ROUTES (WITH LANGUAGE PREFIX)
+|--------------------------------------------------------------------------
+| These routes are ADDITIONS for multi-language support.
+| They mirror the English routes but with a language prefix: /es/, /pt/, etc.
+|
+| IMPORTANT:
+| - English routes above have NO prefix (backward compatible)
+| - These routes only activate when TRANSLATIONS_ENABLED=true in .env
+| - If translation missing, English text is shown as fallback
+|--------------------------------------------------------------------------
+*/
+
+// Only register localized routes if translations feature is enabled
+if (config('localization.enabled', false)) {
+    Route::prefix('{locale}')
+        ->where(['locale' => 'es|pt|fr|de|ja|ko'])
+        ->group(function () {
+            // Public pricing page (localized)
+            Route::get('/pricing', [SubscriptionController::class, 'pricing'])->name('pricing.localized');
+
+            // Subscription routes (localized, requires auth)
+            Route::middleware(['auth'])->group(function () {
+                Route::get('/subscribe/{tier}/{billing}', [SubscriptionController::class, 'checkout'])
+                    ->name('subscribe.checkout.localized')
+                    ->where(['tier' => 'free|artist|label', 'billing' => 'monthly|annual']);
+
+                Route::get('/subscribe/success', [SubscriptionController::class, 'success'])->name('subscribe.success.localized');
+                Route::get('/subscribe/cancel', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel.localized');
+                Route::get('/subscription', [SubscriptionController::class, 'manage'])->name('subscription.manage.localized');
+                Route::post('/subscription/upgrade', [SubscriptionController::class, 'upgrade'])->name('subscription.upgrade.localized');
+                Route::post('/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel.localized');
+                Route::post('/subscription/resume', [SubscriptionController::class, 'resume'])->name('subscription.resume.localized');
+                Route::get('/billing-portal', [SubscriptionController::class, 'billingPortal'])->name('billing.portal.localized');
+                Route::get('/subscription/upload-usage', [SubscriptionController::class, 'uploadUsage'])->name('subscription.upload-usage.localized');
+            });
+        });
+}
