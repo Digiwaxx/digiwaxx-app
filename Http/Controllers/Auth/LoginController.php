@@ -195,25 +195,28 @@ class LoginController extends Controller
         
 		if($membertype == 'client'){
 
-			// SECURITY FIX: Use query builder with parameter binding to prevent SQL injection
-			// Removed urlencode() from database queries - data should be stored raw
+			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
 			$users = DB::table('clients')
 				->where(function($query) use ($username) {
 					$query->where(DB::raw('LOWER(uname)'), strtolower(trim($username)))
 						  ->orWhere('email', trim($username));
 				})
-				->where(function($query) use ($password) {
-					// SECURITY NOTE: MD5 is deprecated. Checking both for backward compatibility
-					// TODO: Migrate all passwords to bcrypt
-					$hashedPassword = md5(trim($password));
-					$query->where('pword', $hashedPassword)
-						  ->orWhere(DB::raw('MD5(pword)'), $hashedPassword);
-				})
 				->where('deleted', 0)
 				->get()
-				->toArray();				
-			
-			if(!empty($users) && count($users)>0){
+				->toArray();
+
+			// Verify password using migration helper (supports both MD5 and bcrypt)
+			$passwordValid = false;
+			if (!empty($users) && count($users) > 0) {
+				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
+					trim($password),
+					$users[0]->pword,
+					'clients',
+					$users[0]->id
+				);
+			}
+
+			if(!empty($users) && count($users)>0 && $passwordValid){
 								
 				$result['type'] = 1;
 				$result['numRows'] = count($users);
@@ -240,25 +243,28 @@ class LoginController extends Controller
 			}		
 		}else if($membertype == 'member'){
 
-			// SECURITY FIX: Use query builder with parameter binding to prevent SQL injection
-			// Removed urlencode() from database queries - data should be stored raw
+			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
 			$users = DB::table('members')
 				->where(function($query) use ($username) {
 					$query->where(DB::raw('LOWER(uname)'), strtolower(trim($username)))
 						  ->orWhere('email', trim($username));
 				})
-				->where(function($query) use ($password) {
-					// SECURITY NOTE: MD5 is deprecated. Checking both for backward compatibility
-					// TODO: Migrate all passwords to bcrypt
-					$hashedPassword = md5(trim($password));
-					$query->where('pword', $hashedPassword)
-						  ->orWhere(DB::raw('MD5(pword)'), $hashedPassword);
-				})
 				->where('deleted', 0)
 				->get()
 				->toArray();
-                                            
-			if(!empty($users) && count($users)>0){
+
+			// Verify password using migration helper (supports both MD5 and bcrypt)
+			$passwordValid = false;
+			if (!empty($users) && count($users) > 0) {
+				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
+					trim($password),
+					$users[0]->pword,
+					'members',
+					$users[0]->id
+				);
+			}
+
+			if(!empty($users) && count($users)>0 && $passwordValid){
 				$result['type'] = 2;
 				$result['numRows'] = count($users);
 				$result['data'] = $users;

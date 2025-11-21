@@ -414,7 +414,8 @@ class ClientRegisterController extends Controller
                 	       
                 	        $code = md5(time());
                 	        $string = array('id'=>$clientId, 'code'=>$code,'type'=>'2');
-                	        $encode_string=base64_encode(serialize($string));
+                	        // SECURITY FIX: Changed from serialize() to json_encode() to prevent RCE
+                	        $encode_string=base64_encode(json_encode($string));
                 	        
                 	        $update_token=DB::table('clients')->where('id','=',$clientId)->update(['veri_token'=>$code]);
                 	        $my_ver_link= route("verify_mail",['mtoken'=>$encode_string]);

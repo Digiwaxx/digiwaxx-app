@@ -76,8 +76,11 @@ if ($request->isMethod('post')) {
       ];
 
       setcookie('adminId', $result->id, $cookieOptions);
-      setcookie('user_role', $result->user_role, $cookieOptions);
+
+      // SECURITY FIX: NEVER store user_role in cookies (privilege escalation risk)
+      // Store role in server-side session only - client cannot modify
       Session::put('admin_Id', $result->id);
+      Session::put('admin_role', $result->user_role); // Store role server-side
 
       // SECURITY FIX: Regenerate session ID to prevent session fixation
       $request->session()->regenerate();
@@ -104,14 +107,12 @@ if ($request->isMethod('post')) {
             $request->session()->regenerate();  
             
             if (isset($_COOKIE['adminId'])) {
-                unset($_COOKIE['adminId']); 
+                unset($_COOKIE['adminId']);
                 setcookie('adminId', null, -1, '/');
             }
 
-            if (isset($_COOKIE['user_role'])) {
-              unset($_COOKIE['user_role']); 
-              setcookie('user_role', null, -1, '/');
-          }
+            // SECURITY FIX: user_role is no longer stored in cookies
+            // Session flush above already clears admin_role from session
             
            return redirect('/admin');
     }

@@ -2092,7 +2092,10 @@ class MemberDashboardController extends Controller
 			$ip = $remote;
 		}
 
-		$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));  	
+		// SECURITY FIX: Use secure helper to prevent SSRF attacks
+		$geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+		$countryCode = $geoData['countryCode'];
+		$countryName = $geoData['countryName'];  	
 
 		if($ip_data && $ip_data->geoplugin_countryName != null){
 
@@ -3021,7 +3024,10 @@ $getArray = array(); $urlString = '?';
 				$ip = $remote;
 			}
 
-			$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));
+			// SECURITY FIX: Use secure helper to prevent SSRF attacks
+		$geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+		$countryCode = $geoData['countryCode'];
+		$countryName = $geoData['countryName'];
 
 			if($ip_data && $ip_data->geoplugin_countryName != null){
 				$countryCode = $ip_data->geoplugin_countryCode;
@@ -6841,7 +6847,10 @@ $getArray = array(); $urlString = '?';
 
 
 
-			$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));
+			// SECURITY FIX: Use secure helper to prevent SSRF attacks
+		$geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+		$countryCode = $geoData['countryCode'];
+		$countryName = $geoData['countryName'];
 
 
 
@@ -7870,7 +7879,10 @@ $getArray = array(); $urlString = '?';
 			$ip = $remote;
 		}
 
-		$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));
+		// SECURITY FIX: Use secure helper to prevent SSRF attacks
+		$geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+		$countryCode = $geoData['countryCode'];
+		$countryName = $geoData['countryName'];
 
 		if($ip_data && $ip_data->geoplugin_countryName != null){
 			$countryCode = $ip_data->geoplugin_countryCode;
@@ -8438,7 +8450,10 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 			$ip = $remote;
 		}
 
-		$ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));
+		// SECURITY FIX: Use secure helper to prevent SSRF attacks
+		$geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+		$countryCode = $geoData['countryCode'];
+		$countryName = $geoData['countryName'];
 
 		if($ip_data && $ip_data->geoplugin_countryName != null){
 			$countryCode = $ip_data->geoplugin_countryCode;
@@ -9053,7 +9068,10 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 
 
-  $ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=".$ip));  
+  // SECURITY FIX: Use secure helper to prevent SSRF attacks
+  $geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+  $countryCode = $geoData['countryCode'];
+  $countryName = $geoData['countryName'];  
 
   
 
@@ -10762,7 +10780,10 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 			   $ip = $remote;
 		   }
 
-		   $ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip));
+		   // SECURITY FIX: Use secure helper to prevent SSRF attacks
+		   $geoData = \App\Helpers\GeolocationHelper::getGeolocation($ip);
+		   $countryCode = $geoData['countryCode'];
+		   $countryName = $geoData['countryName'];
 
 		   if ($ip_data && $ip_data->geoplugin_countryName != null) {
 			   $countryCode = $ip_data->geoplugin_countryCode;

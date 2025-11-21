@@ -202,7 +202,8 @@ class FrontEndUser extends Model
 				$result['numRows'] = -1;
 			} else {
 				
-				$password = md5($password);		
+				// SECURITY FIX: Use bcrypt instead of MD5 for password hashing
+			$password = \App\Helpers\PasswordMigrationHelper::hashPassword($password);		
 				
 				$updateData = array(
 					'uname' => $username,
@@ -258,7 +259,8 @@ class FrontEndUser extends Model
 			$mobile = $request->input('mobile');
 			$howHeard = $request->input('howHeard');
 			
-			$password = md5($password);		
+			// SECURITY FIX: Use bcrypt instead of MD5 for password hashing
+			$password = \App\Helpers\PasswordMigrationHelper::hashPassword($password);		
 				
 			$updateData = array(
 				'uname' => $username,
@@ -308,7 +310,8 @@ class FrontEndUser extends Model
             $dob = date('Y-m-d', $timestamp);
 				$updateData = array(
 				'uname' => urlencode($request->input('username')),
-				'pword' => md5($request->input('password')),
+				// SECURITY FIX: Use bcrypt instead of MD5
+				'pword' => \App\Helpers\PasswordMigrationHelper::hashPassword($request->input('password')),
 				'fname' => $request->input('firstName'),
 				'lname' => $request->input('lastName'),
 				'phone' => $request->input('phone'),
@@ -361,7 +364,8 @@ class FrontEndUser extends Model
 
 				$result = -1;
 			} else {
-				$password = md5($password);
+				// SECURITY FIX: Use bcrypt instead of MD5 for password hashing
+			$password = \App\Helpers\PasswordMigrationHelper::hashPassword($password);
 				
 				$qData = array(				
 					'uname' => $username,
@@ -1620,7 +1624,8 @@ class FrontEndUser extends Model
 				}
 				
 				$updateUserData = array(
-					'pword'=> md5($password)
+					// SECURITY FIX: Use bcrypt instead of MD5
+				'pword'=> \App\Helpers\PasswordMigrationHelper::hashPassword($password)
 				);
 				$updatePwdData = array(
 					'status'=> 1
