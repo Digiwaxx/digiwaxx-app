@@ -943,16 +943,7 @@ class PagesController extends Controller
 	}
 	public function reCaptcha($recaptcha)
 	{
-		// SECURITY FIX: Moved reCAPTCHA secret to environment variable
-		// The previous hardcoded secret has been exposed in git history
-		// and MUST be regenerated at Google Cloud Console
 		$secret = env('RECAPTCHA_SECRET_KEY');
-
-		if (empty($secret)) {
-			\Log::error('reCAPTCHA secret key not configured in environment');
-			return ['success' => false, 'error-codes' => ['missing-secret-key']];
-		}
-
 		$ip = $_SERVER['REMOTE_ADDR'];
 
 		$postvars = array("secret" => $secret, "response" => $recaptcha, "remoteip" => $ip);
