@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $pageTitle ?? 'Manage Subscription - Digiwaxx' }}</title>
+    <title>{{ $pageTitle ?? __('Manage Subscription') . ' - Digiwaxx' }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -137,7 +137,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Manage Subscription</h1>
+        {{-- Language Switcher --}}
+        <div style="text-align: right; margin-bottom: 20px;">
+            <x-language-switcher />
+        </div>
+
+        <h1>{{ __('Manage Subscription') }}</h1>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
@@ -149,43 +154,43 @@
         <!-- Current Plan Card -->
         <div class="card">
             <div class="card-header">
-                <h2>Current Plan</h2>
+                <h2>{{ __('Current Plan') }}</h2>
                 <div>
-                    <span class="badge badge-{{ $tier }}">{{ ucfirst($tier) }} Plan</span>
+                    <span class="badge badge-{{ $tier }}">{{ __(ucfirst($tier)) }} {{ __('Plan') }}</span>
                     @if($billing === 'annual')
-                        <span class="badge badge-annual">Annual Member</span>
+                        <span class="badge badge-annual">{{ __('Annual Member') }}</span>
                     @endif
                     @if(($client->subscription_status ?? 'active') === 'canceled')
-                        <span class="badge badge-canceled">Canceled</span>
+                        <span class="badge badge-canceled">{{ __('Canceled') }}</span>
                     @endif
                 </div>
             </div>
 
             <div class="stat-row">
-                <span class="stat-label">Billing Cycle</span>
-                <span class="stat-value">{{ ucfirst($billing) }}</span>
+                <span class="stat-label">{{ __('Billing Cycle') }}</span>
+                <span class="stat-value">{{ __(ucfirst($billing)) }}</span>
             </div>
             <div class="stat-row">
-                <span class="stat-label">Monthly Upload Limit</span>
-                <span class="stat-value">{{ $uploadLimit }} song(s)</span>
+                <span class="stat-label">{{ __('Monthly Upload Limit') }}</span>
+                <span class="stat-value">{{ $uploadLimit }} {{ __('song(s)') }}</span>
             </div>
             <div class="stat-row">
-                <span class="stat-label">Status</span>
-                <span class="stat-value">{{ ucfirst($client->subscription_status ?? 'Active') }}</span>
+                <span class="stat-label">{{ __('Status') }}</span>
+                <span class="stat-value">{{ __(ucfirst($client->subscription_status ?? 'Active')) }}</span>
             </div>
 
             @if($tier !== 'free')
             <div class="btn-group">
-                <a href="{{ route('billing.portal') }}" class="btn btn-secondary">Manage Billing</a>
+                <a href="{{ route('billing.portal') }}" class="btn btn-secondary">{{ __('Manage Billing') }}</a>
                 @if(($client->subscription_status ?? 'active') === 'canceled')
                     <form action="{{ route('subscription.resume') }}" method="POST" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn btn-primary">Resume Subscription</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Resume Subscription') }}</button>
                     </form>
                 @else
-                    <form action="{{ route('subscription.cancel') }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel? You\'ll retain access until the end of your billing period.');">
+                    <form action="{{ route('subscription.cancel') }}" method="POST" style="display:inline;" onsubmit="return confirm('{{ __('Are you sure you want to cancel? You will retain access until the end of your billing period.') }}');">
                         @csrf
-                        <button type="submit" class="btn btn-danger">Cancel Subscription</button>
+                        <button type="submit" class="btn btn-danger">{{ __('Cancel Subscription') }}</button>
                     </form>
                 @endif
             </div>
@@ -195,13 +200,13 @@
         <!-- Upload Usage Card -->
         <div class="card">
             <div class="card-header">
-                <h2>Monthly Uploads</h2>
+                <h2>{{ __('Monthly Uploads') }}</h2>
             </div>
 
             <div class="progress-container">
                 <div class="progress-header">
-                    <span>{{ $uploadsUsed }} of {{ $uploadLimit }} uploads used</span>
-                    <span>{{ $uploadsRemaining }} remaining</span>
+                    <span>{{ $uploadsUsed }} {{ __('of') }} {{ $uploadLimit }} {{ __('uploads used') }}</span>
+                    <span>{{ $uploadsRemaining }} {{ __('remaining') }}</span>
                 </div>
                 @php
                     $percentage = $uploadLimit > 0 ? ($uploadsUsed / $uploadLimit) * 100 : 100;
@@ -213,15 +218,15 @@
             </div>
 
             <div class="stat-row">
-                <span class="stat-label">Resets On</span>
+                <span class="stat-label">{{ __('Resets On') }}</span>
                 <span class="stat-value">{{ $nextResetDate }}</span>
             </div>
 
             @if($uploadsUsed >= $uploadLimit && $tier !== 'label')
             <div class="upgrade-section">
-                <h3>Need more uploads?</h3>
-                <p>Upgrade your plan to increase your monthly upload limit.</p>
-                <a href="{{ route('pricing') }}" class="btn btn-primary">View Plans</a>
+                <h3>{{ __('Need more uploads?') }}</h3>
+                <p>{{ __('Upgrade your plan to increase your monthly upload limit.') }}</p>
+                <a href="{{ route('pricing') }}" class="btn btn-primary">{{ __('View Plans') }}</a>
             </div>
             @endif
         </div>
@@ -230,39 +235,39 @@
         @if($tier !== 'label')
         <div class="card">
             <div class="card-header">
-                <h2>Upgrade Your Plan</h2>
+                <h2>{{ __('Upgrade Your Plan') }}</h2>
             </div>
 
             @if($tier === 'free')
             <div class="upgrade-section" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">
-                <h3>Artist Plan - $20/month</h3>
-                <p>Perfect for independent artists and producers</p>
+                <h3>{{ __('Artist') }} {{ __('Plan') }} - $20/{{ __('month') }}</h3>
+                <p>{{ __('Perfect for independent artists and producers') }}</p>
                 <ul class="features-list">
-                    <li>2 song uploads per month</li>
-                    <li>Full validation reports</li>
-                    <li>DJ demand reports</li>
-                    <li>Priority support</li>
+                    <li>{{ __('2 song uploads per month') }}</li>
+                    <li>{{ __('Full validation reports') }}</li>
+                    <li>{{ __('DJ demand reports') }}</li>
+                    <li>{{ __('Priority support') }}</li>
                 </ul>
-                <a href="{{ route('subscribe.checkout', ['tier' => 'artist', 'billing' => 'monthly']) }}" class="btn btn-primary">Upgrade to Artist</a>
+                <a href="{{ route('subscribe.checkout', ['tier' => 'artist', 'billing' => 'monthly']) }}" class="btn btn-primary">{{ __('Upgrade to Artist') }}</a>
             </div>
             @endif
 
             <div class="upgrade-section" style="background: linear-gradient(135deg, #fce4ec, #f8bbd9); margin-top: 20px;">
-                <h3>Label Plan - $149/month</h3>
-                <p>For record labels and management companies</p>
+                <h3>{{ __('Label') }} {{ __('Plan') }} - $149/{{ __('month') }}</h3>
+                <p>{{ __('For record labels and management companies') }}</p>
                 <ul class="features-list">
-                    <li>20 song uploads per month</li>
-                    <li>Campaign creation tools</li>
-                    <li>Multi-user team access</li>
-                    <li>Dedicated account manager</li>
+                    <li>{{ __('20 song uploads per month') }}</li>
+                    <li>{{ __('Campaign creation tools') }}</li>
+                    <li>{{ __('Multi-user team access') }}</li>
+                    <li>{{ __('Dedicated account manager') }}</li>
                 </ul>
-                <a href="{{ route('subscribe.checkout', ['tier' => 'label', 'billing' => 'monthly']) }}" class="btn btn-primary">Upgrade to Label</a>
+                <a href="{{ route('subscribe.checkout', ['tier' => 'label', 'billing' => 'monthly']) }}" class="btn btn-primary">{{ __('Upgrade to Label') }}</a>
             </div>
         </div>
         @endif
 
         <div style="text-align: center; margin-top: 30px;">
-            <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="/dashboard" class="btn btn-secondary">{{ __('Back to Dashboard') }}</a>
         </div>
     </div>
 </body>

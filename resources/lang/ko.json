@@ -89,5 +89,15 @@
     "Help": "도움말",
 
     "Welcome to Digiwaxx": "Digiwaxx에 오신 것을 환영합니다",
-    "Your music distribution platform": "당신의 음악 배급 플랫폼"
+    "Your music distribution platform": "당신의 음악 배급 플랫폼",
+
+    "Plan": "플랜",
+    "song(s)": "곡",
+    "of": "/",
+    "month": "월",
+    "Perfect for independent artists and producers": "독립 아티스트와 프로듀서에게 완벽",
+    "For record labels and management companies": "레코드 레이블과 매니지먼트 회사용",
+    "Upgrade your plan to increase your monthly upload limit.": "플랜을 업그레이드하여 월간 업로드 한도를 늘리세요.",
+    "to manage your subscription.": "구독을 관리하려면.",
+    "Are you sure you want to cancel? You will retain access until the end of your billing period.": "정말 취소하시겠습니까? 결제 기간이 끝날 때까지 액세스를 유지할 수 있습니다."
 }

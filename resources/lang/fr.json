@@ -89,5 +89,15 @@
     "Help": "Aide",
 
     "Welcome to Digiwaxx": "Bienvenue sur Digiwaxx",
-    "Your music distribution platform": "Votre plateforme de distribution musicale"
+    "Your music distribution platform": "Votre plateforme de distribution musicale",
+
+    "Plan": "Plan",
+    "song(s)": "chanson(s)",
+    "of": "sur",
+    "month": "mois",
+    "Perfect for independent artists and producers": "Parfait pour les artistes indépendants et producteurs",
+    "For record labels and management companies": "Pour les labels et sociétés de management",
+    "Upgrade your plan to increase your monthly upload limit.": "Mettez à niveau votre plan pour augmenter votre limite mensuelle d'uploads.",
+    "to manage your subscription.": "pour gérer votre abonnement.",
+    "Are you sure you want to cancel? You will retain access until the end of your billing period.": "Êtes-vous sûr de vouloir annuler? Vous conserverez l'accès jusqu'à la fin de votre période de facturation."
 }

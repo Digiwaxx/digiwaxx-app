@@ -104,5 +104,11 @@
     "Help": "Ayuda",
 
     "Welcome to Digiwaxx": "Bienvenido a Digiwaxx",
-    "Your music distribution platform": "Tu plataforma de distribución musical"
+    "Your music distribution platform": "Tu plataforma de distribución musical",
+
+    "Plan": "Plan",
+    "song(s)": "canción(es)",
+    "of": "de",
+    "month": "mes",
+    "Are you sure you want to cancel? You will retain access until the end of your billing period.": "¿Estás seguro de que deseas cancelar? Mantendrás acceso hasta el final de tu período de facturación."
 }

@@ -89,5 +89,15 @@
     "Help": "ヘルプ",
 
     "Welcome to Digiwaxx": "Digiwaxxへようこそ",
-    "Your music distribution platform": "あなたの音楽配信プラットフォーム"
+    "Your music distribution platform": "あなたの音楽配信プラットフォーム",
+
+    "Plan": "プラン",
+    "song(s)": "曲",
+    "of": "/",
+    "month": "月",
+    "Perfect for independent artists and producers": "独立系アーティストとプロデューサーに最適",
+    "For record labels and management companies": "レコードレーベルとマネジメント会社向け",
+    "Upgrade your plan to increase your monthly upload limit.": "プランをアップグレードして月間アップロード制限を増やしましょう。",
+    "to manage your subscription.": "サブスクリプションを管理するには。",
+    "Are you sure you want to cancel? You will retain access until the end of your billing period.": "本当に解約しますか？請求期間終了までアクセスを維持できます。"
 }
