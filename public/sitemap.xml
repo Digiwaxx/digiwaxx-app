@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+    <!-- Pricing Page - English (Default) -->
+    <url>
+        <loc>https://app.digiwaxx.com/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://app.digiwaxx.com/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Pricing Page - Spanish -->
+    <url>
+        <loc>https://app.digiwaxx.com/es/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Pricing Page - Portuguese -->
+    <url>
+        <loc>https://app.digiwaxx.com/pt/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Pricing Page - French -->
+    <url>
+        <loc>https://app.digiwaxx.com/fr/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Pricing Page - German -->
+    <url>
+        <loc>https://app.digiwaxx.com/de/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Pricing Page - Japanese -->
+    <url>
+        <loc>https://app.digiwaxx.com/ja/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Pricing Page - Korean -->
+    <url>
+        <loc>https://app.digiwaxx.com/ko/pricing</loc>
+        <xhtml:link rel="alternate" hreflang="en" href="https://app.digiwaxx.com/pricing"/>
+        <xhtml:link rel="alternate" hreflang="es" href="https://app.digiwaxx.com/es/pricing"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://app.digiwaxx.com/pt/pricing"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://app.digiwaxx.com/fr/pricing"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://app.digiwaxx.com/de/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ja" href="https://app.digiwaxx.com/ja/pricing"/>
+        <xhtml:link rel="alternate" hreflang="ko" href="https://app.digiwaxx.com/ko/pricing"/>
+        <lastmod>2025-11-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+</urlset>
