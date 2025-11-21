@@ -8131,156 +8131,158 @@ return $question_id;
                   $stationCall = '';
               }
 
-              $result = DB::select("INSERT INTO members_dj_mixer (`member`, `djtype_commercialreporting`, `djtype_commercialnonreporting`, `djtype_club`, `djtype_mixtape`, `djtype_satellite`, `djtype_internet`, `djtype_college`, `djtype_pirate`, `djwith_mp3`, `djwith_mp3_serato`, `djwith_mp3_final`, `djwith_mp3_pcdj`, `djwith_mp3_ipod`, `djwith_mp3_other`, `djwith_cd`, `djwith_cd_stanton`, `djwith_cd_numark`, `djwith_cd_american`, `djwith_cd_vestax`, `djwith_cd_technics`, `djwith_cd_gemini`, `djwith_cd_denon`, `djwith_cd_gemsound`, `djwith_cd_pioneer`, `djwith_cd_tascam`, `djwith_cd_other`, `djwith_vinyl`, `djwith_vinyl_12`, `djwith_vinyl_45`, `djwith_vinyl_78`, `commercialdj_showname`, `commercialdj_call`, `commercialdj_name`, `commercialdj_frequency`, `commercialdj_monday`, `commercialdj_tuesday`, `commercialdj_wednesday`, `commercialdj_thursday`, `commercialdj_friday`, `commercialdj_saturday`, `commercialdj_sunday`, `commercialdj_varies`, `commercialdj_showtime`, `commercialdj_showtype`, `noncommercialdj_showname`, `noncommercialdj_call`, `noncommercialdj_name`, `noncommercialdj_frequency`, `noncommercialdj_monday`, `noncommercialdj_tuesday`, `noncommercialdj_wednesday`, `noncommercialdj_thursday`, `noncommercialdj_friday`, `noncommercialdj_saturday`, `noncommercialdj_sunday`, `noncommercialdj_varies`, `noncommercialdj_showtime`, `noncommercialdj_showtype`, `clubdj_clubname`, `clubdj_capacity`, `clubdj_hiphop`, `clubdj_rb`, `clubdj_pop`, `clubdj_reggae`, `clubdj_house`, `clubdj_calypso`, `clubdj_rock`, `clubdj_techno`, `clubdj_trance`, `clubdj_afro`, `clubdj_reggaeton`, `clubdj_gogo`, `clubdj_neosoul`, `clubdj_oldschool`, `clubdj_electronic`, `clubdj_latin`, `clubdj_dance`, `clubdj_jazz`, `clubdj_country`, `clubdj_world`, `clubdj_monday`, `clubdj_tuesday`, `clubdj_wednesday`, `clubdj_thursday`, `clubdj_friday`, `clubdj_saturday`, `clubdj_sunday`, `clubdj_varies`, `clubdj_city`, `clubdj_state`, `clubdj_intcountry`, `mixtapedj_name`, `mixtapedj_type`, `mixtapedj_schedule`, `mixtapedj_distribution`, `satellitedj_stationname`, `satellitedj_showname`, `satellitedj_channelname`, `satellitedj_channelnumber`, `satellitedj_monday`, `satellitedj_tuesday`, `satellitedj_wednesday`, `satellitedj_thursday`, `satellitedj_friday`, `satellitedj_saturday`, `satellitedj_sunday`, `satellitedj_showtime`, `internetdj_stationwebsite`, `internetdj_showtype`, `internetdj_showname`, `internetdj_monday`, `internetdj_tuesday`, `internetdj_wednesday`, `internetdj_thursday`, `internetdj_friday`, `internetdj_saturday`, `internetdj_sunday`, `internetdj_varies`, `internetdj_showtime`, `collegedj_callletters`, `collegedj_collegename`, `collegedj_stationfrequency`, `collegedj_showtype`, `collegedj_showname`, `collegedj_monday`, `collegedj_tuesday`, `collegedj_wednesday`, `collegedj_thursday`, `collegedj_friday`, `collegedj_saturday`, `collegedj_sunday`, `collegedj_varies`, `collegedj_showtime`, `collegedj_city`, `collegedj_state`, `collegedj_intcountry`, `piratedj_stationfrequency`, `piratedj_showname`, `piratedj_monday`, `piratedj_tuesday`, `piratedj_wednesday`, `piratedj_thursday`, `piratedj_friday`, `piratedj_saturday`, `piratedj_sunday`, `piratedj_varies`, `piratedj_showtime`) 
-              VALUES (
-              '" . (int) $insertId . "', 
-              '" . (int) $djtype_commercialreporting . "', 
-              '" . (int) $djtype_commercialnonreporting . "', 
-              '" . (int) $djtype_club . "', 
-              '" . (int) $djtype_mixtape . "', 
-              '" . (int) $djtype_satellite . "', 
-              '" . (int) $djtype_internet . "', 
-              '" . (int) $djtype_college . "', 
-              '" . (int) $djtype_pirate . "', 
-              '" . (int) $djwith_mp3 . "', 
-              '" . (int) $djwith_mp3_serato . "', 
-              '" . (int) $djwith_mp3_final . "', 
-              '" . (int) $djwith_mp3_pcdj . "', 
-              '" . (int) $djwith_mp3_ipod . "', 
-              '" . (int) $djwith_mp3_other . "', 
-              '" . (int) $djwith_cd . "', 
-              '" . (int) $djwith_cd_stanton . "', 
-              '" . (int) $djwith_cd_numark . "', 
-              '" . (int) $djwith_cd_american . "', 
-              '" . (int) $djwith_cd_vestax . "', 
-              '" . (int) $djwith_cd_technics . "', 
-              '" . (int) $djwith_cd_gemini . "', 
-              '" . (int) $djwith_cd_denon . "', 
-              '" . (int) $djwith_cd_gemsound . "', 
-              '" . (int) $djwith_cd_pioneer . "', 
-              '" . (int) $djwith_cd_tascam . "', 
-              '" . (int) $djwith_cd_other . "', 
-              '" . (int) $djwith_vinyl . "', 
-              '" . (int) $djwith_vinyl_12 . "', 
-              '" . (int) $djwith_vinyl_45 . "', 
-              '" . (int) $djwith_vinyl_78 . "', 
-              '" . addslashes($commercialdj_showname)."',
-              '" . addslashes($commercialdj_call)."',
-              '" . addslashes($commercialdj_name)."',
-              '" . addslashes($commercialdj_frequency)."',
-              '" . (int) $commercialdj_monday."', 
-              '" . (int) $commercialdj_tuesday."', 
-              '" . (int) $commercialdj_wednesday."', 
-              '" . (int) $commercialdj_thursday."', 
-              '" . (int) $commercialdj_friday."', 
-              '" . (int) $commercialdj_saturday."', 
-              '" . (int) $commercialdj_sunday."', 
-              '" . (int) $commercialdj_varies."', 
-              '" . addslashes($commercialdj_showtime)."', 
-              '" . addslashes($commercialdj_showtype)."', 
-              '" . addslashes($noncommercialdj_showname)."', 
-              '" . addslashes($noncommercialdj_call)."', 
-              '" . addslashes($noncommercialdj_name)."', 
-              '" . addslashes($noncommercialdj_frequency)."', 
-              '" . (int) $noncommercialdj_monday."', 
-              '" . (int) $noncommercialdj_tuesday."', 
-              '" . (int) $noncommercialdj_wednesday."', 
-              '" . (int) $noncommercialdj_thursday."', 
-              '" . (int) $noncommercialdj_friday."', 
-              '" . (int) $noncommercialdj_saturday."', 
-              '" . (int) $noncommercialdj_sunday."', 
-              '" . (int) $noncommercialdj_varies."', 
-              '" . addslashes($noncommercialdj_showtime)."', 
-              '" . addslashes($noncommercialdj_showtype)."', 
-              '" . addslashes($clubdj_clubname)."', 
-              '" . addslashes($clubdj_capacity)."', 
-              '" . (int) $clubdj_hiphop."', 
-              '" . (int) $clubdj_rb."', 
-              '" . (int) $clubdj_pop."', 
-              '" . (int) $clubdj_reggae."', 
-              '" . (int) $clubdj_house."', 
-              '" . (int) $clubdj_calypso."', 
-              '" . (int) $clubdj_rock."', 
-              '" . (int) $clubdj_techno."', 
-              '" . (int) $clubdj_trance."', 
-              '" . (int) $clubdj_afro."', 
-              '" . (int) $clubdj_reggaeton."', 
-              '" . (int) $clubdj_gogo."', 
-              '" . (int) $clubdj_neosoul."', 
-              '" . (int) $clubdj_oldschool."', 
-              '" . (int) $clubdj_electronic."', 
-              '" . (int) $clubdj_latin."', 
-              '" . (int) $clubdj_dance."', 
-              '" . (int) $clubdj_jazz."', 
-              '" . (int) $clubdj_country."', 
-              '" . (int) $clubdj_world."', 
-              '" . (int) $clubdj_monday."', 
-              '" . (int) $clubdj_tuesday."', 
-              '" . (int) $clubdj_wednesday."', 
-              '" . (int) $clubdj_thursday."', 
-              '" . (int) $clubdj_friday."', 
-              '" . (int) $clubdj_saturday."', 
-              '" . (int) $clubdj_sunday."', 
-              '" . (int) $clubdj_varies."', 
-              '" . addslashes($clubdj_city)."', 
-              '" . addslashes($clubdj_state)."', 
-              '" . addslashes($clubdj_intcountry)."', 
-              '" . addslashes($mixtapedj_name)."', 
-              '" . addslashes($mixtapedj_type)."', 
-              '" . addslashes($mixtapedj_schedule)."', 
-              '" . addslashes($mixtapedj_distribution)."', 
-              '" . addslashes($satellitedj_stationname)."', 
-              '" . addslashes($satellitedj_showname)."', 
-              '" . addslashes($satellitedj_channelname)."', 
-              '" . addslashes($satellitedj_channelnumber)."', 
-              '" . (int) $satellitedj_monday."', 
-              '" . (int) $satellitedj_tuesday."', 
-              '" . (int) $satellitedj_wednesday."', 
-              '" . (int) $satellitedj_thursday."', 
-              '" . (int) $satellitedj_friday."', 
-              '" . (int) $satellitedj_saturday."', 
-              '" . (int) $satellitedj_sunday."', 
-              '" . addslashes($satellitedj_showtime)."', 
-              '" . addslashes($internetdj_stationwebsite)."', 
-              '" . addslashes($internetdj_showtype)."', 
-              '" . addslashes($internetdj_showname)."', 
-              '" . (int) $internetdj_monday."', 
-              '" . (int) $internetdj_tuesday."', 
-              '" . (int) $internetdj_wednesday."', 
-              '" . (int) $internetdj_thursday."', 
-              '" . (int) $internetdj_friday."', 
-              '" . (int) $internetdj_saturday."', 
-              '" . (int) $internetdj_sunday."', 
-              '" . (int) $internetdj_varies."', 
-              '" . addslashes($internetdj_showtime)."', 
-              '" . addslashes($collegedj_callletters)."', 
-              '" . addslashes($collegedj_collegename)."', 
-              '" . addslashes($collegedj_stationfrequency)."', 
-              '" . addslashes($collegedj_showtype)."', 
-              '" . addslashes($collegedj_showname)."', 
-              '" . (int) $collegedj_monday."', 
-              '" . (int) $collegedj_tuesday."', 
-              '" . (int) $collegedj_wednesday."', 
-              '" . (int) $collegedj_thursday."', 
-              '" . (int) $collegedj_friday."', 
-              '" . (int) $collegedj_saturday."', 
-              '" . (int) $collegedj_sunday."', 
-              '" . (int) $collegedj_varies."', 
-              '" . addslashes($collegedj_showtime)."', 
-              '" . addslashes($collegedj_city)."', 
-              '" . addslashes($collegedj_state)."', 
-              '" . addslashes($collegedj_intcountry)."', 
-              '" . addslashes($piratedj_stationfrequency)."', 
-              '" . addslashes($piratedj_showname)."', 
-              '" . (int) $piratedj_monday."', 
-              '" . (int) $piratedj_tuesday."', 
-              '" . (int) $piratedj_wednesday."', 
-              '" . (int) $piratedj_thursday."', 
-              '" . (int) $piratedj_friday."', 
-              '" . (int) $piratedj_saturday."', 
-              '" . (int) $piratedj_sunday."', 
-              '" . (int) $piratedj_varies."', 
-              '" . addslashes($piratedj_showtime)."')");
+              // SECURITY FIX: Use Query Builder to prevent SQL injection
+              $djMixerData = [
+                  'member' => (int) $insertId,
+                  'djtype_commercialreporting' => (int) $djtype_commercialreporting,
+                  'djtype_commercialnonreporting' => (int) $djtype_commercialnonreporting,
+                  'djtype_club' => (int) $djtype_club,
+                  'djtype_mixtape' => (int) $djtype_mixtape,
+                  'djtype_satellite' => (int) $djtype_satellite,
+                  'djtype_internet' => (int) $djtype_internet,
+                  'djtype_college' => (int) $djtype_college,
+                  'djtype_pirate' => (int) $djtype_pirate,
+                  'djwith_mp3' => (int) $djwith_mp3,
+                  'djwith_mp3_serato' => (int) $djwith_mp3_serato,
+                  'djwith_mp3_final' => (int) $djwith_mp3_final,
+                  'djwith_mp3_pcdj' => (int) $djwith_mp3_pcdj,
+                  'djwith_mp3_ipod' => (int) $djwith_mp3_ipod,
+                  'djwith_mp3_other' => (int) $djwith_mp3_other,
+                  'djwith_cd' => (int) $djwith_cd,
+                  'djwith_cd_stanton' => (int) $djwith_cd_stanton,
+                  'djwith_cd_numark' => (int) $djwith_cd_numark,
+                  'djwith_cd_american' => (int) $djwith_cd_american,
+                  'djwith_cd_vestax' => (int) $djwith_cd_vestax,
+                  'djwith_cd_technics' => (int) $djwith_cd_technics,
+                  'djwith_cd_gemini' => (int) $djwith_cd_gemini,
+                  'djwith_cd_denon' => (int) $djwith_cd_denon,
+                  'djwith_cd_gemsound' => (int) $djwith_cd_gemsound,
+                  'djwith_cd_pioneer' => (int) $djwith_cd_pioneer,
+                  'djwith_cd_tascam' => (int) $djwith_cd_tascam,
+                  'djwith_cd_other' => (int) $djwith_cd_other,
+                  'djwith_vinyl' => (int) $djwith_vinyl,
+                  'djwith_vinyl_12' => (int) $djwith_vinyl_12,
+                  'djwith_vinyl_45' => (int) $djwith_vinyl_45,
+                  'djwith_vinyl_78' => (int) $djwith_vinyl_78,
+                  'commercialdj_showname' => $commercialdj_showname,
+                  'commercialdj_call' => $commercialdj_call,
+                  'commercialdj_name' => $commercialdj_name,
+                  'commercialdj_frequency' => $commercialdj_frequency,
+                  'commercialdj_monday' => (int) $commercialdj_monday,
+                  'commercialdj_tuesday' => (int) $commercialdj_tuesday,
+                  'commercialdj_wednesday' => (int) $commercialdj_wednesday,
+                  'commercialdj_thursday' => (int) $commercialdj_thursday,
+                  'commercialdj_friday' => (int) $commercialdj_friday,
+                  'commercialdj_saturday' => (int) $commercialdj_saturday,
+                  'commercialdj_sunday' => (int) $commercialdj_sunday,
+                  'commercialdj_varies' => (int) $commercialdj_varies,
+                  'commercialdj_showtime' => $commercialdj_showtime,
+                  'commercialdj_showtype' => $commercialdj_showtype,
+                  'noncommercialdj_showname' => $noncommercialdj_showname,
+                  'noncommercialdj_call' => $noncommercialdj_call,
+                  'noncommercialdj_name' => $noncommercialdj_name,
+                  'noncommercialdj_frequency' => $noncommercialdj_frequency,
+                  'noncommercialdj_monday' => (int) $noncommercialdj_monday,
+                  'noncommercialdj_tuesday' => (int) $noncommercialdj_tuesday,
+                  'noncommercialdj_wednesday' => (int) $noncommercialdj_wednesday,
+                  'noncommercialdj_thursday' => (int) $noncommercialdj_thursday,
+                  'noncommercialdj_friday' => (int) $noncommercialdj_friday,
+                  'noncommercialdj_saturday' => (int) $noncommercialdj_saturday,
+                  'noncommercialdj_sunday' => (int) $noncommercialdj_sunday,
+                  'noncommercialdj_varies' => (int) $noncommercialdj_varies,
+                  'noncommercialdj_showtime' => $noncommercialdj_showtime,
+                  'noncommercialdj_showtype' => $noncommercialdj_showtype,
+                  'clubdj_clubname' => $clubdj_clubname,
+                  'clubdj_capacity' => $clubdj_capacity,
+                  'clubdj_hiphop' => (int) $clubdj_hiphop,
+                  'clubdj_rb' => (int) $clubdj_rb,
+                  'clubdj_pop' => (int) $clubdj_pop,
+                  'clubdj_reggae' => (int) $clubdj_reggae,
+                  'clubdj_house' => (int) $clubdj_house,
+                  'clubdj_calypso' => (int) $clubdj_calypso,
+                  'clubdj_rock' => (int) $clubdj_rock,
+                  'clubdj_techno' => (int) $clubdj_techno,
+                  'clubdj_trance' => (int) $clubdj_trance,
+                  'clubdj_afro' => (int) $clubdj_afro,
+                  'clubdj_reggaeton' => (int) $clubdj_reggaeton,
+                  'clubdj_gogo' => (int) $clubdj_gogo,
+                  'clubdj_neosoul' => (int) $clubdj_neosoul,
+                  'clubdj_oldschool' => (int) $clubdj_oldschool,
+                  'clubdj_electronic' => (int) $clubdj_electronic,
+                  'clubdj_latin' => (int) $clubdj_latin,
+                  'clubdj_dance' => (int) $clubdj_dance,
+                  'clubdj_jazz' => (int) $clubdj_jazz,
+                  'clubdj_country' => (int) $clubdj_country,
+                  'clubdj_world' => (int) $clubdj_world,
+                  'clubdj_monday' => (int) $clubdj_monday,
+                  'clubdj_tuesday' => (int) $clubdj_tuesday,
+                  'clubdj_wednesday' => (int) $clubdj_wednesday,
+                  'clubdj_thursday' => (int) $clubdj_thursday,
+                  'clubdj_friday' => (int) $clubdj_friday,
+                  'clubdj_saturday' => (int) $clubdj_saturday,
+                  'clubdj_sunday' => (int) $clubdj_sunday,
+                  'clubdj_varies' => (int) $clubdj_varies,
+                  'clubdj_city' => $clubdj_city,
+                  'clubdj_state' => $clubdj_state,
+                  'clubdj_intcountry' => $clubdj_intcountry,
+                  'mixtapedj_name' => $mixtapedj_name,
+                  'mixtapedj_type' => $mixtapedj_type,
+                  'mixtapedj_schedule' => $mixtapedj_schedule,
+                  'mixtapedj_distribution' => $mixtapedj_distribution,
+                  'satellitedj_stationname' => $satellitedj_stationname,
+                  'satellitedj_showname' => $satellitedj_showname,
+                  'satellitedj_channelname' => $satellitedj_channelname,
+                  'satellitedj_channelnumber' => $satellitedj_channelnumber,
+                  'satellitedj_monday' => (int) $satellitedj_monday,
+                  'satellitedj_tuesday' => (int) $satellitedj_tuesday,
+                  'satellitedj_wednesday' => (int) $satellitedj_wednesday,
+                  'satellitedj_thursday' => (int) $satellitedj_thursday,
+                  'satellitedj_friday' => (int) $satellitedj_friday,
+                  'satellitedj_saturday' => (int) $satellitedj_saturday,
+                  'satellitedj_sunday' => (int) $satellitedj_sunday,
+                  'satellitedj_showtime' => $satellitedj_showtime,
+                  'internetdj_stationwebsite' => $internetdj_stationwebsite,
+                  'internetdj_showtype' => $internetdj_showtype,
+                  'internetdj_showname' => $internetdj_showname,
+                  'internetdj_monday' => (int) $internetdj_monday,
+                  'internetdj_tuesday' => (int) $internetdj_tuesday,
+                  'internetdj_wednesday' => (int) $internetdj_wednesday,
+                  'internetdj_thursday' => (int) $internetdj_thursday,
+                  'internetdj_friday' => (int) $internetdj_friday,
+                  'internetdj_saturday' => (int) $internetdj_saturday,
+                  'internetdj_sunday' => (int) $internetdj_sunday,
+                  'internetdj_varies' => (int) $internetdj_varies,
+                  'internetdj_showtime' => $internetdj_showtime,
+                  'collegedj_callletters' => $collegedj_callletters,
+                  'collegedj_collegename' => $collegedj_collegename,
+                  'collegedj_stationfrequency' => $collegedj_stationfrequency,
+                  'collegedj_showtype' => $collegedj_showtype,
+                  'collegedj_showname' => $collegedj_showname,
+                  'collegedj_monday' => (int) $collegedj_monday,
+                  'collegedj_tuesday' => (int) $collegedj_tuesday,
+                  'collegedj_wednesday' => (int) $collegedj_wednesday,
+                  'collegedj_thursday' => (int) $collegedj_thursday,
+                  'collegedj_friday' => (int) $collegedj_friday,
+                  'collegedj_saturday' => (int) $collegedj_saturday,
+                  'collegedj_sunday' => (int) $collegedj_sunday,
+                  'collegedj_varies' => (int) $collegedj_varies,
+                  'collegedj_showtime' => $collegedj_showtime,
+                  'collegedj_city' => $collegedj_city,
+                  'collegedj_state' => $collegedj_state,
+                  'collegedj_intcountry' => $collegedj_intcountry,
+                  'piratedj_stationfrequency' => $piratedj_stationfrequency,
+                  'piratedj_showname' => $piratedj_showname,
+                  'piratedj_monday' => (int) $piratedj_monday,
+                  'piratedj_tuesday' => (int) $piratedj_tuesday,
+                  'piratedj_wednesday' => (int) $piratedj_wednesday,
+                  'piratedj_thursday' => (int) $piratedj_thursday,
+                  'piratedj_friday' => (int) $piratedj_friday,
+                  'piratedj_saturday' => (int) $piratedj_saturday,
+                  'piratedj_sunday' => (int) $piratedj_sunday,
+                  'piratedj_varies' => (int) $piratedj_varies,
+                  'piratedj_showtime' => $piratedj_showtime
+              ];
+              DB::table('members_dj_mixer')->insert($djMixerData);
 
               /*	  	  $result = DB::select("insert into  members_dj_mixer (`member`, `djtype_commercialreporting`, `djtype_commercialnonreporting`, `djtype_club`, `djtype_mixtape`, `djtype_satellite`, `djtype_internet`, `djtype_college`, `djtype_pirate`, `djwith_mp3`, `djwith_mp3_serato`, `djwith_mp3_final`, `djwith_mp3_pcdj`, `djwith_mp3_ipod`, `djwith_mp3_other`, `djwith_cd`, `djwith_vinyl`, `clubdj_clubname`, `clubdj_capacity`, `clubdj_hiphop`, `clubdj_rb`, `clubdj_pop`, `clubdj_reggae`, `clubdj_house`, `clubdj_calypso`, `clubdj_rock`, `clubdj_techno`, `clubdj_trance`, `clubdj_afro`, `clubdj_reggaeton`, `clubdj_gogo`, `clubdj_neosoul`, `clubdj_oldschool`, `clubdj_electronic`, `clubdj_latin`, `clubdj_dance`, `clubdj_jazz`, `clubdj_country`, `clubdj_world`, `clubdj_monday`, `clubdj_tuesday`, `clubdj_wednesday`, `clubdj_thursday`, `clubdj_friday`, `clubdj_saturday`, `clubdj_sunday`, `clubdj_varies`, `clubdj_city`, `clubdj_state`, `clubdj_intcountry`) values('". $insertId . "', '$djtype_commercialreporting',  '$djtype_commercialnonreporting', '$djtype_club', '$djtype_mixtape', '$djtype_satellite',  '$djtype_internet', '$djtype_college', '$djtype_pirate', '$djwith_mp3', '$djwith_mp3_serato', '$djwith_mp3_final', '$djwith_mp3_pcdj',  '$djwith_mp3_ipod', '$djwith_mp3_other', '$djwith_cd', '$djwith_vinyl', '$clubdj_clubname', '$clubdj_capacity', '$clubdj_hiphop', '$clubdj_rb', '$clubdj_pop', '$clubdj_reggae', '$clubdj_house', '$clubdj_calypso', '$clubdj_rock', '$clubdj_techno', '$clubdj_trance', '$clubdj_afro',  '$clubdj_reggaeton', '$clubdj_gogo', '$clubdj_neosoul', '$clubdj_oldschool', '$clubdj_electronic', '$clubdj_latin',  '$clubdj_dance', '$clubdj_jazz', '$clubdj_country', '$clubdj_world', '$clubdj_monday', '$clubdj_tuesday',  '$clubdj_wednesday', '$clubdj_thursday', '$clubdj_friday', '$clubdj_saturday',  '$clubdj_sunday', '$clubdj_varies', '$clubdj_city', '$clubdj_state', '$clubdj_intcountry')");  
 
@@ -8493,55 +8495,57 @@ return $question_id;
        
                   $programTime = '';
               }
-              
 
-              DB::select("INSERT INTO `members_radio_station` (`member`, `radiotype_musicdirector`, `radiotype_programdirector`, `radiotype_jock`, `radiotype_promotion`, `radiotype_production`, `radiotype_sales`, `radiotype_tech`, `stationcallletters`, `stationfrequency`, `stationname`, `programdirector_stationcallletters`, `programdirector_host`, `programdirector_showname`, `programdirector_showtime`, `programdirector_monday`, `programdirector_tuesday`, `programdirector_wednesday`, `programdirector_thursday`, `programdirector_friday`, `programdirector_saturday`, `programdirector_sunday`, `programdirector_varies`, `musicdirector_stationcallletters`, `musicdirector_host`, `musicdirector_showname`, `musicdirector_showtime`, `musicdirector_monday`, `musicdirector_tuesday`, `musicdirector_wednesday`, `musicdirector_thursday`, `musicdirector_friday`, `musicdirector_saturday`, `musicdirector_sunday`, `musicdirector_varies`, `onairpersonality_showname`, `onairpersonality_showtime`, `onairpersonality_monday`, `onairpersonality_tuesday`, `onairpersonality_wednesday`, `onairpersonality_thursday`, `onairpersonality_friday`, `onairpersonality_saturday`, `onairpersonality_sunday`, `onairpersonality_varies`) 
-              VALUES (
-                  '".(int) $insertId."',
-                  ".(int) $radioMusic.",
-                  ".(int) $radioProgram.",
-                  ".(int) $radioAir.",
-                  ".(int) $radioPromotion.",
-                  ".(int) $radioProduction.",
-                  ".(int) $radioSales.",
-                  ".(int) $radioIt.",
-                  '".addslashes($stationCall)."',
-                  '".addslashes($stationFrequency)."',
-                  '".addslashes($stationName)."',
-                  '".addslashes($programCall)."',
-                  '".addslashes($programHost)."',
-                  '".addslashes($programName)."',
-                  '".addslashes($programTime)."',
-                  ".(int) $programMonday.",
-                  ".(int) $programTuesday.",
-                  ".(int) $programWednesday.",
-                  ".(int) $programThursday.",
-                  ".(int) $programFriday.",
-                  ".(int) $programSaturday.",
-                  ".(int) $programSunday.",
-                  ".(int) $programVaries.",
-                  '".addslashes($musicCall)."',
-                  '".addslashes($musicHost)."',
-                  '".addslashes($musicName)."',
-                  '".addslashes($musicTime)."',
-                  ".(int) $musicMonday.",
-                  ".(int) $musicTuesday.",
-                  ".(int) $musicWednesday.",
-                  ".(int) $musicThursday.",
-                  ".(int) $musicFriday.",
-                  ".(int) $musicSaturday.",
-                  ".(int) $musicSunday.",
-                  ".(int) $musicVaries.",
-                  '".addslashes($airName)."',
-                  '".addslashes($airTime)."',
-                  ".(int) $airMonday.",
-                  ".(int) $airTuesday.",
-                  ".(int) $airWednesday.",
-                  ".(int) $airThursday.",
-                  ".(int) $airFriday.",
-                  ".(int) $airSaturday.",
-                  ".(int) $airSunday.",
-                  ".(int) $airVaries.")");
+
+              // SECURITY FIX: Use Query Builder to prevent SQL injection
+              $radioStationData = [
+                  'member' => (int) $insertId,
+                  'radiotype_musicdirector' => (int) $radioMusic,
+                  'radiotype_programdirector' => (int) $radioProgram,
+                  'radiotype_jock' => (int) $radioAir,
+                  'radiotype_promotion' => (int) $radioPromotion,
+                  'radiotype_production' => (int) $radioProduction,
+                  'radiotype_sales' => (int) $radioSales,
+                  'radiotype_tech' => (int) $radioIt,
+                  'stationcallletters' => $stationCall,
+                  'stationfrequency' => $stationFrequency,
+                  'stationname' => $stationName,
+                  'programdirector_stationcallletters' => $programCall,
+                  'programdirector_host' => $programHost,
+                  'programdirector_showname' => $programName,
+                  'programdirector_showtime' => $programTime,
+                  'programdirector_monday' => (int) $programMonday,
+                  'programdirector_tuesday' => (int) $programTuesday,
+                  'programdirector_wednesday' => (int) $programWednesday,
+                  'programdirector_thursday' => (int) $programThursday,
+                  'programdirector_friday' => (int) $programFriday,
+                  'programdirector_saturday' => (int) $programSaturday,
+                  'programdirector_sunday' => (int) $programSunday,
+                  'programdirector_varies' => (int) $programVaries,
+                  'musicdirector_stationcallletters' => $musicCall,
+                  'musicdirector_host' => $musicHost,
+                  'musicdirector_showname' => $musicName,
+                  'musicdirector_showtime' => $musicTime,
+                  'musicdirector_monday' => (int) $musicMonday,
+                  'musicdirector_tuesday' => (int) $musicTuesday,
+                  'musicdirector_wednesday' => (int) $musicWednesday,
+                  'musicdirector_thursday' => (int) $musicThursday,
+                  'musicdirector_friday' => (int) $musicFriday,
+                  'musicdirector_saturday' => (int) $musicSaturday,
+                  'musicdirector_sunday' => (int) $musicSunday,
+                  'musicdirector_varies' => (int) $musicVaries,
+                  'onairpersonality_showname' => $airName,
+                  'onairpersonality_showtime' => $airTime,
+                  'onairpersonality_monday' => (int) $airMonday,
+                  'onairpersonality_tuesday' => (int) $airTuesday,
+                  'onairpersonality_wednesday' => (int) $airWednesday,
+                  'onairpersonality_thursday' => (int) $airThursday,
+                  'onairpersonality_friday' => (int) $airFriday,
+                  'onairpersonality_saturday' => (int) $airSaturday,
+                  'onairpersonality_sunday' => (int) $airSunday,
+                  'onairpersonality_varies' => (int) $airVaries
+              ];
+              DB::table('members_radio_station')->insert($radioStationData);
 
               // media
 
@@ -9024,7 +9028,40 @@ return $question_id;
 
       
 
-      $query = DB::select("update members set uname = '" . urlencode($userName) . "', fname = '" . urlencode($firstName) . "', lname = '" . urlencode($lastName) . "', stagename = '" . urlencode($stageName) . "', email = '" . urlencode(trim($email)) . "', address1 = '" . urlencode($address1) . "', address2 = '" . urlencode($address2) . "', city = '" . urlencode($city) . "', state = '" . urlencode($state) . "', country = '" . urlencode($country) . "', zip = '" . urlencode($zip) . "', phone = '" . urlencode($phone) . "',  edited = NOW(), editedby = '" . $admin_id . "', age = '" . urlencode($age) . "', sex = '" . urlencode($sex) . "', player = '" . urlencode($player) . "', dj_mixer = '" . $djMixer . "', radio_station = '" . $radioStation . "', record_label = '" . $recordLabel . "', management = '" . $management . "', clothing_apparel = '" . $clothingApparel . "', mass_media = '" . $massMedia . "', promoter = '" . $promoter . "', production_talent = '" . $productionTalent . "', special_services = '" . $specialServices . "', website = '" . urlencode($website) . "', computer = '" . urlencode($computer) . "', reviewPts = '" . urlencode($memberPoints) . "', howheard = '" . $howheard . "', howheardvalue = '" . $howheardvalue . "' where id = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      DB::table('members')->where('id', $memberId)->update([
+          'uname' => urlencode($userName),
+          'fname' => urlencode($firstName),
+          'lname' => urlencode($lastName),
+          'stagename' => urlencode($stageName),
+          'email' => urlencode(trim($email)),
+          'address1' => urlencode($address1),
+          'address2' => urlencode($address2),
+          'city' => urlencode($city),
+          'state' => urlencode($state),
+          'country' => urlencode($country),
+          'zip' => urlencode($zip),
+          'phone' => urlencode($phone),
+          'edited' => NOW(),
+          'editedby' => $admin_id,
+          'age' => urlencode($age),
+          'sex' => urlencode($sex),
+          'player' => urlencode($player),
+          'dj_mixer' => $djMixer,
+          'radio_station' => $radioStation,
+          'record_label' => $recordLabel,
+          'management' => $management,
+          'clothing_apparel' => $clothingApparel,
+          'mass_media' => $massMedia,
+          'promoter' => $promoter,
+          'production_talent' => $productionTalent,
+          'special_services' => $specialServices,
+          'website' => urlencode($website),
+          'computer' => urlencode($computer),
+          'reviewPts' => urlencode($memberPoints),
+          'howheard' => $howheard,
+          'howheardvalue' => $howheardvalue
+      ]);
 
 
 
@@ -9502,9 +9539,10 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_dj_mixer where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $managementQuery = DB::table('members_dj_mixer')->select('id')->where('member', $memberId)->get();
 
-      $managementRows = $managemecount(ntQuery);
+      $managementRows = count($managementQuery);
 
 
 
@@ -9961,9 +9999,10 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_radio_station where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $managementQuery = DB::table('members_radio_station')->select('id')->where('member', $memberId)->get();
 
-      $managementRows = $managemecount(ntQuery);
+      $managementRows = count($managementQuery);
 
 
 
@@ -10088,17 +10127,35 @@ return $question_id;
       }
 
 
-      $managementQuery = DB::select("select id from members_mass_media where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $managementQuery = DB::table('members_mass_media')->select('id')->where('member', $memberId)->get();
 
-      $managementRows = $managemecount(ntQuery);
+      $managementRows = count($managementQuery);
 
 
       if ($managementRows > 0) {
-
-          DB::select("update members_mass_media set mediatype_tvfilm = '$massTv', mediatype_publication = '$massPublication', mediatype_newmedia = '$massDotcom', mediatype_newsletter = '$massNewsletter', media_name = '$massName', media_website = '$massWebsite', media_department = '$massDepartment' where member = '" . $memberId . "'");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_mass_media')->where('member', $memberId)->update([
+              'mediatype_tvfilm' => $massTv,
+              'mediatype_publication' => $massPublication,
+              'mediatype_newmedia' => $massDotcom,
+              'mediatype_newsletter' => $massNewsletter,
+              'media_name' => $massName,
+              'media_website' => $massWebsite,
+              'media_department' => $massDepartment
+          ]);
       } else {
-
-          DB::select("insert into `members_mass_media` (`member`, `mediatype_tvfilm`, `mediatype_publication`, `mediatype_newmedia`, `mediatype_newsletter`, `media_name`, `media_website`, `media_department`) values ('" . $memberId . "', '" . $massTv . "', '" . $massPublication . "', '" . $massDotcom . "', '" . $massNewsletter . "', '" . $massName . "', '" . $massWebsite . "', '" . $massDepartment . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_mass_media')->insert([
+              'member' => $memberId,
+              'mediatype_tvfilm' => $massTv,
+              'mediatype_publication' => $massPublication,
+              'mediatype_newmedia' => $massDotcom,
+              'mediatype_newsletter' => $massNewsletter,
+              'media_name' => $massName,
+              'media_website' => $massWebsite,
+              'media_department' => $massDepartment
+          ]);
       }
 
 
@@ -10120,18 +10177,32 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_record_label where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $managementQuery = DB::table('members_record_label')->select('id')->where('member', $memberId)->get();
 
-      $managementRows = $managemecount(ntQuery);
+      $managementRows = count($managementQuery);
 
 
 
       if ($managementRows > 0) {
-
-          DB::select("update members_record_label set labeltype_major = '$recordMajor', labeltype_indy = '$recordIndy', labeltype_distribution = '$recordDistribution', label_name = '$recordName', label_department = '$recordDepartment' where member = '" . $memberId . "'");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_record_label')->where('member', $memberId)->update([
+              'labeltype_major' => $recordMajor,
+              'labeltype_indy' => $recordIndy,
+              'labeltype_distribution' => $recordDistribution,
+              'label_name' => $recordName,
+              'label_department' => $recordDepartment
+          ]);
       } else {
-
-          DB::select("insert into `members_record_label` (`member`, `labeltype_major`, `labeltype_indy`, `labeltype_distribution`, `label_name`, `label_department`) values ('" . $memberId . "', '" . $recordMajor . "', '" . $recordIndy . "', '" . $recordDistribution . "', '" . $recordName . "', '" . $recordDepartment . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_record_label')->insert([
+              'member' => $memberId,
+              'labeltype_major' => $recordMajor,
+              'labeltype_indy' => $recordIndy,
+              'labeltype_distribution' => $recordDistribution,
+              'label_name' => $recordName,
+              'label_department' => $recordDepartment
+          ]);
       }
 
 
@@ -10155,17 +10226,35 @@ return $question_id;
 
 
 
-      $managementQuery = DB::select("select id from members_management where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $managementQuery = DB::table('members_management')->select('id')->where('member', $memberId)->get();
 
-      $managementRows = $managemecount(ntQuery);
+      $managementRows = count($managementQuery);
 
 
       if ($managementRows > 0) {
-
-          DB::select("update members_management set managementtype_artist = '$managementArtist', managementtype_tour = '$managementTour', managementtype_personal = '$managementPersonal', managementtype_finance = '$managementFinance', management_name = '$managementName', management_who = '$managementWho', management_industry = '$managementIndustry' where member = '" . $memberId . "'");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_management')->where('member', $memberId)->update([
+              'managementtype_artist' => $managementArtist,
+              'managementtype_tour' => $managementTour,
+              'managementtype_personal' => $managementPersonal,
+              'managementtype_finance' => $managementFinance,
+              'management_name' => $managementName,
+              'management_who' => $managementWho,
+              'management_industry' => $managementIndustry
+          ]);
       } else {
-
-          DB::select("insert into `members_management` (`member`, `managementtype_artist`, `managementtype_tour`, `managementtype_personal`, `managementtype_finance`, `management_name`, `management_who`, `management_industry`) values ('" . $memberId . "', '" . $managementArtist . "', '" . $managementTour . "', '" . $managementPersonal . "', '" . $managementFinance . "', '" . $managementName . "', '" . $managementWho . "', '" . $managementIndustry . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_management')->insert([
+              'member' => $memberId,
+              'managementtype_artist' => $managementArtist,
+              'managementtype_tour' => $managementTour,
+              'managementtype_personal' => $managementPersonal,
+              'managementtype_finance' => $managementFinance,
+              'management_name' => $managementName,
+              'management_who' => $managementWho,
+              'management_industry' => $managementIndustry
+          ]);
       }
 
 
@@ -10174,17 +10263,25 @@ return $question_id;
 
 
 
-      $clothingQuery = DB::select("select id from members_clothing_apparel where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $clothingQuery = DB::table('members_clothing_apparel')->select('id')->where('member', $memberId)->get();
 
-      $clothingRows = $clothicount(ngQuery);
+      $clothingRows = count($clothingQuery);
 
 
       if ($clothingRows > 0) {
-
-          DB::select("update members_clothing_apparel set clothing_name = '$clothingName', clothing_department = '$clothingDepartment' where member = '" . $memberId . "'");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_clothing_apparel')->where('member', $memberId)->update([
+              'clothing_name' => $clothingName,
+              'clothing_department' => $clothingDepartment
+          ]);
       } else {
-
-          DB::select("insert into `members_clothing_apparel` (`member`, `clothing_name`, `clothing_department`) values ('" . $memberId . "', '" . $clothingName . "', '" . $clothingDepartment . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_clothing_apparel')->insert([
+              'member' => $memberId,
+              'clothing_name' => $clothingName,
+              'clothing_department' => $clothingDepartment
+          ]);
       }
 
 
@@ -10209,21 +10306,36 @@ return $question_id;
 
 
 
-      $promoterQuery = DB::select("select id from members_promoter where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $promoterQuery = DB::table('members_promoter')->select('id')->where('member', $memberId)->get();
 
-      $promoterRows = $promotcount(erQuery);
+      $promoterRows = count($promoterQuery);
 
 
 
       if ($promoterRows > 0) {
-
-
-          DB::select("update members_promoter set promotertype_indy = '$promoterIndy', promotertype_club = '$promoterClub', promotertype_event = '$promoterSpecial', promotertype_street = '$promoterStreet', promoter_name = '$promoterName', promoter_department = '$promoterDepartment', promoter_website = '$promoterWebsite' where member = '" . $memberId . "'");
-      }
-      
-      else {
-
-          DB::select("insert into `members_promoter` (`member`, `promotertype_indy`, `promotertype_club`, `promotertype_event`, `promotertype_street`, `promoter_name`, `promoter_department`, `promoter_website`) values ('" . $memberId . "', '" . $promoterIndy . "', '" . $promoterClub . "', '" . $promoterSpecial . "', '" . $promoterStreet . "', '" . $promoterName . "', '" . $promoterDepartment . "', '" . $promoterWebsite . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_promoter')->where('member', $memberId)->update([
+              'promotertype_indy' => $promoterIndy,
+              'promotertype_club' => $promoterClub,
+              'promotertype_event' => $promoterSpecial,
+              'promotertype_street' => $promoterStreet,
+              'promoter_name' => $promoterName,
+              'promoter_department' => $promoterDepartment,
+              'promoter_website' => $promoterWebsite
+          ]);
+      } else {
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_promoter')->insert([
+              'member' => $memberId,
+              'promotertype_indy' => $promoterIndy,
+              'promotertype_club' => $promoterClub,
+              'promotertype_event' => $promoterSpecial,
+              'promotertype_street' => $promoterStreet,
+              'promoter_name' => $promoterName,
+              'promoter_department' => $promoterDepartment,
+              'promoter_website' => $promoterWebsite
+          ]);
       }
 
 
@@ -10248,18 +10360,34 @@ return $question_id;
 
 
 
-      $specialQuery = DB::select("select id from members_special_services where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $specialQuery = DB::table('members_special_services')->select('id')->where('member', $memberId)->get();
 
-      $specialRows = $specicount(alQuery);
+      $specialRows = count($specialQuery);
 
 
 
       if ($specialRows > 0) {
-
-          DB::select("update members_special_services set servicestype_corporate = '$specialCorporate', servicestype_graphicdesign = '$specialGraphic', servicestype_webdesign = '$specialWeb', servicestype_other = '$specialOther', services_name = '$specialName', services_website = '$specialWebsite' where member = '" . $memberId . "'");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_special_services')->where('member', $memberId)->update([
+              'servicestype_corporate' => $specialCorporate,
+              'servicestype_graphicdesign' => $specialGraphic,
+              'servicestype_webdesign' => $specialWeb,
+              'servicestype_other' => $specialOther,
+              'services_name' => $specialName,
+              'services_website' => $specialWebsite
+          ]);
       } else {
-
-          DB::select("insert into `members_special_services` (`member`, `servicestype_corporate`, `servicestype_graphicdesign`, `servicestype_webdesign`, `servicestype_other`, `services_name`, `services_website`) values ('" . $memberId . "', '" . $specialCorporate . "', '" . $specialGraphic . "', '" . $specialWeb . "', '" . $specialOther . "', '" . $specialName . "', '" . $specialWebsite . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_special_services')->insert([
+              'member' => $memberId,
+              'servicestype_corporate' => $specialCorporate,
+              'servicestype_graphicdesign' => $specialGraphic,
+              'servicestype_webdesign' => $specialWeb,
+              'servicestype_other' => $specialOther,
+              'services_name' => $specialName,
+              'services_website' => $specialWebsite
+          ]);
       }
 
 
@@ -10284,18 +10412,32 @@ return $question_id;
 
 
 
-      $productionQuery = DB::select("select id from members_production_talent where member = '" . $memberId . "'");
+      // SECURITY FIX: Use Query Builder to prevent SQL injection
+      $productionQuery = DB::table('members_production_talent')->select('id')->where('member', $memberId)->get();
 
-      $productionRows = $producticount(onQuery);
+      $productionRows = count($productionQuery);
 
 
 
       if ($productionRows > 0) {
-
-          DB::select("update members_production_talent set productiontype_artist = '$productionArtist', productiontype_producer = '$productionProducer', productiontype_choreographer = '$productionChoregrapher', productiontype_sound = '$productionSound', production_name = '$productionName' where member = '" . $memberId . "'");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_production_talent')->where('member', $memberId)->update([
+              'productiontype_artist' => $productionArtist,
+              'productiontype_producer' => $productionProducer,
+              'productiontype_choreographer' => $productionChoregrapher,
+              'productiontype_sound' => $productionSound,
+              'production_name' => $productionName
+          ]);
       } else {
-
-          DB::select("insert into `members_production_talent` (`member`, `productiontype_artist`, `productiontype_producer`, `productiontype_choreographer`, `productiontype_sound`, `production_name`) values ('" . $memberId . "', '" . $productionArtist . "', '" . $productionProducer . "', '" . $productionChoregrapher . "', '" . $productionSound . "', '" . $productionName . "')");
+          // SECURITY FIX: Use Query Builder to prevent SQL injection
+          DB::table('members_production_talent')->insert([
+              'member' => $memberId,
+              'productiontype_artist' => $productionArtist,
+              'productiontype_producer' => $productionProducer,
+              'productiontype_choreographer' => $productionChoregrapher,
+              'productiontype_sound' => $productionSound,
+              'production_name' => $productionName
+          ]);
       }
 
 
