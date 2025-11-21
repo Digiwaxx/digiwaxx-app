@@ -622,7 +622,7 @@ public function admin_editCompanyLogo(Request $request){
         			  
         			  if(!empty($upload_data)){
         				 
-        				$folder = 13199825142;  // PCLOUD_FOLDER_ID
+        				$folder = env('PCLOUD_FOLDER_ID', 13199825142);  // From .env
                 
                     	$metadata = $this->uploadImage_to_pcloud($destinationPath, $fileNameToStore, $folder);
                     	
@@ -748,7 +748,7 @@ public function admin_editCompanyLogo(Request $request){
 			  
 			  if(!empty($upload_data)){
 				 
-				$folder = 13199825142;  // PCLOUD_FOLDER_ID
+				$folder = env('PCLOUD_FOLDER_ID', 13199825142);  // From .env
         
             	$metadata = $this->uploadImage_to_pcloud($destinationPath, $fileNameToStore, $folder);
             	
@@ -11050,7 +11050,7 @@ function track_review(Request $request)
 
 				  $uploaded_data_loi = $logoImage->move( $destination_path_loi , $image_name_loi );
 				  
-				  $folder= '13199825142';
+				  $folder = env('PCLOUD_FOLDER_ID', '13199825142');  // From .env
                   $metadata = $this->uploadImage_to_pcloud($destination_path_loi, $image_name_loi, $folder);
         
                   $pcloudFileId = $metadata->metadata->fileid;
@@ -12159,7 +12159,7 @@ function track_review(Request $request)
 				 $uploaded_data = $logoImage->move($destination_path , $image_name);
 				 
 				 ////////////////////////////////Pcloud image 
-				  $folder= '13199825142';    //folder id
+				  $folder = env('PCLOUD_FOLDER_ID', '13199825142');  // From .env    //folder id
                   $metadata = $this->uploadImage_to_pcloud($destination_path, $image_name, $folder);
             
                   $pcloudFileId = $metadata->metadata->fileid;
@@ -22868,7 +22868,7 @@ function Digicoins()
                 $vidImg = $val->id;
             	$destinationPath =  base_path('/Logos/');
             	$fileNameToStore = $val->img;
-                $folder = 13199825142;  // PCLOUD_FOLDER_ID
+                $folder = env('PCLOUD_FOLDER_ID', 13199825142);  // From .env
                 
                 $checkFilePath = $destinationPath.$fileNameToStore;
                 if (file_exists($checkFilePath)){
