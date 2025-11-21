@@ -942,7 +942,7 @@ class PagesController extends Controller
 	}
 	public function reCaptcha($recaptcha)
 	{
-		$secret = "6Lcz58IkAAAAAMwf7LkqCEfemauHtcMkK-c0Mj8z";
+		$secret = env('RECAPTCHA_SECRET_KEY');
 		$ip = $_SERVER['REMOTE_ADDR'];
 
 		$postvars = array("secret" => $secret, "response" => $recaptcha, "remoteip" => $ip);
