@@ -139,5 +139,19 @@
     "Subject": "Asunto",
     "Message": "Mensaje",
     "Send message": "Enviar mensaje",
-    "Get in touch": "Ponte en contacto"
+    "Get in touch": "Ponte en contacto",
+
+    "Create a Client Account": "Crear una Cuenta de Cliente",
+    "Already registered?": "¿Ya estás registrado?",
+    "Click here to log in": "Haz clic aquí para iniciar sesión",
+    "Name/Company name": "Nombre/Nombre de la empresa",
+    "Billing contact (First/Last name)": "Contacto de facturación (Nombre/Apellido)",
+    "What continent do you live in?": "¿En qué continente vives?",
+    "What country do you live in?": "¿En qué país vives?",
+    "What state/providence do you live in?": "¿En qué estado/provincia vives?",
+    "City": "Ciudad",
+    "Zip": "Código postal",
+    "Address": "Dirección",
+    "Address Line 2": "Dirección línea 2",
+    "Continue": "Continuar"
 }

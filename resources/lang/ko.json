@@ -128,5 +128,19 @@
     "Subject": "제목",
     "Message": "메시지",
     "Send message": "보내기",
-    "Get in touch": "연락하기"
+    "Get in touch": "연락하기",
+
+    "Create a Client Account": "클라이언트 계정 만들기",
+    "Already registered?": "이미 등록하셨나요?",
+    "Click here to log in": "여기를 클릭하여 로그인",
+    "Name/Company name": "이름/회사명",
+    "Billing contact (First/Last name)": "청구 담당자 (이름/성)",
+    "What continent do you live in?": "어느 대륙에 거주하시나요?",
+    "What country do you live in?": "어느 나라에 거주하시나요?",
+    "What state/providence do you live in?": "어느 주/도에 거주하시나요?",
+    "City": "도시",
+    "Zip": "우편번호",
+    "Address": "주소",
+    "Address Line 2": "주소 2",
+    "Continue": "계속"
 }

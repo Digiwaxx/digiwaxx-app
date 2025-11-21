@@ -17,8 +17,8 @@
                     <div class="music-icon">
                       <img src="{{ asset('public/images/path/music-icon.png') }}" class="img-fluid">
                     </div>
-                    <h2 class="text-center">Create a Client Account</h2>
-                    <p class="text-center areg">Already registered? <a href="{{ url('login') }}">Click here to log in</a>  </p>
+                    <h2 class="text-center">{{ __('Create a Client Account') }}</h2>
+                    <p class="text-center areg">{{ __('Already registered?') }} <a href="{{ url('login') }}">{{ __('Click here to log in') }}</a>  </p>
                 </div>
 
               </div>
@@ -44,14 +44,14 @@
                 <div class="col-md-6 col-sm-12">
                     <div class="form-group"> <span class="man"></span>
 
-                        <input name="company" id="company"  class="form-control input"  size="20" placeholder="Name/Company name" type="text" value="{{ Session::get('sess-client-company') }}">
+                        <input name="company" id="company"  class="form-control input"  size="20" placeholder="{{ __('Name/Company name') }}" type="text" value="{{ Session::get('sess-client-company') }}">
 
                     </div>
                 </div>
                  <div class="col-md-6 col-sm-12">
                      <div class="form-group"> <span class="man"></span>
 
-                        <input name="name" id="name"  class="form-control input"  size="20" placeholder="Billing contact (First/Last name)" type="text" value="{{ Session::get('sess-client-name') }}">
+                        <input name="name" id="name"  class="form-control input"  size="20" placeholder="{{ __('Billing contact (First/Last name)') }}" type="text" value="{{ Session::get('sess-client-name') }}">
 
                     </div>
                  </div>
@@ -65,7 +65,7 @@
 				           <select id="continent" name="continent" onchange="getCountries(this.value)" class="selectpicker form-control">
 							
 					
-                           <option value="">What continent do you live in?</option>
+                           <option value="">{{ __('What continent do you live in?') }}</option>
 							@foreach($continents['data'] as $continent)
 							
 							<option value="{{ $continent->continentId }}">{{ $continent->continent }}</option>
@@ -76,14 +76,14 @@
 				
 				 <div class="form-group mb-4"> <span class="man"></span>
 				  <select id="country" name="country" onchange="getStates(this.value)" class="selectpicker form-control">
-                        <option value="">What country do you live in?</option>
+                        <option value="">{{ __('What country do you live in?') }}</option>
 				  </select>
                 </div>
                
 
               <div class="form-group mb-4"> <span class="man"></span>			
               <select id="state" name="state" class="selectpicker form-control">
-                    <option value="">What state/providence do you live in?</option>
+                    <option value="">{{ __('What state/providence do you live in?') }}</option>
 			  </select>
 			  </div>
 				
@@ -111,18 +111,18 @@
              <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class="form-group mb-4"> <span class="man"></span>
-                        <input name="city" id="city"  class="form-control input"  size="20" placeholder="City" type="text" value="{{ Session::get('sess-client-city') }}">
+                        <input name="city" id="city"  class="form-control input"  size="20" placeholder="{{ __('City') }}" type="text" value="{{ Session::get('sess-client-city') }}">
                     </div>
                 </div>
                  <div class="col-md-6 col-sm-12">
                       <div class="form-group"> <span class="man"></span>
-                        <input name="zip" id="postal_code"  class="form-control input"  size="20" placeholder="Zip" type="text" value="{{ Session::get('sess-client-zip') }}">
+                        <input name="zip" id="postal_code"  class="form-control input"  size="20" placeholder="{{ __('Zip') }}" type="text" value="{{ Session::get('sess-client-zip') }}">
                     </div>
                  </div>
             </div>
   <div class="form-group"> 
 
-                    <input name="address1" id="street_number"  class="form-control input"  size="20" placeholder="Address" type="text" value="{{ Session::get('sess-client-address1') }}">
+                    <input name="address1" id="street_number"  class="form-control input"  size="20" placeholder="{{ __('Address') }}" type="text" value="{{ Session::get('sess-client-address1') }}">
 
                 </div>
 
@@ -130,7 +130,7 @@
 
           <div class="form-group">
 
-                    <input name="address2" id="route"  class="form-control input"  size="20" placeholder="Address2" type="text" value="{{ Session::get('sess-client-address2') }}">
+                    <input name="address2" id="route"  class="form-control input"  size="20" placeholder="{{ __('Address Line 2') }}" type="text" value="{{ Session::get('sess-client-address2') }}">
 
                 </div>
                 
@@ -139,7 +139,7 @@
 
                 <div class="btn-center">
 
-                    <input name="addClient" class="login_btn btn btn-theme btn-gradient" value="Continue" type="submit">
+                    <input name="addClient" class="login_btn btn btn-theme btn-gradient" value="{{ __('Continue') }}" type="submit">
 
                 </div>
 

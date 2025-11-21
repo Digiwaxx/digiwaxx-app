@@ -128,5 +128,19 @@
     "Subject": "件名",
     "Message": "メッセージ",
     "Send message": "送信",
-    "Get in touch": "お問い合わせ"
+    "Get in touch": "お問い合わせ",
+
+    "Create a Client Account": "クライアントアカウントを作成",
+    "Already registered?": "すでに登録済みですか？",
+    "Click here to log in": "こちらをクリックしてログイン",
+    "Name/Company name": "名前/会社名",
+    "Billing contact (First/Last name)": "請求先連絡先（姓/名）",
+    "What continent do you live in?": "どの大陸にお住まいですか？",
+    "What country do you live in?": "どの国にお住まいですか？",
+    "What state/providence do you live in?": "どの州/県にお住まいですか？",
+    "City": "市区町村",
+    "Zip": "郵便番号",
+    "Address": "住所",
+    "Address Line 2": "住所2",
+    "Continue": "続ける"
 }
