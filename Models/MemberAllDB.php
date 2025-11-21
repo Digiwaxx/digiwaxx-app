@@ -1477,6 +1477,98 @@ class MemberAllDB extends Model
                  }
              }
          } // digi coins for review
+
+        // FEATURE: Send email notification to track owner when review is submitted
+        if ($insertId > 0) {
+            try {
+                // Get track details
+                $track = DB::table('tracks')->where('id', $tid)->first();
+
+                if ($track) {
+                    // Get client (track owner) details
+                    $client = DB::table('clients')->where('id', $track->client)->first();
+
+                    // Check if client wants email notifications
+                    if ($client && !empty($client->email) && $client->trackReviewEmailsActivated == 1) {
+                        // Get DJ details
+                        $member = DB::table('members')->where('id', $member_session_id)->first();
+                        $djName = 'Anonymous DJ';
+                        if ($member) {
+                            if (!empty($member->fname) && !empty($member->lname)) {
+                                $djName = $member->fname . ' ' . $member->lname;
+                            } elseif (!empty($member->uname)) {
+                                $djName = $member->uname;
+                            }
+                        }
+
+                        // Get the review that was just inserted
+                        $review = DB::table('tracks_reviews')->where('id', $insertId)->first();
+
+                        if ($review) {
+                            // Generate or get unsubscribe token
+                            $unsubscribeToken = $client->review_notification_token ?? null;
+                            if (empty($unsubscribeToken)) {
+                                $unsubscribeToken = bin2hex(random_bytes(32));
+                                DB::table('clients')
+                                    ->where('id', $client->id)
+                                    ->update(['review_notification_token' => $unsubscribeToken]);
+                            }
+
+                            // Generate report download URL
+                            $reportToken = base64_encode($tid . '|' . time());
+                            $reportDownloadUrl = url('/track/report/download/' . $reportToken);
+
+                            // Send email notification
+                            \Mail::to($client->email)->send(
+                                new \App\Mail\TrackReviewNotification(
+                                    $track,
+                                    $review,
+                                    $djName,
+                                    $client->name,
+                                    $unsubscribeToken,
+                                    $reportDownloadUrl
+                                )
+                            );
+
+                            // Log the email notification
+                            DB::table('email_notification_logs')->insert([
+                                'client_id' => $client->id,
+                                'track_id' => $tid,
+                                'review_id' => $insertId,
+                                'notification_type' => 'review',
+                                'status' => 'sent',
+                                'recipient_email' => $client->email,
+                                'sent_at' => now(),
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                // Log error but don't fail the review submission
+                \Log::error('Failed to send review notification email', [
+                    'track_id' => $tid,
+                    'review_id' => $insertId,
+                    'error' => $e->getMessage()
+                ]);
+
+                // Log failed email attempt
+                if (isset($client) && isset($client->id)) {
+                    DB::table('email_notification_logs')->insert([
+                        'client_id' => $client->id,
+                        'track_id' => $tid,
+                        'review_id' => $insertId,
+                        'notification_type' => 'review',
+                        'status' => 'failed',
+                        'recipient_email' => $client->email ?? 'unknown',
+                        'error_message' => $e->getMessage(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+        }
  
          return $insertId;
      }
