@@ -709,7 +709,14 @@ class PagesController extends Controller
 
 		$arr = json_encode($array);
 
-		$other_comment = DB::select("select* from forum_article_comments where art_id=$id AND delete_status=0 AND comment_status=1 order by created_at asc ");
+		// SECURITY FIX P0-CRITICAL: Convert to Query Builder to prevent SQL injection
+	// $id comes from route parameter and was vulnerable to SQL injection
+	$other_comment = DB::table('forum_article_comments')
+		->where('art_id', '=', $id)
+		->where('delete_status', '=', 0)
+		->where('comment_status', '=', 1)
+		->orderBy('created_at', 'asc')
+		->get();
 		$array1 = json_decode(json_encode($other_comment), true);
 
 		foreach ($array1 as $key => $value) {
@@ -734,7 +741,12 @@ class PagesController extends Controller
 		}
 
 		if (!empty($id1)) {
-			$like_fetch_user = DB::select("select art_id from forum_article_likes where art_id=$id AND user_id=$id1");
+			// SECURITY FIX P0-CRITICAL: Convert to Query Builder to prevent SQL injection
+		// $id and $id1 are user-controlled and were vulnerable to SQL injection
+		$like_fetch_user = DB::table('forum_article_likes')
+			->where('art_id', '=', $id)
+			->where('user_id', '=', $id1)
+			->get();
 			$liked_by_user = count($like_fetch_user);
 			$output['liked_by_user'] = $liked_by_user;
 		}
@@ -854,7 +866,12 @@ class PagesController extends Controller
 		$user_id = $request->user_id;
 
 
-		$delete_query = DB::delete("DELETE from forum_article_likes where art_id=$art_id AND user_id=$user_id");
+		// SECURITY FIX P0-CRITICAL: Convert to Query Builder to prevent SQL injection
+	// $art_id and $user_id come from request and were vulnerable to SQL injection
+	$delete_query = DB::table('forum_article_likes')
+		->where('art_id', '=', $art_id)
+		->where('user_id', '=', $user_id)
+		->delete();
 
 		$total_likes = DB::table('forum_article_likes')->where('art_id', '=', $art_id)->count();
 		if ($delete_query) {
