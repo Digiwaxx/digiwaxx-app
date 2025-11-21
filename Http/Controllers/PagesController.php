@@ -67,11 +67,14 @@ class PagesController extends Controller
 		//  $output['max_reviews']=$max_reviews;
 		$output['max_reviews'] = '';
 
-		$max_downloads = DB::select("SELECT DISTINCT track_member_downloads.trackId,  COUNT(track_member_downloads.trackId) AS downloads, tracks.id, tracks.title, tracks.album, tracks.imgpage,tracks.pCloudFileID,tracks.pCloudParentFolderID FROM   track_member_downloads
-            
+		// SECURITY FIX MEDIUM: Use parameterized queries to prevent SQL injection
+	// Variables $monday and $sunday are PHP-generated (safe), but using bindings is best practice
+	$max_downloads = DB::select("SELECT DISTINCT track_member_downloads.trackId,  COUNT(track_member_downloads.trackId) AS downloads, tracks.id, tracks.title, tracks.album, tracks.imgpage,tracks.pCloudFileID,tracks.pCloudParentFolderID FROM   track_member_downloads
+
                left join tracks_mp3s on track_member_downloads.mp3Id = tracks_mp3s.id
                left join tracks on track_member_downloads.trackId = tracks.id
-               $where GROUP BY tracks.id order by $sort limit $limit");
+               WHERE tracks.deleted = '0' AND track_member_downloads.downloadedDateTime > ? AND track_member_downloads.downloadedDateTime < ?
+               GROUP BY tracks.id order by tracks_mp3s.downloads desc limit ?", [$monday, $sunday, $limit]);
 
 		//   pArr($max_downloads);
 		//   die();
@@ -249,7 +252,14 @@ class PagesController extends Controller
 
 
 
-		$display_news = DB::select("select* from news_details where approved=1 order by added desc limit $start,$limit ");;
+		// SECURITY FIX HIGH: Convert to Query Builder to prevent SQL injection in pagination
+	// $start and $limit are calculated from $_GET['page'] and are vulnerable
+	$display_news = DB::table('news_details')
+		->where('approved', '=', 1)
+		->orderBy('added', 'desc')
+		->offset($start)
+		->limit($limit)
+		->get();
 
 		// 	$get_logo = $logo_details->logo;
 		$get_logo = $logo_details->pCloudFileID; //pCloudFileID
@@ -353,7 +363,14 @@ class PagesController extends Controller
 
 
 
-		$display_news = DB::select("select* from digiwaxx_videos where status=1 order by created_at desc limit $start,$limit ");;
+		// SECURITY FIX HIGH: Convert to Query Builder to prevent SQL injection in pagination
+	// $start and $limit are calculated from $_GET['page'] and are vulnerable
+	$display_news = DB::table('digiwaxx_videos')
+		->where('status', '=', 1)
+		->orderBy('created_at', 'desc')
+		->offset($start)
+		->limit($limit)
+		->get();
 
 		// 	$get_logo = $logo_details->logo;	
 		$get_logo = $logo_details->pCloudFileID; //pCloudFileID
@@ -468,7 +485,14 @@ class PagesController extends Controller
 		}
 
 
-		$get_query = DB::select("select* from forum_article where art_status=1 order by art_id desc limit $start,$limit ");
+		// SECURITY FIX HIGH: Convert to Query Builder to prevent SQL injection in pagination
+	// $start and $limit are calculated from $_GET['page'] and are vulnerable
+	$get_query = DB::table('forum_article')
+		->where('art_status', '=', 1)
+		->orderBy('art_id', 'desc')
+		->offset($start)
+		->limit($limit)
+		->get();
 
 		$array = json_decode(json_encode($get_query), true);
 
@@ -1439,7 +1463,10 @@ class PagesController extends Controller
 		$sunday = date('Y-m-d', strtotime('sunday this week'));
 
 
-		$where1 = "where tracks.deleted = '0' AND tracks.status = 'publish' AND tracks.active = '1' AND track_member_downloads.downloadedDateTime > '" . $monday . "' AND track_member_downloads.downloadedDateTime < '" . $sunday . "' ";
+		// SECURITY NOTE MEDIUM: These WHERE clauses use PHP-generated date variables (not user input)
+	// However, they are passed to model methods that use DB::select() with string concatenation
+	// TODO: Refactor frontend_model methods to use Query Builder or parameterized queries
+	$where1 = "where tracks.deleted = '0' AND tracks.status = 'publish' AND tracks.active = '1' AND track_member_downloads.downloadedDateTime > '" . $monday . "' AND track_member_downloads.downloadedDateTime < '" . $sunday . "' ";
 
 		$where2 = "where tracks.deleted = '0' AND tracks.status = 'publish' AND tracks.active = '1' AND track_member_downloads.downloadedDateTime like '" . $year . '-' . $month . "%'";
 
@@ -1460,13 +1487,16 @@ class PagesController extends Controller
 
 		if ((isset($_GET['page']))  && ($_GET['page'] > 0) && (isset($_GET['type'])) && ($_GET['type'] > 0) && ($_GET['type'] < 4)) {
 
-			if ($_GET['type'] == 1) {
+		// SECURITY FIX HIGH: Validate and sanitize user input to prevent SQL injection
+		$type = (int) $_GET['type'];
+
+			if ($type == 1) {
 
 				$where = "where tracks.deleted = '0' AND tracks.status = 'publish' AND tracks.active = '1' AND track_member_downloads.downloadedDateTime > '" . $monday . "' AND track_member_downloads.downloadedDateTime < '" . $sunday . "' ";
-			} else if ($_GET['type'] == 2) {
+			} else if ($type == 2) {
 
 				$where = "where tracks.deleted = '0' AND tracks.status = 'publish' AND tracks.active = '1' AND track_member_downloads.downloadedDateTime like '" . $year . '-' . $month . "%'";
-			} else if ($_GET['type'] == 3) {
+			} else if ($type == 3) {
 
 				$where = "where tracks.deleted = '0' AND tracks.status = 'publish' AND tracks.active = '1' AND track_member_downloads.downloadedDateTime like '" . $year . "%'";
 			}
