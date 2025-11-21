@@ -21,7 +21,7 @@ $package_id=urldecode($value->id);
                     <div class="music-icon">
                       <img src="{{ asset('public/images/path/music-icon.png') }}" class="img-fluid">
                     </div>
-                    <h2 class="text-center">Create a Client Account</h2>
+                    <h2 class="text-center">{{ __('Create a Client Account') }}</h2>
                     
                 </div>
             
@@ -39,10 +39,10 @@ $package_id=urldecode($value->id);
               <!--  </div>-->
                 <div class="package_info">
                     
-                    <p class="package_type text-center">PACKAGE TYPE - <?php echo $package_type; ?></p>
-                    
-                    <p class="package_price text-center">PACKAGE PRICE - <?php if(!empty($package_price)){echo "$".$package_price;}else{echo "FREE";} ?></p>
-                    <p class="package_features">PACKAGE FEATURES-
+                    <p class="package_type text-center">{{ __('PACKAGE TYPE') }} - <?php echo $package_type; ?></p>
+
+                    <p class="package_price text-center">{{ __('PACKAGE PRICE') }} - <?php if(!empty($package_price)){echo "$".$package_price;}else{echo __('FREE');} ?></p>
+                    <p class="package_features">{{ __('PACKAGE FEATURES') }} -
                         <ul class="pck_fea">
                             <?php foreach($package_features as $key=>$value){
                                 echo '<li>';
@@ -61,7 +61,7 @@ $package_id=urldecode($value->id);
                
                 <div class="btn-center">
                 <?php if (empty($package_price)){?>   
-                    <input name="addMember4" class="login_btn btn btn-theme btn-gradient" value="CONFIRM PACKAGE" type="submit">
+                    <input name="addMember4" class="login_btn btn btn-theme btn-gradient" value="{{ __('CONFIRM PACKAGE') }}" type="submit">
                 <?php }?>
                 </div>
             </form>

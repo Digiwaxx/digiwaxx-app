@@ -30,8 +30,8 @@
                     <div class="music-icon">
                       <img src="{{ asset('public/images/path/music-icon.png') }}" class="img-fluid">
                     </div>
-                    <h2 class="text-center">Create a Client Account</h2>
-                    <p class="text-center areg">Already registered? &nbsp; <a href="{{ url('Login') }}">Click here to log in</a>  </p>
+                    <h2 class="text-center">{{ __('Create a Client Account') }}</h2>
+                    <p class="text-center areg">{{ __('Already registered?') }} &nbsp; <a href="{{ url('Login') }}">{{ __('Click here to log in') }}</a>  </p>
                 </div>               
 
               </div>
@@ -42,7 +42,7 @@
 
 			  @if(request()->get('emailExists'))
 
-			  <div class="alert alert-danger">Email already exists!</div>
+			  <div class="alert alert-danger">{{ __('Email already exists!') }}</div>
 
               @endif
 
@@ -54,28 +54,28 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> <span class="man"></span>
 
-                        <input name="email" id="email"  class="form-control input"  size="20" placeholder="Billing contact e-mail address" type="text" value="{{ Session::get('sess-client-email') }}">
+                        <input name="email" id="email"  class="form-control input"  size="20" placeholder="{{ __('Billing contact e-mail address') }}" type="text" value="{{ Session::get('sess-client-email') }}">
 
                     </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> <span class="man"></span>
 
-                            <input name="phone" id="phone"  class="form-control input"  size="20" placeholder="Phone" type="text" value="{{ Session::get('sess-client-phone') }}">
+                            <input name="phone" id="phone"  class="form-control input"  size="20" placeholder="{{ __('Phone') }}" type="text" value="{{ Session::get('sess-client-phone') }}">
 
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> <span class="man"></span>
 
-                            <input name="mobile" id="mobile"  class="form-control input"  size="20" placeholder="Mobile phone" type="text" value="{{ Session::get('sess-client-mobile') }}">
+                            <input name="mobile" id="mobile"  class="form-control input"  size="20" placeholder="{{ __('Mobile phone') }}" type="text" value="{{ Session::get('sess-client-mobile') }}">
 
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                          <div class="form-group"> <span class="man"></span>
 
-                            <input name="website" id="website"  class="form-control input"  size="20" placeholder="Company website" type="text" value="{{ Session::get('sess-client-website') }}">
+                            <input name="website" id="website"  class="form-control input"  size="20" placeholder="{{ __('Company website') }}" type="text" value="{{ Session::get('sess-client-website') }}">
 
                         </div>
                     </div>
@@ -84,7 +84,7 @@
 
                 <div class="form-group"> <span class="man"></span>
 
-                    <input name="username" id="username"  class="form-control input"  size="20" placeholder="Username" type="text" value="{{ Session::get('sess-client-username') }}">
+                    <input name="username" id="username"  class="form-control input"  size="20" placeholder="{{ __('Username') }}" type="text" value="{{ Session::get('sess-client-username') }}">
 
                 </div>
 
@@ -93,13 +93,13 @@
                 <div class="form-group"> <span class="man"></span>
                      
                   <div class="login-pass-digi1"> 
-                    <input name="password" id="password"  class="form-control input"  size="20" placeholder="Password" type="password" value="">
+                    <input name="password" id="password"  class="form-control input"  size="20" placeholder="{{ __('Password') }}" type="password" value="">
                     <i class="far fa-eye" id="togglePassword"  onclick="myFunction('password','togglePassword')"></i>
                   </div>    
                 <div>
-					<a href="javascript:void();" onclick="randomPassword(8)" style="float:left;"  class="btn btn-theme btn-gradient mb-4"> Generate Password </a>
+					<a href="javascript:void();" onclick="randomPassword(8)" style="float:left;"  class="btn btn-theme btn-gradient mb-4"> {{ __('Generate Password') }} </a>
 
-					<a href="javascript:void();" id="hideKey" onclick="hidePassword(1)" style="display:none; float:left; margin-left:20px;" class="btn btn-theme btn-alt"> Hide </a>
+					<a href="javascript:void();" id="hideKey" onclick="hidePassword(1)" style="display:none; float:left; margin-left:20px;" class="btn btn-theme btn-alt"> {{ __('Hide') }} </a>
                 </div>
 					
 
@@ -111,7 +111,7 @@
 
                 <div class="form-group"> <span class="man"></span>
                    <div class="login-pass-digi1"> 
-                     <input name="password1" id="password1"  class="form-control input"  size="20" placeholder="Confirm Password" type="password" value="">
+                     <input name="password1" id="password1"  class="form-control input"  size="20" placeholder="{{ __('Confirm Password') }}" type="password" value="">
                      <i class="far fa-eye" id="togglePassword1"  onclick="myFunction('password1','togglePassword1')"></i>
                   </div>
 
@@ -125,17 +125,17 @@
 
                     <select class="selectpicker form-control" name="howHeard" id="howHeard">
 
-                                <option value="">How did you hear about Digiwaxx?</option>
+                                <option value="">{{ __('How did you hear about Digiwaxx?') }}</option>
 
-                                <option value="Internet Search">Internet Search</option>
+                                <option value="Internet Search">{{ __('Internet Search') }}</option>
 
-                                <option value="Magazine Article">Magazine Article</option>
+                                <option value="Magazine Article">{{ __('Magazine Article') }}</option>
 
-                                <option value="Record Pool">Record Pool</option>
+                                <option value="Record Pool">{{ __('Record Pool') }}</option>
 
-                                <option value="Digiwaxx Crew">Digiwaxx Crew</option>
+                                <option value="Digiwaxx Crew">{{ __('Digiwaxx Crew') }}</option>
 
-                                <option value="A Current Member">A Current Member</option>                              
+                                <option value="A Current Member">{{ __('A Current Member') }}</option>                              
 
                           </select>   
 
@@ -148,14 +148,14 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> 
 
-                             <input name="facebook" id="facebook"  class="form-control input"  size="20" placeholder="Facebook profile" type="text" value="{{ Session::get('sess-client-facebook') }}">
+                             <input name="facebook" id="facebook"  class="form-control input"  size="20" placeholder="{{ __('Facebook profile') }}" type="text" value="{{ Session::get('sess-client-facebook') }}">
 
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> 
 
-                            <input name="twitter" id="twitter"  class="form-control input"  size="20" placeholder="Twitter profile" type="text" value="{{ Session::get('sess-client-twitter') }}">
+                            <input name="twitter" id="twitter"  class="form-control input"  size="20" placeholder="{{ __('Twitter profile') }}" type="text" value="{{ Session::get('sess-client-twitter') }}">
 
                         </div>
 
@@ -163,46 +163,46 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> 
 
-                          <input name="instagram" id="instagram"  class="form-control input"  size="20" placeholder="Instagram profile" type="text" value="{{ Session::get('sess-client-instagram') }}">
+                          <input name="instagram" id="instagram"  class="form-control input"  size="20" placeholder="{{ __('Instagram profile') }}" type="text" value="{{ Session::get('sess-client-instagram') }}">
 
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group"> 
 
-                          <input name="linkedin" id="linkedin"  class="form-control input"  size="20" placeholder="Linkedin profile" type="text" value="{{ Session::get('sess-client-linkedin') }}">
+                          <input name="linkedin" id="linkedin"  class="form-control input"  size="20" placeholder="{{ __('LinkedIn profile') }}" type="text" value="{{ Session::get('sess-client-linkedin') }}">
 
                     </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                          <div class="form-group">
-                            <input name="snapchat" id="snapchat" class="form-control input" size="20" placeholder="Snapchat profile" type="text" value="{{ Session::get('sess-client-snapchat') }}">
+                            <input name="snapchat" id="snapchat" class="form-control input" size="20" placeholder="{{ __('Snapchat profile') }}" type="text" value="{{ Session::get('sess-client-snapchat') }}">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                        <input name="tiktok" id="tiktok" class="form-control input" size="20" placeholder="Tiktok profile" type="text" value="{{ Session::get('sess-client-tiktok') }}">
+                        <input name="tiktok" id="tiktok" class="form-control input" size="20" placeholder="{{ __('TikTok profile') }}" type="text" value="{{ Session::get('sess-client-tiktok') }}">
                     </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         
                         <div class="form-group">
-                            <input name="triller" id="triller" class="form-control input" size="20" placeholder="Triller profile" type="text" value="{{ Session::get('sess-client-triller') }}">
+                            <input name="triller" id="triller" class="form-control input" size="20" placeholder="{{ __('Triller profile') }}" type="text" value="{{ Session::get('sess-client-triller') }}">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                            <input name="twitch" id="twitch" class="form-control input" size="20" placeholder="Twitch profile" type="text" value="{{ Session::get('sess-client-twitch') }}">
+                            <input name="twitch" id="twitch" class="form-control input" size="20" placeholder="{{ __('Twitch profile') }}" type="text" value="{{ Session::get('sess-client-twitch') }}">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                          <div class="form-group">
-                            <input name="mixcloud" id="mixcloud" class="form-control input" size="20" placeholder="Mixcloud profile" type="text" value="{{ Session::get('sess-client-mixcloud') }}">
+                            <input name="mixcloud" id="mixcloud" class="form-control input" size="20" placeholder="{{ __('Mixcloud profile') }}" type="text" value="{{ Session::get('sess-client-mixcloud') }}">
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                        <input name="reddit" id="reddit" class="form-control input" size="20" placeholder="Reddit profile" type="text" value="{{ Session::get('sess-client-reddit') }}">
+                        <input name="reddit" id="reddit" class="form-control input" size="20" placeholder="{{ __('Reddit profile') }}" type="text" value="{{ Session::get('sess-client-reddit') }}">
                     </div>
                     </div>
                 </div>
@@ -228,7 +228,7 @@
 
                 <div class="btn-center">
 
-                    <input name="addClient2" class="login_btn btn btn-theme btn-gradient" value="Next" type="submit">
+                    <input name="addClient2" class="login_btn btn btn-theme btn-gradient" value="{{ __('Next') }}" type="submit">
 
                 </div>
 

@@ -19,9 +19,8 @@
                                     <div class="music-icon">
                                         <img src="{{ asset('public/images/path/music-icon.png') }}" class="img-fluid">
                                     </div>
-                                    <h2 class="text-center">Create a Member Account</h2>
-                                    <p class="text-center areg">Already registered? <a href="{{ url('login') }}">Click here
-                                            to log in</a> </p>
+                                    <h2 class="text-center">{{ __('Create a Member Account') }}</h2>
+                                    <p class="text-center areg">{{ __('Already registered?') }} <a href="{{ url('login') }}">{{ __('Click here to log in') }}</a> </p>
                                     <div class="donate-icon">
                                         <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
                                             <input type="hidden" name="cmd" value="_donations" />
@@ -65,7 +64,7 @@
 
 
                                 <?php if(isset($_GET['emailExists']))  { ?>
-                                <div class="alert alert-danger">Email already exists!</div>
+                                <div class="alert alert-danger">{{ __('Email already exists!') }}</div>
                                 <?php } ?>
 
 
@@ -73,34 +72,34 @@
 
                                 <form action="" method="post" name="myForm" id="registrationForm" autocomplete="off">
                                     @csrf
-                                    <h2 class="text-center" style="margin:30px 0px;">Account Information</h2>
+                                    <h2 class="text-center" style="margin:30px 0px;">{{ __('Account Information') }}</h2>
 
                                     <div class="row">
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group"> <span class="man"></span>
                                                 <input name="firstName" id="firstName" class="form-control input"
-                                                    size="20" placeholder="First name" type="text"
+                                                    size="20" placeholder="{{ __('First name') }}" type="text"
                                                     value="{{ Session::get('sess-member-firstName') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group"> <span class="man"></span>
                                                 <input name="lastName" id="lastName" class="form-control input"
-                                                    size="20" placeholder="Last name" type="text"
+                                                    size="20" placeholder="{{ __('Last name') }}" type="text"
                                                     value="{{ Session::get('sess-member-lastName') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group"> <span class="man"></span>
                                                 <input name="phone" id="phone" class="form-control input"
-                                                    size="20" placeholder="Phone Number" type="text"
+                                                    size="20" placeholder="{{ __('Phone Number') }}" type="text"
                                                     value="{{ Session::get('sess-member-phone') }}">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-12">
                                             <div class="form-group"> <span class="man"></span>
                                                 <input name="email" id="email" class="form-control input"
-                                                    size="20" placeholder="Alert Email Address" type="text"
+                                                    size="20" placeholder="{{ __('Alert Email Address') }}" type="text"
                                                     value="{{ Session::get('sess-member-email') }}">
                                             </div>
                                         </div>
@@ -108,7 +107,7 @@
                                         <div class="col-md-12 col-sm-12">
                                             <div class="form-group"> <span class="man"></span>
                                                 <input name="dob" id="dob" class="form-control input"
-                                                    placeholder="Date of Birth" type="text"
+                                                    placeholder="{{ __('Date of Birth') }}" type="text"
                                                     value="{{ Session::get('sess-member-dob') }}" required>
 
                                             </div>
@@ -120,7 +119,7 @@
                                         <span class="man"></span>
                                         <input name="username" id="username" class="form-control input"
                                             onchange="checkAvailability1(this.value)" size="20"
-                                            placeholder="Username" type="text" required
+                                            placeholder="{{ __('Username') }}" type="text" required
                                             value="{{ Session::get('sess-member-username') }}">
                                     </div>
 
@@ -129,20 +128,20 @@
 
                                     <div class="form-group"> <span class="man"></span>
                                         <input name="password" id="password" class="form-control input" size="20"
-                                            placeholder="Password" type="password" value="">
+                                            placeholder="{{ __('Password') }}" type="password" value="">
                                         <div>
                                             <a href="javascript:void()" onclick="randomPassword(8)" style="float:left;"
-                                                class="btn btn-theme btn-gradient  mb-4"> Generate Password </a>
+                                                class="btn btn-theme btn-gradient  mb-4"> {{ __('Generate Password') }} </a>
                                             <a href="javascript:void()" id="hideKey" onclick="hidePassword(1)"
                                                 style="display:none; float:left; margin-left:20px;"
-                                                class="btn btn-theme btn-alt"> Hide </a>
+                                                class="btn btn-theme btn-alt"> {{ __('Hide') }} </a>
                                         </div>
                                     </div>
 
                                     <div style="clear:both;"></div>
                                     <div class="form-group"> <span class="man"></span>
                                         <input name="password1" id="password1" class="form-control input" size="20"
-                                            placeholder="Confirm password" type="password" value="">
+                                            placeholder="{{ __('Confirm password') }}" type="password" value="">
                                         <span class="help-text">(Username and password must have at least 8 characters and
                                             may only contain letters and numbers)</span>
                                     </div>
@@ -151,7 +150,7 @@
 
                                     <div>
                                         <input name="addMember" class="login_btn btn btn-theme btn-gradient"
-                                            value="Continue" type="submit" />
+                                            value="{{ __('Continue') }}" type="submit" />
                                     </div>
                                 </form>
 
