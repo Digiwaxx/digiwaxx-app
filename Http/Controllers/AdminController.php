@@ -568,18 +568,34 @@ public function admin_editCompanyLogo(Request $request){
 			$resultID =  $this->admin_model->updateLogo($requestDta,$logoId,$loggedUserId);	// Update the Logo Data
 			if($resultID>0){
 				if($request->hasFile('image')){ // Check if File is added'''
-				
+
+				// SECURITY FIX: Validate file upload - only allow images
+				$allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+				$allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+				$maxFileSize = 5 * 1024 * 1024; // 5MB max
+
+				$uploadedFile = $request->file('image');
+				$fileExtension = strtolower($uploadedFile->getClientOriginalExtension());
+				$fileMimeType = $uploadedFile->getMimeType();
+				$fileSize = $uploadedFile->getSize();
+
+				if (!in_array($fileExtension, $allowedExtensions) ||
+					!in_array($fileMimeType, $allowedMimeTypes) ||
+					$fileSize > $maxFileSize) {
+					return Redirect::to("admin/logo_edit?lid=".$logoId."&error=invalid_file");
+				}
+
 				$query=DB::table('logos')->select('pCloudFileID_logo')->where('id',$logoId)->get();
-            
+
                if(!empty($query[0]->pCloudFileID_logo)){
                     $pcloud_image_id=(int)$query[0]->pCloudFileID_logo;
-                    
-                    
+
+
                     if(!empty($pcloud_image_id)){
-                     $delete_metadata = $this->delete_pcloud($pcloud_image_id);   
+                     $delete_metadata = $this->delete_pcloud($pcloud_image_id);
                     }
                }
-				
+
 						$resultID =  $this->admin_model->unlinkCompanyLogo($resultID);
 						$fileLogo = $request->file('image') ;
 						$image_name = $fileLogo->getClientOriginalName();

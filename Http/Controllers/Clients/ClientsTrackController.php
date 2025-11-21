@@ -71,19 +71,20 @@ class ClientsTrackController extends Controller
 		$clientdata = $this->clientAllDB_model->getClientsDetails_cld($clientId);
 		$headerOutput['wrapperClass'] = 'client';
 
-        if (isset($_GET['getSubGenres']) && isset($_GET['genreId'])) {
-			$subGenres = $this->clientAllDB_model->getSubGenres_cld($_GET['genreId']);
+        // SECURITY FIX: Use Laravel request instead of $_GET superglobal
+        if ($request->has('getSubGenres') && $request->has('genreId')) {
+			$genreId = (int) $request->input('genreId'); // Cast to int for safety
+			$subGenres = $this->clientAllDB_model->getSubGenres_cld($genreId);
 			if ($subGenres['numRows'] > 0) {
 				$arr[] = array('id' => '0', 'name' => 'Select Sub Genre');
 				foreach ($subGenres['data'] as $genre) {
 					$arr[] = array('id' => $genre->subGenreId, 'name' => $genre->subGenre);
 				}
-			} 
+			}
             else {
 				$arr[] = array('id' => '0', 'name' => 'No Data found.');
 			}
-			echo json_encode($arr);
-			exit;
+			return response()->json($arr);
 		}
 
         
@@ -604,19 +605,20 @@ class ClientsTrackController extends Controller
 		$clientdata = $this->clientAllDB_model->getClientsDetails_cld($clientId);
 		$headerOutput['wrapperClass'] = 'client';
 
-        if (isset($_GET['getSubGenres']) && isset($_GET['genreId'])) {
-			$subGenres = $this->clientAllDB_model->getSubGenres_cld($_GET['genreId']);
+        // SECURITY FIX: Use Laravel request instead of $_GET superglobal
+        if ($request->has('getSubGenres') && $request->has('genreId')) {
+			$genreId = (int) $request->input('genreId'); // Cast to int for safety
+			$subGenres = $this->clientAllDB_model->getSubGenres_cld($genreId);
 			if ($subGenres['numRows'] > 0) {
 				$arr[] = array('id' => '0', 'name' => 'Select Sub Genre');
 				foreach ($subGenres['data'] as $genre) {
 					$arr[] = array('id' => $genre->subGenreId, 'name' => $genre->subGenre);
 				}
-			} 
+			}
             else {
 				$arr[] = array('id' => '0', 'name' => 'No Data found.');
 			}
-			echo json_encode($arr);
-			exit;
+			return response()->json($arr);
 		}
 
         $track_data = DB::table('tracks_submitted')

@@ -196,9 +196,10 @@ class LoginController extends Controller
 		if($membertype == 'client'){
 
 			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
+			// Using parameterized whereRaw for case-insensitive username matching
 			$users = DB::table('clients')
 				->where(function($query) use ($username) {
-					$query->where(DB::raw('LOWER(uname)'), strtolower(trim($username)))
+					$query->whereRaw('LOWER(uname) = ?', [strtolower(trim($username))])
 						  ->orWhere('email', trim($username));
 				})
 				->where('deleted', 0)
@@ -244,9 +245,10 @@ class LoginController extends Controller
 		}else if($membertype == 'member'){
 
 			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
+			// Using parameterized whereRaw for case-insensitive username matching
 			$users = DB::table('members')
 				->where(function($query) use ($username) {
-					$query->where(DB::raw('LOWER(uname)'), strtolower(trim($username)))
+					$query->whereRaw('LOWER(uname) = ?', [strtolower(trim($username))])
 						  ->orWhere('email', trim($username));
 				})
 				->where('deleted', 0)
