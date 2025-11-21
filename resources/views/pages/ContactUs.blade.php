@@ -46,7 +46,7 @@
         <div class="row">
           <div class="col-md-6 col-sm-12">
             <div class="contact-form">
-              <h2>Send us a message</h2>
+              <h2>{{ __('Send us a message') }}</h2>
               @if(!empty($alert_message))
                    <div class="{{ $alert_class }}">
                         <p>{{ $alert_message }}</p>
@@ -55,17 +55,17 @@
               <form action="" method="post" id="contactusForm" autocomplete="off">
               	@csrf
                 <div class="form-group" >
-                  <input type="text" name="email" id="email" class="form-control" placeholder="Your email">
+                  <input type="text" name="email" id="email" class="form-control" placeholder="{{ __('Your email') }}">
                 </div>
                 <div class="form-group">
-                  <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject">
+                  <input type="text" name="subject" id="subject" class="form-control" placeholder="{{ __('Subject') }}">
                 </div>
                 <div class="form-group">
-                  <textarea class="form-control" name="message" id="message" placeholder="Message" rows="5"> </textarea>
+                  <textarea class="form-control" name="message" id="message" placeholder="{{ __('Message') }}" rows="5"> </textarea>
                 </div>
                 <div class="g-recaptcha" data-sitekey="6Lcz58IkAAAAAPpGChEJebu4NPUu4NhOvWk5so38"></div>
                 <div class="btn-submit">
-                <button class="btn btn-theme btn-gradient" type="submit" name="sendMessage" value="Send Message">Send message</button>
+                <button class="btn btn-theme btn-gradient" type="submit" name="sendMessage" value="Send Message">{{ __('Send message') }}</button>
                 
               </div>
               <span id="captcha" style="margin-left:100px;color:red" />
@@ -76,7 +76,7 @@
           </div>
           <div class="col-md-6 col-sm-12">
             <div class="contact-info">
-              <h2>Get in touch</h2>
+              <h2>{{ __('Get in touch') }}</h2>
 				<?php echo stripslashes(urldecode($getInTouchText[0]->meta_value)); ?>
             </div>
           </div>
