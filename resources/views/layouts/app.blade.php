@@ -268,6 +268,10 @@
 						 <li class="login"><a class="nav-link hidden-xs" href="{{ route('login') }}">{{ __('Login') }}</a></li>
 						<li class="signup"><a class="nav-link hidden-xs" href="{{ route('register') }}">{{ __('Register') }}</a></li>
                     @endif
+                    {{-- Language Switcher --}}
+                    <li class="nav-item" style="margin-left: 10px;">
+                        <x-language-switcher />
+                    </li>
                     <li class="menu-bar menu-btn"><a href="#"><img src="{{ asset('public/images/path/bar.png') }}" alt="bar"></a></li>
                   </ul>
                 </div>

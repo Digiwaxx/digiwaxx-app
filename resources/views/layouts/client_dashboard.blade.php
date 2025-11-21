@@ -435,12 +435,16 @@
                                             </div>
                                                 </li>
                                 @endif
-                            
-                                <li class="menu-bar menu-btn"><a href="#"><img src="{{ asset('public/images/path/bar.png') }}" alt="bar"></a></li>
-                              
 
-                          
-                      
+                                {{-- Language Switcher --}}
+                                <li class="nav-item" style="margin-left: 10px;">
+                                    <x-language-switcher />
+                                </li>
+                                <li class="menu-bar menu-btn"><a href="#"><img src="{{ asset('public/images/path/bar.png') }}" alt="bar"></a></li>
+
+
+
+
                   </ul>
 
                             </div>
