@@ -188,5 +188,30 @@
     "Postal Code": "郵便番号",
     "What city/town do you live in?": "どの市町村にお住まいですか？",
     "SELECT ANOTHER PACKAGE": "別のパッケージを選択",
-    "Thank you for submitting your profile!": "プロフィールをご提出いただきありがとうございます！"
+    "Thank you for submitting your profile!": "プロフィールをご提出いただきありがとうございます！",
+
+    "My Dashboard": "マイダッシュボード",
+    "ALL": "すべて",
+    "RATED": "評価済み",
+    "DOWNLOADED": "ダウンロード済み",
+    "COMMENTED": "コメント済み",
+    "PLAYED": "再生済み",
+
+    "My Record Pool": "マイレコードプール",
+    "Home": "ホーム",
+    "Promote your project": "プロジェクトを宣伝",
+    "Charts": "チャート",
+    "Digiwaxx Radio": "Digiwaxx Radio",
+    "Contact us": "お問い合わせ",
+    "MY TRACKS": "マイトラック",
+    "Start a Campaign": "キャンペーンを開始",
+    "Tracks": "トラック",
+    "Uploaded Track Versions": "アップロードしたトラックバージョン",
+    "Upload Your Music": "音楽をアップロード",
+    "Add article": "記事を追加",
+    "Messages": "メッセージ",
+    "My Label Reps": "マイレーベル担当者",
+    "My Info": "マイ情報",
+    "My Digicoins": "マイDigicoins",
+    "How to Tag Your Music": "音楽のタグ付け方法"
 }

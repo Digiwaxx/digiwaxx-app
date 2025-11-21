@@ -2,7 +2,7 @@
 
 <div class="album-d-sec my-tracks-cls">
 <?php if(count($rightTracks['data'])>0) { ?>
-<h5><i class="fa fa-music"></i> MY TRACKS</h5>
+<h5><i class="fa fa-music"></i> {{ __('MY TRACKS') }}</h5>
 <ul class="ul-mytraks">
 <?php 
 	$i=1;

@@ -188,5 +188,30 @@
     "Postal Code": "우편번호",
     "What city/town do you live in?": "어느 도시/마을에 거주하시나요?",
     "SELECT ANOTHER PACKAGE": "다른 패키지 선택",
-    "Thank you for submitting your profile!": "프로필을 제출해 주셔서 감사합니다!"
+    "Thank you for submitting your profile!": "프로필을 제출해 주셔서 감사합니다!",
+
+    "My Dashboard": "내 대시보드",
+    "ALL": "전체",
+    "RATED": "평가됨",
+    "DOWNLOADED": "다운로드됨",
+    "COMMENTED": "댓글",
+    "PLAYED": "재생됨",
+
+    "My Record Pool": "내 레코드 풀",
+    "Home": "홈",
+    "Promote your project": "프로젝트 홍보",
+    "Charts": "차트",
+    "Digiwaxx Radio": "Digiwaxx Radio",
+    "Contact us": "문의하기",
+    "MY TRACKS": "내 트랙",
+    "Start a Campaign": "캠페인 시작",
+    "Tracks": "트랙",
+    "Uploaded Track Versions": "업로드된 트랙 버전",
+    "Upload Your Music": "음악 업로드",
+    "Add article": "기사 추가",
+    "Messages": "메시지",
+    "My Label Reps": "내 레이블 담당자",
+    "My Info": "내 정보",
+    "My Digicoins": "내 Digicoins",
+    "How to Tag Your Music": "음악 태그 방법"
 }

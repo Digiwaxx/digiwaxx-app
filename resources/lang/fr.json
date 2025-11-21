@@ -188,5 +188,30 @@
     "Postal Code": "Code Postal",
     "What city/town do you live in?": "Dans quelle ville habitez-vous ?",
     "SELECT ANOTHER PACKAGE": "SÉLECTIONNER UN AUTRE FORFAIT",
-    "Thank you for submitting your profile!": "Merci d'avoir soumis votre profil !"
+    "Thank you for submitting your profile!": "Merci d'avoir soumis votre profil !",
+
+    "My Dashboard": "Mon Tableau de Bord",
+    "ALL": "TOUT",
+    "RATED": "NOTÉ",
+    "DOWNLOADED": "TÉLÉCHARGÉ",
+    "COMMENTED": "COMMENTÉ",
+    "PLAYED": "JOUÉ",
+
+    "My Record Pool": "Mon Pool de Disques",
+    "Home": "Accueil",
+    "Promote your project": "Promouvez votre projet",
+    "Charts": "Classements",
+    "Digiwaxx Radio": "Digiwaxx Radio",
+    "Contact us": "Contactez-nous",
+    "MY TRACKS": "MES PISTES",
+    "Start a Campaign": "Démarrer une Campagne",
+    "Tracks": "Pistes",
+    "Uploaded Track Versions": "Versions des Pistes Téléchargées",
+    "Upload Your Music": "Téléchargez Votre Musique",
+    "Add article": "Ajouter un article",
+    "Messages": "Messages",
+    "My Label Reps": "Mes Représentants de Label",
+    "My Info": "Mes Informations",
+    "My Digicoins": "Mes Digicoins",
+    "How to Tag Your Music": "Comment Étiqueter Votre Musique"
 }
