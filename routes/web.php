@@ -20,33 +20,30 @@ use App\Http\Controllers\AdminAddTracksController;
 |
 */
 
+// SECURITY FIX: Protected cache clearing route - requires admin session
 Route::get('/clear-cache', function() {
-	$exitCode1 = \Artisan::call('config:cache');
-    $exitCode2 = \Artisan::call('config:clear'); 
+    // Check if admin is logged in
+    if (!session()->has('admin_id') && !session()->has('admin_logged_in')) {
+        abort(403, 'Unauthorized access. Admin login required.');
+    }
+
+    $exitCode1 = \Artisan::call('config:cache');
+    $exitCode2 = \Artisan::call('config:clear');
     $exitCode3 = \Artisan::call('cache:clear');
     $exitCode4 = \Artisan::call('view:clear');
-    
     $exitCode = \Artisan::call('optimize:clear');
 
-	echo $exitCode1;
-
-	echo '<br>';
-
-	echo $exitCode2;
-
-	echo '<br>';
-
-	echo $exitCode3;
-
-	echo '<br>';
-
-	echo $exitCode4;echo '<br>';
-	echo $exitCode;echo '<br>';
-
-	die("Cache cleared.");
-
-    // return what you want
-
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Cache cleared successfully',
+        'results' => [
+            'config:cache' => $exitCode1,
+            'config:clear' => $exitCode2,
+            'cache:clear' => $exitCode3,
+            'view:clear' => $exitCode4,
+            'optimize:clear' => $exitCode
+        ]
+    ]);
 });
 
 Route::get('/', 'App\Http\Controllers\Auth\LoginController@login')->name('home');

@@ -98,7 +98,7 @@
                                             @if (\Session::has('danger'))
                                             <div class="alert alert-danger">
                                                 <ul>
-                                                    <li>{!! \Session::get('danger') !!}</li>
+                                                    <li>{{ \Session::get('danger') }}</li>
                                                 </ul>
                                             </div>
                                          @endif
@@ -106,7 +106,7 @@
 										 @if (\Session::has('danger_no_email'))
                                             <div class="alert alert-danger">
                                                 <ul>
-                                                    <li>{!! \Session::get('danger_no_email') !!}</li>
+                                                    <li>{{ \Session::get('danger_no_email') }}</li>
                                                 </ul>
                                             </div>
                                          @endif
@@ -114,7 +114,7 @@
 										 @if (\Session::has('success_avail_email'))
                                             <div class="alert alert-success">
                                                 <ul>
-                                                    <li>{!! \Session::get('success_avail_email') !!}</li>
+                                                    <li>{{ \Session::get('success_avail_email') }}</li>
                                                 </ul>
                                             </div>
                                          @endif
@@ -122,7 +122,7 @@
 										 @if (\Session::has('password_changed'))
 										<div class="alert alert-success">
 										<ul>
-											<li>{!! \Session::get('password_changed') !!}</li>
+											<li>{{ \Session::get('password_changed') }}</li>
 										</ul>
 										</div>
 										@endif
