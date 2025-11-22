@@ -1,0 +1,464 @@
+/* Digiwaxx Custom Overrides */
+
+/* Dashboard specific styles */
+.client .wrapper {
+    background: #0a0a0a;
+}
+
+.client header {
+    background: transparent;
+    border-bottom: none;
+}
+
+/* Client Dashboard Sidebar */
+.sidebar-menu {
+    background: #111;
+}
+
+.sidebar-menu .nav-link {
+    color: #ccc;
+    padding: 12px 20px;
+    display: block;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-menu .nav-link:hover,
+.sidebar-menu .nav-link.active {
+    color: #f98cd4;
+    background: rgba(249, 140, 212, 0.1);
+    border-left-color: #f98cd4;
+}
+
+.sidebar-menu .nav-link i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Member Dashboard specific */
+.member-dashboard {
+    background: #0d0d0d;
+}
+
+.member-dashboard .card {
+    background: #151515;
+    border-color: #252525;
+}
+
+/* Track Upload */
+.upload-area {
+    border: 2px dashed #333;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    background: #151515;
+    transition: all 0.3s;
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+    border-color: #f98cd4;
+    background: rgba(249, 140, 212, 0.05);
+}
+
+.upload-area i {
+    font-size: 48px;
+    color: #f98cd4;
+    margin-bottom: 15px;
+}
+
+.upload-area p {
+    color: #888;
+    margin: 0;
+}
+
+/* Track List Items */
+.track-row {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: all 0.3s;
+}
+
+.track-row:hover {
+    background: #222;
+    transform: translateX(5px);
+}
+
+.track-row .play-btn {
+    width: 40px;
+    height: 40px;
+    background: #f98cd4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.track-row .play-btn i {
+    color: #fff;
+}
+
+.track-row .track-thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.track-row .track-details {
+    flex: 1;
+}
+
+.track-row .track-name {
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.track-row .track-meta {
+    font-size: 12px;
+    color: #888;
+}
+
+.track-row .track-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.track-row .track-actions .btn {
+    padding: 8px 15px;
+    font-size: 12px;
+}
+
+/* Stats Cards */
+.stat-card {
+    background: linear-gradient(135deg, #1a1a1a, #222);
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.stat-card .stat-icon {
+    font-size: 36px;
+    color: #f98cd4;
+    margin-bottom: 15px;
+}
+
+.stat-card .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-card .stat-label {
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+/* Digicoins */
+.digicoin-balance {
+    background: linear-gradient(135deg, #f98cd4, #e066b3);
+    border-radius: 10px;
+    padding: 20px;
+    color: #fff;
+}
+
+.digicoin-balance .balance-amount {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.digicoin-balance .balance-label {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Feedback Section */
+.feedback-item {
+    background: #151515;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 3px solid #f98cd4;
+}
+
+.feedback-item .feedback-author {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.feedback-item .feedback-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.feedback-item .feedback-author .author-name {
+    font-weight: 600;
+}
+
+.feedback-item .feedback-author .author-role {
+    font-size: 12px;
+    color: #888;
+}
+
+.feedback-item .feedback-text {
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.feedback-item .feedback-rating {
+    margin-top: 10px;
+}
+
+.feedback-item .feedback-rating i {
+    color: #ffc107;
+}
+
+/* World Map */
+#world-map-1 {
+    height: 300px;
+    background: #1a1a1a;
+    border-radius: 8px;
+}
+
+/* Custom Select */
+.bootstrap-select .btn {
+    background: #222 !important;
+    border-color: #333 !important;
+    color: #fff !important;
+}
+
+.bootstrap-select .dropdown-menu {
+    background: #222;
+    border-color: #333;
+}
+
+.bootstrap-select .dropdown-item {
+    color: #fff;
+}
+
+.bootstrap-select .dropdown-item:hover {
+    background: #333;
+}
+
+/* Tab Navigation */
+.nav-tabs {
+    border-bottom: 1px solid #333;
+}
+
+.nav-tabs .nav-link {
+    color: #888;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 10px 20px;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #fff;
+    border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: #f98cd4;
+    background: transparent;
+    border-bottom-color: #f98cd4;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+/* Badge Styles */
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-success { background: #28a745; color: #fff; }
+.badge-warning { background: #ffc107; color: #000; }
+.badge-danger { background: #dc3545; color: #fff; }
+.badge-info { background: #17a2b8; color: #fff; }
+.badge-primary { background: #f98cd4; color: #000; }
+
+/* Progress Bars */
+.progress {
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #f98cd4, #e066b3);
+    height: 100%;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Dropzone customization */
+.dropzone {
+    background: #151515;
+    border: 2px dashed #333;
+    border-radius: 10px;
+    min-height: 200px;
+}
+
+.dropzone:hover {
+    border-color: #f98cd4;
+}
+
+.dropzone .dz-message {
+    color: #888;
+}
+
+.dropzone .dz-preview .dz-details {
+    background: #222;
+}
+
+/* Campaign Modal */
+#alertModal_campaign .modal-dialog {
+    max-width: 95%;
+}
+
+#alertModal_campaign .modal-content {
+    background: #0d0d0d;
+}
+
+/* Client specific overrides */
+.client-wrapper {
+    display: flex;
+}
+
+.client-sidebar {
+    width: 250px;
+    background: #111;
+    min-height: calc(100vh - 70px);
+}
+
+.client-content {
+    flex: 1;
+    padding: 30px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #333;
+    transition: 0.3s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background: #f98cd4;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 64px;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.empty-state h3 {
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+}

@@ -1,0 +1,34 @@
+/* jPlayer Main Custom Styles for Digiwaxx */
+.jp-video {
+    margin: 0 auto;
+}
+.jp-video-270p .jp-jplayer {
+    width: 100%;
+    height: auto;
+}
+#jp_container_1 {
+    max-width: 100%;
+    margin: 20px auto;
+}
+.jp-gui {
+    position: relative;
+}
+.jp-controls-holder .jp-image {
+    float: left;
+    margin-right: 15px;
+}
+.jp-controls-holder .jp-details {
+    float: left;
+    width: calc(100% - 200px);
+}
+@media (max-width: 768px) {
+    .jp-controls-holder .jp-details {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .jp-controls-holder .jp-image {
+        float: none;
+        margin: 0 auto 10px;
+        text-align: center;
+    }
+}

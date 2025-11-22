@@ -1,0 +1,391 @@
+/* Digiwaxx Responsive Styles */
+
+/* Extra Large Devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* Large Devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .container {
+        max-width: 960px;
+    }
+
+    .dso-item h3 {
+        font-size: 18px;
+    }
+
+    .dso-item .price .amt {
+        font-size: 28px;
+    }
+}
+
+/* Medium Devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        max-width: 720px;
+    }
+
+    .header-nav ul {
+        gap: 10px;
+    }
+
+    .header-nav ul li a {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .add-banner {
+        display: none;
+    }
+
+    .dso-item {
+        margin-bottom: 20px;
+    }
+
+    .sidebar-left {
+        width: 200px;
+    }
+}
+
+/* Small Devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .container {
+        max-width: 540px;
+    }
+
+    .header-nav ul li.login,
+    .header-nav ul li.signup {
+        display: none;
+    }
+
+    .menu-bar {
+        display: block !important;
+    }
+
+    .add-banner {
+        display: none;
+    }
+
+    .dso-sec h2 {
+        font-size: 22px;
+    }
+
+    .dso-item {
+        margin-bottom: 20px;
+    }
+
+    .sidebar-left {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+}
+
+/* Extra Small Devices (portrait phones, less than 576px) */
+@media (max-width: 575px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Header */
+    header .row {
+        align-items: center;
+    }
+
+    .logo img {
+        max-height: 40px;
+    }
+
+    .header-nav ul li.login,
+    .header-nav ul li.signup,
+    .header-nav ul li:not(.menu-bar):not(.nav-item) {
+        display: none;
+    }
+
+    .menu-bar {
+        display: block !important;
+    }
+
+    .add-banner {
+        display: none;
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .d-none.d-sm-inline-block {
+        display: none !important;
+    }
+
+    /* Main Content */
+    main {
+        padding: 20px 0;
+    }
+
+    /* Pricing Section */
+    .dso-sec {
+        padding: 20px 0;
+    }
+
+    .dso-sec h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .dso-item {
+        margin-bottom: 15px;
+        padding: 20px;
+    }
+
+    .dso-item h3 {
+        font-size: 18px;
+    }
+
+    .dso-item .price .amt {
+        font-size: 28px;
+    }
+
+    .dso-item ul li {
+        font-size: 12px;
+    }
+
+    /* Sidebar */
+    .sidebar-left {
+        display: none;
+    }
+
+    .sidebar-left.show {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 9998;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    /* Track Items */
+    .track-row {
+        flex-wrap: wrap;
+    }
+
+    .track-row .play-btn {
+        width: 35px;
+        height: 35px;
+    }
+
+    .track-row .track-thumb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .track-row .track-details {
+        width: calc(100% - 110px);
+    }
+
+    .track-row .track-actions {
+        width: 100%;
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+
+    /* jPlayer */
+    .jp-controls-holder {
+        flex-wrap: wrap;
+    }
+
+    .jp-controls-holder .jp-image {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .jp-controls-holder .jp-details {
+        width: 100%;
+        text-align: center;
+    }
+
+    .jp-timer {
+        flex-wrap: wrap;
+    }
+
+    .jp-toggles,
+    .jp-volume-controls {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    /* Stats Cards */
+    .stat-card {
+        margin-bottom: 15px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 24px;
+    }
+
+    /* Forms */
+    .form-control {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+
+    /* Tables */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table th,
+    .table td {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    /* Modal */
+    .modal-dialog {
+        margin: 10px;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    #alertModal_campaign .modal-dialog {
+        max-width: 100%;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 30px 0 15px;
+    }
+
+    .footer .menu a {
+        display: block;
+        margin: 10px 0;
+    }
+
+    /* Charts */
+    .chart-item {
+        flex-wrap: wrap;
+    }
+
+    .chart-rank {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+
+    /* Upload Area */
+    .upload-area {
+        padding: 30px 20px;
+    }
+
+    .upload-area i {
+        font-size: 36px;
+    }
+
+    /* Feedback */
+    .feedback-item {
+        padding: 15px;
+    }
+
+    .feedback-item .feedback-author img {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* World Map */
+    #world-map-1 {
+        height: 200px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar-left,
+    .header-nav,
+    .menu-con,
+    .processing_loader_gif {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+        color: #000;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+    }
+}
+
+/* Hidden classes for different breakpoints */
+@media (max-width: 575px) {
+    .hidden-xs { display: none !important; }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .hidden-sm { display: none !important; }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .hidden-md { display: none !important; }
+}
+
+@media (min-width: 992px) {
+    .hidden-lg { display: none !important; }
+}
+
+/* Visible only classes */
+@media (max-width: 575px) {
+    .visible-xs { display: block !important; }
+}
+
+@media (min-width: 576px) {
+    .visible-xs { display: none !important; }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover {
+        transform: none;
+    }
+
+    .track-row:hover {
+        transform: none;
+    }
+
+    .dso-item:hover {
+        transform: none;
+    }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
