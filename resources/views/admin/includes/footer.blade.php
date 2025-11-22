@@ -332,14 +332,35 @@
 
 
 
+    // SECURITY FIX: Use POST with CSRF token instead of GET for delete operations
     function deleteRecord(page, did, msg) {
-
         if (confirm(msg)) {
+            // Create a form dynamically with CSRF token
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = page;
+            form.style.display = 'none';
 
-            window.location = page + "?did=" + did;
+            // Add CSRF token
+            var csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken.getAttribute('content');
+                form.appendChild(csrfInput);
+            }
 
+            // Add delete ID
+            var didInput = document.createElement('input');
+            didInput.type = 'hidden';
+            didInput.name = 'did';
+            didInput.value = did;
+            form.appendChild(didInput);
+
+            document.body.appendChild(form);
+            form.submit();
         }
-
     }
 
     
@@ -398,14 +419,35 @@
 
 
 
+    // SECURITY FIX: Use POST with CSRF token instead of GET for delete operations
     function deleteRecord1(page, did, msg) {
-
         if (confirm(msg)) {
+            // Create a form dynamically with CSRF token
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = page;
+            form.style.display = 'none';
 
-            window.location = page + "did=" + did;
+            // Add CSRF token
+            var csrfToken = document.querySelector('meta[name="csrf-token"]');
+            if (csrfToken) {
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken.getAttribute('content');
+                form.appendChild(csrfInput);
+            }
 
+            // Add delete ID
+            var didInput = document.createElement('input');
+            didInput.type = 'hidden';
+            didInput.name = 'did';
+            didInput.value = did;
+            form.appendChild(didInput);
+
+            document.body.appendChild(form);
+            form.submit();
         }
-
     }
 
 

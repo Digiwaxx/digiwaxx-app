@@ -20,7 +20,7 @@
                                 <div class="music-icon">
                                     <img src="{{ asset('public/images/path/music-icon.png') }}" class="img-fluid">
                                 </div>
-                                <h2 class="text-center">Create a Member Account</h2>
+                                <h2 class="text-center">{{ __('Create a Member Account') }}</h2>
 
                             </div>
 
@@ -38,14 +38,14 @@
                                 </div>
                                 <div class="package_info">
 
-                                    <p class="package_type text-center">PACKAGE TYPE - <?php echo $package_type; ?></p>
+                                    <p class="package_type text-center">{{ __('PACKAGE TYPE') }} - <?php echo $package_type; ?></p>
 
-                                    <p class="package_price text-center">PACKAGE PRICE - <?php if (!empty($package_price)) {
+                                    <p class="package_price text-center">{{ __('PACKAGE PRICE') }} - <?php if (!empty($package_price)) {
                                                                                                 echo "$" . $package_price;
                                                                                             } else {
-                                                                                                echo "FREE";
+                                                                                                echo __('FREE');
                                                                                             } ?></p>
-                                    <p class="package_features">PACKAGE FEATURES-
+                                    <p class="package_features">{{ __('PACKAGE FEATURES') }} -
                                     <ul class="pck_fea">
                                         <?php foreach ($package_features as $key => $value) {
                                             echo '<li>';
@@ -57,11 +57,11 @@
 
                                     </p>
                                     <p class="package_link">
-                                        <a href="{{route('package_selection_registration')}}"><button type="button" class="btn btn-link">SELECT ANOTHER PACKAGE</button></a>
+                                        <a href="{{route('package_selection_registration')}}"><button type="button" class="btn btn-link">{{ __('SELECT ANOTHER PACKAGE') }}</button></a>
                                     </p>
                                 </div>
                                 <div class="follow-us">
-                                    <p>Follow us on:</p>
+                                    <p>{{ __('Follow us on:') }}</p>
                                     <ul class="social-icons">
                                         <li><a href="https://www.facebook.com/digiwaxx" target="_blank"><i class="fab fa-facebook"></i></a></li>
                                         <li><a href="https://www.instagram.com/digiwaxx" target="_blank"><i class="fab fa-instagram"></i></a></li>
@@ -72,7 +72,7 @@
 
                                 <div class="btn-center">
                                     <?php if ($package_id == 7) { ?>
-                                        <input name="addMember4" class="login_btn btn btn-theme btn-gradient" value="CONFIRM PACKAGE" type="submit">
+                                        <input name="addMember4" class="login_btn btn btn-theme btn-gradient" value="{{ __('CONFIRM PACKAGE') }}" type="submit">
                                     <?php } ?>
                                 </div>
                             </form>

@@ -1,5 +1,5 @@
 <div class="left-sidebar">
-	<div class="sidebar-heading">My Record Pool</div> 
+	<div class="sidebar-heading">{{ __('My Record Pool') }}</div> 
 
 	 <div class="menu-first">
 		@include('clients.dashboard.includes.client_menu-left') 
@@ -8,22 +8,22 @@
 	   <div class="menu-second">
 	   <ul class="menu-default">
 		 <li>
-		   <a href="https://digiwaxx.com"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> Home</a>
+		   <a href="https://digiwaxx.com"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> {{ __('Home') }}</a>
 		 </li>
 		 <li>
-		   <a href="{{ url('/PromoteYourProject') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> Promote your project</a>
+		   <a href="{{ url('/PromoteYourProject') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> {{ __('Promote your project') }}</a>
 		 </li>
 		 <li>
-		   <a href="{{ url('/Charts') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> Charts</a>
+		   <a href="{{ url('/Charts') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> {{ __('Charts') }}</a>
 		 </li>
 		 <li>
-		   <a href="https://digiwaxxradio.com"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> Digiwaxx Radio</a>
+		   <a href="https://digiwaxxradio.com"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> {{ __('Digiwaxx Radio') }}</a>
 		 </li>
 		 <!-- <li>-->
 		 <!--  <a href="{{ url('/client_payment_history') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span>Payment History</a>-->
 		 <!--</li>-->
 		 <li>
-		   <a href="{{ url('/Contactus') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> Contact us</a>
+		   <a href="{{ url('/Contactus') }}"><span class="li-icon"><i class="fas fa-chevron-right"></i></span> {{ __('Contact us') }}</a>
 		 </li>             
 		 
 	   </ul>

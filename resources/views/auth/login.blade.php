@@ -29,7 +29,7 @@
                                         </form>
                                     </div> -->
                                     <div class="follow-icons-login-page">
-                                        <p>Follow us on:</p>
+                                        <p>{{ __('Follow us on:') }}</p>
                                         <ul class="social-icons-edit">
                                             <li><a href="https://www.facebook.com/digiwaxx" target="_blank"><i class="fab fa-facebook"></i></a></li>
                                             <li><a href="https://www.instagram.com/digiwaxx" target="_blank"><i class="fab fa-instagram"></i></a></li>
@@ -50,13 +50,13 @@
                                             <?php echo $success; ?>
                                         </div>
                                     <?php } ?>
-                                    <h3 class="text-center">Please select account type</h3>
+                                    <h3 class="text-center">{{ __('Please select account type') }}</h3>
                                     <form action="" method="post" id="loginForm">
                                         <div class="form-check">
                                             <input type="radio" name="type" onclick="navigate('member')" class="form-check-input" id="loginMember">
                                             <!-- <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"> -->
                                             <label for="loginMember" class="form-check-label" for="flexRadioDefault1">
-                                                DJ's/Members
+                                                {{ __("DJ's/Members") }}
                                             </label>
                                         </div>
                                         <div class="form-check">
@@ -64,7 +64,7 @@
 
                                             <!-- <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked> -->
                                             <label for="loginClient" class="form-check-label" for="flexRadioDefault2">
-                                                Artists/Promoters
+                                                {{ __('Artists/Promoters') }}
                                             </label>
                                         </div>
                                         <!-- <div class="form-group text-center">
@@ -114,7 +114,7 @@
 
                                             <div class="form-group reg-email">
                                                 <div class="">
-                                                    <input id="email" type="text" placeholder="Username or email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                                    <input id="email" type="text" placeholder="{{ __('Username or email') }}" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                                     @error('email')
                                                     <span class="invalid-feedback" role="alert">
@@ -128,7 +128,7 @@
                                             <div class="form-group reg-password">
                                                 <div class="">
                                                     <div class="login-pass-digi">
-                                                        <input id="password" type="password" placeholder="Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                                        <input id="password" type="password" placeholder="{{ __('Password') }}" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
                                                         <i class="far fa-eye" id="togglePassword" onclick="myFunction()"></i>
                                                     </div>
                                                     @error('password')
@@ -148,7 +148,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="pull-right fyp"><a href="{{ url('forgot-password') }}">
-                                                        Forgot Your Password?
+                                                        {{ __('Forgot Your Password?') }}
                                                     </a></div>
                                             </div>
 
@@ -159,14 +159,14 @@
                                             </div>
                                         </form>
 
-                                        <div class="or">OR</div>
+                                        <div class="or">{{ __('OR') }}</div>
                                         <div class="modal-footer">
-                                            <p>DON'T HAVE AN CLIENT ACCOUNT? <a href="{{ url('Client_registration_step1') }}">SIGNUP</a> </p>
-                                            <p>DON'T HAVE AN MEMBER (DJ) ACCOUNT? <a href="{{ url('Member_registration_step1') }}">SIGNUP</a></p>
-                                            <p style="text-transform: uppercase;"><a href='#'>CLICK HERE</a> IF YOU WANT TO JOIN OUR MUSIC TEAM. </p>
-                                            <p style="text-transform: uppercase;"><a href='#'>CLICK HERE</a> IF YOU WANT TO BE A GUEST DJ ON DIGIWAXX RADIO. </p>
-                                            <p style="text-transform: uppercase;"><a href='#'>CLICK HERE</a> IF YOU WANT TO HAVE YOUR STATION JOIN THE DIGIWAXX RADIO NETWORK. </p>
-                                            <p style="text-transform: uppercase;">Email support at <a href='mailto:admin@digiwaxx.com'>admin@digiwaxx.com</a> or create a support ticket.</p>
+                                            <p>{{ __("DON'T HAVE A CLIENT ACCOUNT?") }} <a href="{{ url('Client_registration_step1') }}">{{ __('SIGNUP') }}</a> </p>
+                                            <p>{{ __("DON'T HAVE A MEMBER (DJ) ACCOUNT?") }} <a href="{{ url('Member_registration_step1') }}">{{ __('SIGNUP') }}</a></p>
+                                            <p style="text-transform: uppercase;"><a href='#'>{{ __('CLICK HERE') }}</a> {{ __('IF YOU WANT TO JOIN OUR MUSIC TEAM.') }} </p>
+                                            <p style="text-transform: uppercase;"><a href='#'>{{ __('CLICK HERE') }}</a> {{ __('IF YOU WANT TO BE A GUEST DJ ON DIGIWAXX RADIO.') }} </p>
+                                            <p style="text-transform: uppercase;"><a href='#'>{{ __('CLICK HERE') }}</a> {{ __('IF YOU WANT TO HAVE YOUR STATION JOIN THE DIGIWAXX RADIO NETWORK.') }} </p>
+                                            <p style="text-transform: uppercase;">{{ __('Email support at') }} <a href='mailto:admin@digiwaxx.com'>admin@digiwaxx.com</a> {{ __('or create a support ticket.') }}</p>
                                         </div>
                                     </div>
                                 </div>

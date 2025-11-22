@@ -20,33 +20,30 @@ use App\Http\Controllers\AdminAddTracksController;
 |
 */
 
+// SECURITY FIX: Protected cache clearing route - requires admin session
 Route::get('/clear-cache', function() {
-	$exitCode1 = \Artisan::call('config:cache');
-    $exitCode2 = \Artisan::call('config:clear'); 
+    // Check if admin is logged in
+    if (!session()->has('admin_id') && !session()->has('admin_logged_in')) {
+        abort(403, 'Unauthorized access. Admin login required.');
+    }
+
+    $exitCode1 = \Artisan::call('config:cache');
+    $exitCode2 = \Artisan::call('config:clear');
     $exitCode3 = \Artisan::call('cache:clear');
     $exitCode4 = \Artisan::call('view:clear');
-    
     $exitCode = \Artisan::call('optimize:clear');
 
-	echo $exitCode1;
-
-	echo '<br>';
-
-	echo $exitCode2;
-
-	echo '<br>';
-
-	echo $exitCode3;
-
-	echo '<br>';
-
-	echo $exitCode4;echo '<br>';
-	echo $exitCode;echo '<br>';
-
-	die("Cache cleared.");
-
-    // return what you want
-
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Cache cleared successfully',
+        'results' => [
+            'config:cache' => $exitCode1,
+            'config:clear' => $exitCode2,
+            'cache:clear' => $exitCode3,
+            'view:clear' => $exitCode4,
+            'optimize:clear' => $exitCode
+        ]
+    ]);
 });
 
 Route::get('/', 'App\Http\Controllers\Auth\LoginController@login')->name('home');
@@ -733,5 +730,65 @@ Route::any('/submitted_tracks_versions_edit/{tid?}', 'App\Http\Controllers\Admin
 	//Route::any('Charts', 'App\Http\Controllers\AdminController@viewChartsPage');   // ***** remove previous charts route
 	Route::any('Charts', 'App\Http\Controllers\PagesController@viewChartsPage')->name('Charts');   // ***** remove previous charts route
 	Route::post('/ai/ask', [App\Http\Controllers\AIController::class, 'ask']);
+
+/*
+|--------------------------------------------------------------------------
+| Subscription & Pricing Routes (New Pricing Tiers)
+|--------------------------------------------------------------------------
+*/
+
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\StripeWebhookController;
+
+// Public pricing page - shows all tiers with monthly/annual toggle
+Route::get('/pricing', [SubscriptionController::class, 'pricing'])->name('pricing');
+
+// Subscription checkout routes (requires authentication)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/subscribe/{tier}/{billing}', [SubscriptionController::class, 'checkout'])
+        ->name('subscribe.checkout')
+        ->where(['tier' => 'free|artist|label', 'billing' => 'monthly|annual']);
+    Route::get('/subscribe/success', [SubscriptionController::class, 'success'])->name('subscribe.success');
+    Route::get('/subscribe/cancel', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel');
+    Route::get('/subscription', [SubscriptionController::class, 'manage'])->name('subscription.manage');
+    Route::post('/subscription/upgrade', [SubscriptionController::class, 'upgrade'])->name('subscription.upgrade');
+    Route::post('/subscription/cancel', [SubscriptionController::class, 'cancelSubscription'])->name('subscription.cancel');
+    Route::post('/subscription/resume', [SubscriptionController::class, 'resume'])->name('subscription.resume');
+    Route::get('/billing-portal', [SubscriptionController::class, 'billingPortal'])->name('billing.portal');
+    Route::get('/subscription/upload-usage', [SubscriptionController::class, 'uploadUsage'])->name('subscription.upload-usage');
+});
+
+// Stripe Webhook
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
+    ->name('stripe.webhook')
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
+// API Routes for Upload Limit Checking
+Route::middleware(['auth'])->prefix('api')->group(function () {
+    Route::get('/can-upload', [SubscriptionController::class, 'canUpload'])->name('api.can-upload');
+    Route::get('/subscription-info', [SubscriptionController::class, 'subscriptionInfo'])->name('api.subscription-info');
+});
+
+/*
+|--------------------------------------------------------------------------
+| LOCALIZED ROUTES (Multi-Language Support)
+|--------------------------------------------------------------------------
+*/
+
+if (config('localization.enabled', false)) {
+    Route::prefix('{locale}')
+        ->where(['locale' => 'es|pt|fr|de|ja|ko'])
+        ->group(function () {
+            Route::get('/pricing', [SubscriptionController::class, 'pricing'])->name('pricing.localized');
+            Route::middleware(['auth'])->group(function () {
+                Route::get('/subscribe/{tier}/{billing}', [SubscriptionController::class, 'checkout'])
+                    ->name('subscribe.checkout.localized')
+                    ->where(['tier' => 'free|artist|label', 'billing' => 'monthly|annual']);
+                Route::get('/subscribe/success', [SubscriptionController::class, 'success'])->name('subscribe.success.localized');
+                Route::get('/subscribe/cancel', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel.localized');
+                Route::get('/subscription', [SubscriptionController::class, 'manage'])->name('subscription.manage.localized');
+            });
+        });
+}
 
 ?>

@@ -17,7 +17,7 @@
 @if (\Session::has('password_changed'))
 <div class="alert alert-success">
 <ul>
-    <li>{!! \Session::get('password_changed') !!}</li>
+    <li>{{ \Session::get('password_changed') }}</li>
 </ul>
 </div>
 @endif
