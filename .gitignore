@@ -6,3 +6,15 @@ AUDIO/
 AUDIO_new/
 VIDEO/
 my_sg_audio/
+
+# Laravel standard ignores
+/vendor/
+/node_modules/
+.env
+.env.backup
+.phpunit.result.cache
+storage/*.key
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
