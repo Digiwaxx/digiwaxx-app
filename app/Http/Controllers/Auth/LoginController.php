@@ -230,20 +230,26 @@ class LoginController extends Controller
 			}
 
 			if(!empty($users) && count($users)>0 && $passwordValid){
-								
+
 				$result['type'] = 1;
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
-				$upData = array(
-					'userLocation' => $request->ip(),
-					'lastlogon' => date('Y-m-d H:i:s'),
 
-				);
+				// Update last login info (non-critical - don't let this break the login)
+				try {
+					$upData = array(
+						'userLocation' => $request->ip() ?? '',
+						'lastlogon' => date('Y-m-d H:i:s'),
+					);
 
-				$resQry = DB::table('clients')
-				->where('id', $users[0]->id)  // find your user by their email
-				->limit(1)  // optional - to ensure only one record is updated.
-				->update($upData);  // update the record in the DB.
+					DB::table('clients')
+						->where('id', $users[0]->id)
+						->limit(1)
+						->update($upData);
+				} catch (\Exception $e) {
+					// Log error but don't prevent login
+					\Log::warning('Failed to update client login info: ' . $e->getMessage());
+				}
 
 			}else{
 				return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
@@ -264,28 +270,43 @@ class LoginController extends Controller
 			// Verify password using migration helper (supports both MD5 and bcrypt)
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
-				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
-					trim($password),
-					$users[0]->pword,
-					'members',
-					$users[0]->id
-				);
+				try {
+					$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
+						trim($password),
+						$users[0]->pword,
+						'members',
+						$users[0]->id
+					);
+				} catch (\Exception $e) {
+					\Log::error('Member password verification failed: ' . $e->getMessage(), [
+						'user_id' => $users[0]->id ?? 'unknown'
+					]);
+					$passwordValid = false;
+				}
+			} else {
+				\Log::info('Member login: No user found for username', ['username' => $username]);
 			}
 
 			if(!empty($users) && count($users)>0 && $passwordValid){
 				$result['type'] = 2;
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
-				$upData = array(
-					'userLocation' => $request->ip(),
-					'lastlogon' => date('Y-m-d H:i:s'),
 
-				);
+				// Update last login info (non-critical - don't let this break the login)
+				try {
+					$upData = array(
+						'userLocation' => $request->ip() ?? '',
+						'lastlogon' => date('Y-m-d H:i:s'),
+					);
 
-				$resQry = DB::table('members')
-				->where('id', $users[0]->id)  // find your user by their email
-				->limit(1)  // optional - to ensure only one record is updated.
-				->update($upData);  // update the record in the DB.
+					DB::table('members')
+						->where('id', $users[0]->id)
+						->limit(1)
+						->update($upData);
+				} catch (\Exception $e) {
+					// Log error but don't prevent login
+					\Log::warning('Failed to update member login info: ' . $e->getMessage());
+				}
 
 			}else{
 				return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
