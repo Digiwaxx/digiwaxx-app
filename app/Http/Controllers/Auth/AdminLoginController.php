@@ -37,21 +37,21 @@ public function validate_admin_login(Request $request){
 if ($request->isMethod('post')) {
   //  return true;
 
-  $this->validate($request,[ 
-    // 'email' => 'required|email',
+  $this->validate($request,[
+    'email' => 'required|string',
     'password' => 'required|min:6',
 
   ]);
 
   $email_get = $request->email;
-  if(!empty($request->email)){
-    $query = DB::table('admins')
 
-            ->select(DB::raw('admins.email as email, admins.id as id, admins.user_role as user_role'))
-            ->where('admins.email', '=', $email_get)->orWhere('admins.uname','=',$email_get);           
-   }
+  // Query for admin user by email or username
+  $query = DB::table('admins')
+          ->select(DB::raw('admins.email as email, admins.id as id, admins.user_role as user_role'))
+          ->where('admins.email', '=', $email_get)
+          ->orWhere('admins.uname', '=', $email_get);
 
-       $result = $query->first();
+  $result = $query->first();
 
 //   if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember) ){
   if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember) || Auth::guard('admin')->attempt(['uname' => $request->email, 'password' => $request->password], $request->remember)){
