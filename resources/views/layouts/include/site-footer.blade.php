@@ -8,14 +8,15 @@
           $get_logo = '';
 
           $logo_details = DB::table('website_logo')->where('logo_id', 1)->first();
-          if (!empty($logo_details) && !empty($logo_details->pCloudFileID)) {
-            $get_logo = $logo_details->pCloudFileID;
+          // Use local logo field instead of pCloudFileID
+          if (!empty($logo_details) && !empty($logo_details->logo)) {
+            $get_logo = $logo_details->logo;
           }
 
           ?>
           <div class="foot-logo">
             <?php if (!empty($get_logo)) { ?>
-              <a href="https://digiwaxx.com"><img src="<?php echo url('/pCloudImgDownload.php?fileID=' . $get_logo); ?>" class="img-fluid"></a>
+              <a href="https://digiwaxx.com"><img src="<?php echo asset('public/images/' . $get_logo); ?>" class="img-fluid"></a>
             <?php   } else { ?>
               <a href="https://digiwaxx.com"><img src="{{ asset('public/images/logo.png') }}" class="img-fluid"></a>
             <?php    } ?>
