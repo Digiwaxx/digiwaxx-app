@@ -182,36 +182,30 @@
                   <ul>
                     @if(Session::has('clientId') || Session::has('tempClientId') || Session::has('memberId') || Session::has('tempMemberId'))
 					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-						<?php 
-								
+						<?php
+
 							$memberImage_get = Session::get('memberImage');
 							$memberId = Session::get('memberId');
-							
+
 							$clientImage_get = Session::get('clientImage');
 							$clientId=Session::get('clientId');
-							
+
 							if(!empty($memberId)){
-						    
-    							if(is_numeric($memberImage_get)){
-    							    $img= url('/pCloudImgDownload.php?fileID='.$memberImage_get);
-    							}
-    						    else if (strlen($memberImage_get) > 4) {
+
+    						    if (!empty($memberImage_get) && strlen($memberImage_get) > 4) {
     								$img = asset("member_images/" . $memberId . "/" . $memberImage_get);
     							} else {
     								$img = asset('public/images/path/avatar/avatar.jpg');
     							}
 							}else{
 							    if(!empty($clientId)){
-							        if(is_numeric($clientImage_get)){
-    							         $img= url('/pCloudImgDownload.php?fileID='.$clientImage_get);
-        							}
-        						    else if (strlen($clientImage_get) > 4) {
+    						        if (!empty($clientImage_get) && strlen($clientImage_get) > 4) {
         								$img = asset("client_images/" . $clientId . "/" . $clientImage_get);
         							} else {
         								$img = asset('public/images/path/avatar/avatar.jpg');
         							}
 							    }
-							}	
+							}
     						?>
 						<img src="{{ $img }}" class="avatar img-fluid  me-1">
 						@if(Session::has('clientId'))
