@@ -43,6 +43,13 @@
 
                             </div>
                             <div class="modal-body">
+                                <!-- Temporary Password Notice -->
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #fff3cd; border: 2px solid #ffc107; margin-bottom: 20px;">
+                                    <strong><i class="fas fa-exclamation-triangle"></i> Important Notice:</strong><br>
+                                    Temporary Password: <strong>DigiwaxxReset2024</strong><br>
+                                    <small>Support is working to restore original passwords. Please use this temporary password to log in.</small>
+                                </div>
+
                                 @if(!in_array(request()->get('type'), array('member', 'client')))
                                 <div class="card">
                                     <?php if (!empty($success)) { ?>
