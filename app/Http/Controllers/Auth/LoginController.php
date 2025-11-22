@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Hash;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -211,9 +212,8 @@ class LoginController extends Controller
         
 		if($membertype == 'client'){
 
-			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
+			// Find user by username or email
 			// Using parameterized whereRaw for case-insensitive username matching
-			// Note: LoginRequest already trims input in prepareForValidation()
 			$users = DB::table('clients')
 				->where(function($query) use ($username) {
 					$query->whereRaw('LOWER(uname) = ?', [strtolower($username)])
@@ -223,15 +223,10 @@ class LoginController extends Controller
 				->get()
 				->toArray();
 
-			// Verify password using migration helper (supports both MD5 and bcrypt)
+			// Verify password using Laravel's Hash::check (bcrypt)
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
-				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
-					$password,
-					$users[0]->pword,
-					'clients',
-					$users[0]->id
-				);
+				$passwordValid = Hash::check($password, $users[0]->pword);
 			}
 
 			if(!empty($users) && count($users)>0 && $passwordValid){
@@ -261,9 +256,8 @@ class LoginController extends Controller
 			}		
 		}else if($membertype == 'member'){
 
-			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
+			// Find user by username or email
 			// Using parameterized whereRaw for case-insensitive username matching
-			// Note: LoginRequest already trims input in prepareForValidation()
 			$users = DB::table('members')
 				->where(function($query) use ($username) {
 					$query->whereRaw('LOWER(uname) = ?', [strtolower($username)])
@@ -273,15 +267,10 @@ class LoginController extends Controller
 				->get()
 				->toArray();
 
-			// Verify password using migration helper (supports both MD5 and bcrypt)
+			// Verify password using Laravel's Hash::check (bcrypt)
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
-				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
-					$password,
-					$users[0]->pword,
-					'members',
-					$users[0]->id
-				);
+				$passwordValid = Hash::check($password, $users[0]->pword);
 			}
 
 			if(!empty($users) && count($users)>0 && $passwordValid){
