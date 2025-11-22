@@ -114,7 +114,7 @@ Route::post('dislike-article','App\Http\Controllers\PagesController@dislike_arti
 Route::any('single-forum-dev','App\Http\Controllers\PagesController@single_forumDev')->name('single-forum-dev');
 
 
-Route::any('testWebLogin', 'App\Http\Controllers\Auth\LoginController@testWebLogin')->name('testWebLogin');
+// SECURITY: testWebLogin route removed - referenced non-existent method
 
 
 Route::get('forgot-password', 'App\Http\Controllers\Auth\ForgotPasswordController@getEmail');
