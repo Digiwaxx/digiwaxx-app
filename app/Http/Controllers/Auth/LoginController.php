@@ -223,14 +223,22 @@ class LoginController extends Controller
 				->get()
 				->toArray();
 
-			// Verify password using Laravel's Hash::check (bcrypt)
+			// Verify password - supports both MD5 (legacy) and bcrypt
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
-				$passwordValid = Hash::check($password, $users[0]->pword);
+				$storedHash = $users[0]->pword;
+				// Check bcrypt first
+				if (Hash::check($password, $storedHash)) {
+					$passwordValid = true;
+				}
+				// Fall back to MD5 for legacy passwords
+				elseif (md5($password) === $storedHash) {
+					$passwordValid = true;
+				}
 			}
 
 			if(!empty($users) && count($users)>0 && $passwordValid){
-								
+
 				$result['type'] = 1;
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
@@ -267,10 +275,18 @@ class LoginController extends Controller
 				->get()
 				->toArray();
 
-			// Verify password using Laravel's Hash::check (bcrypt)
+			// Verify password - supports both MD5 (legacy) and bcrypt
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
-				$passwordValid = Hash::check($password, $users[0]->pword);
+				$storedHash = $users[0]->pword;
+				// Check bcrypt first
+				if (Hash::check($password, $storedHash)) {
+					$passwordValid = true;
+				}
+				// Fall back to MD5 for legacy passwords
+				elseif (md5($password) === $storedHash) {
+					$passwordValid = true;
+				}
 			}
 
 			if(!empty($users) && count($users)>0 && $passwordValid){
