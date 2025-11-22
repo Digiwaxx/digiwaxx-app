@@ -739,6 +739,7 @@ Route::any('/submitted_tracks_versions_edit/{tid?}', 'App\Http\Controllers\Admin
 
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\StripeWebhookController;
+use App\Http\Controllers\SubscriptionErrorTestController;
 
 // Public pricing page - shows all tiers with monthly/annual toggle
 Route::get('/pricing', [SubscriptionController::class, 'pricing'])->name('pricing');
@@ -763,6 +764,41 @@ Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']
     ->name('stripe.webhook')
     ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
+/*
+|--------------------------------------------------------------------------
+| Subscription Error Testing Routes (Development/Testing)
+|--------------------------------------------------------------------------
+| These routes are for testing subscription error scenarios and verifying
+| that error messages are properly translated in all supported languages.
+*/
+
+Route::prefix('subscription/test')->group(function () {
+    Route::get('/', [SubscriptionErrorTestController::class, 'index'])->name('subscription.error-test');
+    Route::get('/not-logged-in', [SubscriptionErrorTestController::class, 'testNotLoggedIn']);
+    Route::get('/invalid-plan', [SubscriptionErrorTestController::class, 'testInvalidPlan']);
+    Route::get('/invalid-tier', [SubscriptionErrorTestController::class, 'testInvalidTier']);
+    Route::get('/stripe-not-configured', [SubscriptionErrorTestController::class, 'testStripeNotConfigured']);
+    Route::get('/process-error', [SubscriptionErrorTestController::class, 'testProcessError']);
+    Route::get('/invalid-session', [SubscriptionErrorTestController::class, 'testInvalidSession']);
+    Route::get('/verify-error', [SubscriptionErrorTestController::class, 'testVerifyError']);
+    Route::get('/checkout-canceled', [SubscriptionErrorTestController::class, 'testCheckoutCanceled']);
+    Route::get('/invalid-upgrade', [SubscriptionErrorTestController::class, 'testInvalidUpgrade']);
+    Route::get('/upgrade-error', [SubscriptionErrorTestController::class, 'testUpgradeError']);
+    Route::get('/no-active-subscription', [SubscriptionErrorTestController::class, 'testNoActiveSubscription']);
+    Route::get('/cancel-success', [SubscriptionErrorTestController::class, 'testCancelSuccess']);
+    Route::get('/cancel-error', [SubscriptionErrorTestController::class, 'testCancelError']);
+    Route::get('/no-subscription-resume', [SubscriptionErrorTestController::class, 'testNoSubscriptionToResume']);
+    Route::get('/resume-success', [SubscriptionErrorTestController::class, 'testResumeSuccess']);
+    Route::get('/resume-error', [SubscriptionErrorTestController::class, 'testResumeError']);
+    Route::get('/billing-portal-error', [SubscriptionErrorTestController::class, 'testBillingPortalError']);
+    Route::get('/free-plan-success', [SubscriptionErrorTestController::class, 'testFreePlanSuccess']);
+    Route::get('/subscription-success', [SubscriptionErrorTestController::class, 'testSubscriptionSuccess']);
+    Route::get('/upgrade-success', [SubscriptionErrorTestController::class, 'testUpgradeSuccess']);
+});
+
+// Localized error test page
+Route::get('/subscription/error-test', [SubscriptionErrorTestController::class, 'index'])->name('subscription.error-test.en');
+
 // API Routes for Upload Limit Checking
 Route::middleware(['auth'])->prefix('api')->group(function () {
     Route::get('/can-upload', [SubscriptionController::class, 'canUpload'])->name('api.can-upload');
@@ -775,20 +811,20 @@ Route::middleware(['auth'])->prefix('api')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-if (config('localization.enabled', false)) {
-    Route::prefix('{locale}')
-        ->where(['locale' => 'es|pt|fr|de|ja|ko'])
-        ->group(function () {
-            Route::get('/pricing', [SubscriptionController::class, 'pricing'])->name('pricing.localized');
-            Route::middleware(['auth'])->group(function () {
-                Route::get('/subscribe/{tier}/{billing}', [SubscriptionController::class, 'checkout'])
-                    ->name('subscribe.checkout.localized')
-                    ->where(['tier' => 'free|artist|label', 'billing' => 'monthly|annual']);
-                Route::get('/subscribe/success', [SubscriptionController::class, 'success'])->name('subscribe.success.localized');
-                Route::get('/subscribe/cancel', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel.localized');
-                Route::get('/subscription', [SubscriptionController::class, 'manage'])->name('subscription.manage.localized');
-            });
+// Localized routes (always enabled for error testing)
+Route::prefix('{locale}')
+    ->where(['locale' => 'es|pt|fr|de|ja|ko'])
+    ->group(function () {
+        Route::get('/pricing', [SubscriptionController::class, 'pricing'])->name('pricing.localized');
+        Route::get('/subscription/error-test', [SubscriptionErrorTestController::class, 'index'])->name('subscription.error-test.localized');
+        Route::middleware(['auth'])->group(function () {
+            Route::get('/subscribe/{tier}/{billing}', [SubscriptionController::class, 'checkout'])
+                ->name('subscribe.checkout.localized')
+                ->where(['tier' => 'free|artist|label', 'billing' => 'monthly|annual']);
+            Route::get('/subscribe/success', [SubscriptionController::class, 'success'])->name('subscribe.success.localized');
+            Route::get('/subscribe/cancel', [SubscriptionController::class, 'cancel'])->name('subscribe.cancel.localized');
+            Route::get('/subscription', [SubscriptionController::class, 'manage'])->name('subscription.manage.localized');
         });
-}
+    });
 
 ?>
