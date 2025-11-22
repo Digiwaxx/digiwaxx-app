@@ -172,16 +172,17 @@
         <div class="row">
               <div class="col-md-3 col-sm-4 col-7">
               <div class="logo">
-                 <?php 
+                 <?php
 				         $get_logo='';
-				      
+
 				         $logo_details = DB::table('website_logo')->where('logo_id',1)->first();
-				         if(!empty($logo_details) && !empty($logo_details->pCloudFileID)){
-				           $get_logo = $logo_details->pCloudFileID;
+				         // Use local logo field instead of pCloudFileID
+				         if(!empty($logo_details) && !empty($logo_details->logo)){
+				           $get_logo = $logo_details->logo;
 				         }
-				         
+
                    if(!empty($get_logo)){?>
-					       <a href="https://digiwaxx.com"><img src="<?php echo url('/pCloudImgDownload.php?fileID='.$get_logo); ?>"></a>
+					       <a href="https://digiwaxx.com"><img src="<?php echo asset('public/images/'.$get_logo); ?>"></a>
 				<?php	 }else{?>
 					       <a href="https://digiwaxx.com"><img src="{{ asset('public/images/logo.png') }}"></a>
 				<?php    } ?>
