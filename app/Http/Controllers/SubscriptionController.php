@@ -84,7 +84,7 @@ class SubscriptionController extends Controller
         $client = $this->getAuthenticatedClient();
 
         if (!$client) {
-            return redirect()->route('login')->with('error', 'Please log in to subscribe');
+            return redirect()->route('login')->with('error', __('Please log in to subscribe'));
         }
 
         // Handle free plan - no payment needed
@@ -94,7 +94,7 @@ class SubscriptionController extends Controller
 
         // Validate tier and billing
         if (!in_array($tier, ['artist', 'label']) || !in_array($billing, ['monthly', 'annual'])) {
-            return redirect()->route('pricing')->with('error', 'Invalid plan selection');
+            return redirect()->route('pricing')->with('error', __('Invalid plan selection'));
         }
 
         try {
@@ -105,7 +105,7 @@ class SubscriptionController extends Controller
 
             if (!$priceId || $priceId === 'price_ARTIST_MONTHLY_PLACEHOLDER') {
                 Log::error('Stripe price ID not configured', ['tier' => $tier, 'billing' => $billing]);
-                return redirect()->route('pricing')->with('error', 'Subscription plans are not configured yet. Please contact support.');
+                return redirect()->route('pricing')->with('error', __('Subscription plans are not configured yet. Please contact support.'));
             }
 
             // Create or retrieve Stripe customer
@@ -147,7 +147,7 @@ class SubscriptionController extends Controller
                 'billing' => $billing,
             ]);
 
-            return redirect()->route('pricing')->with('error', 'Unable to process subscription. Please try again.');
+            return redirect()->route('pricing')->with('error', __('Unable to process subscription. Please try again.'));
         }
     }
 
@@ -159,7 +159,7 @@ class SubscriptionController extends Controller
         $sessionId = $request->get('session_id');
 
         if (!$sessionId) {
-            return redirect()->route('pricing')->with('error', 'Invalid checkout session');
+            return redirect()->route('pricing')->with('error', __('Invalid checkout session'));
         }
 
         $client = $this->getAuthenticatedClient();
@@ -197,7 +197,7 @@ class SubscriptionController extends Controller
             $this->logSubscriptionPayment($client->id, $session);
 
             $tierName = ucfirst($tier);
-            return redirect('/dashboard')->with('success', "Welcome to the {$tierName} Plan! Your subscription is now active.");
+            return redirect('/dashboard')->with('success', __('Welcome to the :tier Plan! Your subscription is now active.', ['tier' => $tierName]));
 
         } catch (\Exception $e) {
             Log::error('Stripe success callback error', [
@@ -205,7 +205,7 @@ class SubscriptionController extends Controller
                 'session_id' => $sessionId,
             ]);
 
-            return redirect()->route('pricing')->with('error', 'Unable to verify subscription. Please contact support.');
+            return redirect()->route('pricing')->with('error', __('Unable to verify subscription. Please contact support.'));
         }
     }
 
@@ -214,7 +214,7 @@ class SubscriptionController extends Controller
      */
     public function cancel(Request $request)
     {
-        return redirect()->route('pricing')->with('info', 'Subscription checkout was canceled. You can try again anytime.');
+        return redirect()->route('pricing')->with('info', __('Subscription checkout was canceled. You can try again anytime.'));
     }
 
     /**
@@ -262,7 +262,7 @@ class SubscriptionController extends Controller
 
         // Validate upgrade path
         if (!$this->isValidUpgrade($client->subscription_tier, $newTier)) {
-            return redirect()->route('subscription.manage')->with('error', 'Invalid upgrade selection');
+            return redirect()->route('subscription.manage')->with('error', __('Invalid upgrade selection'));
         }
 
         // If no existing Stripe subscription, redirect to checkout
@@ -299,7 +299,7 @@ class SubscriptionController extends Controller
             ]);
 
             $tierName = ucfirst($newTier);
-            return redirect()->route('subscription.manage')->with('success', "Upgraded to {$tierName} Plan successfully!");
+            return redirect()->route('subscription.manage')->with('success', __('Upgraded to :tier Plan successfully!', ['tier' => $tierName]));
 
         } catch (\Exception $e) {
             Log::error('Subscription upgrade error', [
@@ -308,7 +308,7 @@ class SubscriptionController extends Controller
                 'new_tier' => $newTier,
             ]);
 
-            return redirect()->route('subscription.manage')->with('error', 'Unable to upgrade subscription. Please try again.');
+            return redirect()->route('subscription.manage')->with('error', __('Unable to upgrade subscription. Please try again.'));
         }
     }
 
@@ -320,7 +320,7 @@ class SubscriptionController extends Controller
         $client = $this->getAuthenticatedClient();
 
         if (!$client || empty($client->stripe_subscription_id)) {
-            return redirect()->route('subscription.manage')->with('error', 'No active subscription to cancel');
+            return redirect()->route('subscription.manage')->with('error', __('No active subscription to cancel'));
         }
 
         try {
@@ -336,7 +336,7 @@ class SubscriptionController extends Controller
                 'subscription_status' => 'canceled',
             ]);
 
-            return redirect()->route('subscription.manage')->with('success', 'Subscription canceled. You\'ll retain access until the end of your billing period.');
+            return redirect()->route('subscription.manage')->with('success', __("Subscription canceled. You'll retain access until the end of your billing period."));
 
         } catch (\Exception $e) {
             Log::error('Subscription cancel error', [
@@ -344,7 +344,7 @@ class SubscriptionController extends Controller
                 'client_id' => $client->id,
             ]);
 
-            return redirect()->route('subscription.manage')->with('error', 'Unable to cancel subscription. Please try again.');
+            return redirect()->route('subscription.manage')->with('error', __('Unable to cancel subscription. Please try again.'));
         }
     }
 
@@ -356,7 +356,7 @@ class SubscriptionController extends Controller
         $client = $this->getAuthenticatedClient();
 
         if (!$client || empty($client->stripe_subscription_id)) {
-            return redirect()->route('subscription.manage')->with('error', 'No subscription to resume');
+            return redirect()->route('subscription.manage')->with('error', __('No subscription to resume'));
         }
 
         try {
@@ -372,7 +372,7 @@ class SubscriptionController extends Controller
                 'subscription_status' => 'active',
             ]);
 
-            return redirect()->route('subscription.manage')->with('success', 'Subscription resumed successfully!');
+            return redirect()->route('subscription.manage')->with('success', __('Subscription resumed successfully!'));
 
         } catch (\Exception $e) {
             Log::error('Subscription resume error', [
@@ -380,7 +380,7 @@ class SubscriptionController extends Controller
                 'client_id' => $client->id,
             ]);
 
-            return redirect()->route('subscription.manage')->with('error', 'Unable to resume subscription. Please try again.');
+            return redirect()->route('subscription.manage')->with('error', __('Unable to resume subscription. Please try again.'));
         }
     }
 
@@ -411,7 +411,7 @@ class SubscriptionController extends Controller
                 'client_id' => $client->id,
             ]);
 
-            return redirect()->route('subscription.manage')->with('error', 'Unable to access billing portal. Please try again.');
+            return redirect()->route('subscription.manage')->with('error', __('Unable to access billing portal. Please try again.'));
         }
     }
 
@@ -423,7 +423,7 @@ class SubscriptionController extends Controller
         $client = $this->getAuthenticatedClient();
 
         if (!$client) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => __('Unauthorized')], 401);
         }
 
         $uploadsUsed = $this->getUploadUsageForClient($client->id);
@@ -446,7 +446,7 @@ class SubscriptionController extends Controller
         $client = $this->getAuthenticatedClient();
 
         if (!$client) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => __('Unauthorized')], 401);
         }
 
         $uploadsUsed = $this->getUploadUsageForClient($client->id);
@@ -459,8 +459,8 @@ class SubscriptionController extends Controller
             'tier' => $client->subscription_tier ?? 'free',
             'upgrade_url' => route('pricing'),
             'message' => $canUpload
-                ? "You have " . ($uploadLimit - $uploadsUsed) . " upload(s) remaining this month."
-                : "You've reached your monthly upload limit. Upgrade your plan for more uploads.",
+                ? __('You have :count upload(s) remaining this month.', ['count' => ($uploadLimit - $uploadsUsed)])
+                : __("You've reached your monthly upload limit. Upgrade your plan for more uploads."),
         ]);
     }
 
@@ -472,7 +472,7 @@ class SubscriptionController extends Controller
         $client = $this->getAuthenticatedClient();
 
         if (!$client) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => __('Unauthorized')], 401);
         }
 
         $uploadsUsed = $this->getUploadUsageForClient($client->id);
@@ -539,7 +539,7 @@ class SubscriptionController extends Controller
             'show_annual_badge' => false,
         ]);
 
-        return redirect('/dashboard')->with('success', 'Welcome to Digiwaxx Free! You can upload 1 song per month.');
+        return redirect('/dashboard')->with('success', __('Welcome to Digiwaxx Free! You can upload 1 song per month.'));
     }
 
     /**
