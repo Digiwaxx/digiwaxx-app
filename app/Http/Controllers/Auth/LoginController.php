@@ -77,13 +77,14 @@ class LoginController extends Controller
                           $query1=DB::table('package_user_details')->where('user_type',1)->where('user_id',$memID)->update([
                             'package_active' => 0
                               ]);
-                              
+
                         $get_free=DB::table('manage_packages')->where('available_to',1)->where('package_price',0)->get();
                         $get_uname=DB::table('members')->where('id',$memID)->get();
 
-                              
+                        // Safety check: ensure free package and member exist before inserting
+                        if(count($get_free) > 0 && count($get_uname) > 0){
                           $query2=DB::table('package_user_details')->insert([
-                              
+
                                                 'package_id' => $get_free[0]->id,
                                                 'user_id' => $memID,
                                                 'user_name' => $get_uname[0]->uname,
@@ -94,23 +95,25 @@ class LoginController extends Controller
                                                 'payment_method' => '',
                                                 'payment_amount' => '',
                                                 'package_active' => 1
-                              
-                              ]); 
-                              
-                           return redirect()->intended('Member_dashboard_newest_tracks?status=1');  
+
+                              ]);
+                        }
+
+                           return redirect()->intended('Member_dashboard_newest_tracks?status=1');
                         }
              
 
                         }else{
-                            
-                            $current_date= date("Y-m-d");    
-                                
+
+                            $current_date= date("Y-m-d");
+
                             $get_free=DB::table('manage_packages')->where('available_to',1)->where('package_price',0)->get();
                             $get_uname=DB::table('members')->where('id',$memID)->get();
 
-                              
+                        // Safety check: ensure free package and member exist before inserting
+                        if(count($get_free) > 0 && count($get_uname) > 0){
                           $query2=DB::table('package_user_details')->insert([
-                              
+
                                                 'package_id' => $get_free[0]->id,
                                                 'user_id' => $memID,
                                                 'user_name' => $get_uname[0]->uname,
@@ -121,11 +124,12 @@ class LoginController extends Controller
                                                 'payment_method' => '',
                                                 'payment_amount' => '',
                                                 'package_active' => 1
-                              
-                              ]); 
-                             
-                            return redirect()->intended('Member_dashboard_newest_tracks?status=2');    
-                            
+
+                              ]);
+                        }
+
+                            return redirect()->intended('Member_dashboard_newest_tracks?status=2');
+
                         }
             
             
@@ -164,10 +168,20 @@ class LoginController extends Controller
 		$username = trim($request->input('email'));
 		$password = trim($request->input('password'));
 		$membertype = $request->input('membertype');
-		
-	
-		
-		
+
+		// Initialize $result array to prevent undefined variable errors
+		$result = [
+			'type' => 0,
+			'numRows' => 0,
+			'data' => [],
+			'image' => ''
+		];
+
+		// Validate membertype - must be 'client' or 'member'
+		if (!in_array($membertype, ['client', 'member'])) {
+			return redirect('login')->with('error', 'Invalid account type selected. Please select Client or Member.');
+		}
+
 		if (Session::get('clientId')) {
             return redirect()->intended("Client_dashboard");
             exit;
@@ -239,7 +253,7 @@ class LoginController extends Controller
 				exit; */
 				
 			}else{
-				return redirect('login?type='.$membertype)->with('error', 'Oppes! You have entered invalid credentials');
+				return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
 				exit;
 			}		
 		}else if($membertype == 'member'){
@@ -286,7 +300,7 @@ class LoginController extends Controller
 				/* return redirect()->intended('home');
 				exit; */
 			}else{
-				return redirect('login?type='.$membertype)->with('error', 'Oppes! You have entered invalid credentials');
+				return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
 				exit;
 			}
 		}
@@ -442,13 +456,14 @@ class LoginController extends Controller
                           $query1=DB::table('package_user_details')->where('user_type',1)->where('user_id',$memID)->update([
                             'package_active' => 0
                               ]);
-                              
+
                         $get_free=DB::table('manage_packages')->where('available_to',1)->where('package_price',0)->get();
                         $get_uname=DB::table('members')->where('id',$memID)->get();
 
-                              
+                        // Safety check: ensure free package and member exist before inserting
+                        if(count($get_free) > 0 && count($get_uname) > 0){
                           $query2=DB::table('package_user_details')->insert([
-                              
+
                                                 'package_id' => $get_free[0]->id,
                                                 'user_id' => $memID,
                                                 'user_name' => $get_uname[0]->uname,
@@ -459,23 +474,25 @@ class LoginController extends Controller
                                                 'payment_method' => '',
                                                 'payment_amount' => '',
                                                 'package_active' => 1
-                              
-                              ]); 
-                              
-                            $page = "Member_dashboard_newest_tracks?status=1";  
+
+                              ]);
                         }
-             
+
+                            $page = "Member_dashboard_newest_tracks?status=1";
+                        }
+
 
                         }else{
-                            
-                        $current_date= date("Y-m-d");    
-                            
+
+                        $current_date= date("Y-m-d");
+
                         $get_free=DB::table('manage_packages')->where('available_to',1)->where('package_price',0)->get();
                         $get_uname=DB::table('members')->where('id',$memID)->get();
 
-                              
+                        // Safety check: ensure free package and member exist before inserting
+                        if(count($get_free) > 0 && count($get_uname) > 0){
                           $query2=DB::table('package_user_details')->insert([
-                              
+
                                                 'package_id' => $get_free[0]->id,
                                                 'user_id' => $memID,
                                                 'user_name' => $get_uname[0]->uname,
@@ -486,38 +503,30 @@ class LoginController extends Controller
                                                 'payment_method' => '',
                                                 'payment_amount' => '',
                                                 'package_active' => 1
-                              
-                              ]); 
-                             
-                            $page = "Member_dashboard_newest_tracks?status=2";    
-                            
+
+                              ]);
+                        }
+
+                            $page = "Member_dashboard_newest_tracks?status=2";
+
                         }
 					}
 				}
 				
 			}else{
-				return redirect('login?error=9')->with('error', 'Oppes! You have entered invalid credentials');
+				return redirect('login?error=9')->with('error', 'Oops! You have entered invalid credentials');
 				exit;
 			}
+
+			// SECURITY FIX: Regenerate session ID to prevent session fixation attacks
+			$request->session()->regenerate();
+
 			return redirect($page);
 			exit;
 		} else {
-			return redirect('login?type='.$membertype)->with('error', 'Oppes! You have entered invalid credentials');
+			return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
 			exit;
 		}
-		
-        $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('home');
-        }
-
-        
     }
 	
 	public function MemberResubmissionStep2(){
