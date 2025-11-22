@@ -53,6 +53,11 @@ if ($request->isMethod('post')) {
 
   $result = $query->first();
 
+  // Safety check: ensure admin user exists before attempting login
+  if (!$result) {
+      return redirect()->back()->with('danger', 'Invalid Credentials');
+  }
+
 //   if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember) ){
   if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember) || Auth::guard('admin')->attempt(['uname' => $request->email, 'password' => $request->password], $request->remember)){
 
@@ -79,7 +84,8 @@ if ($request->isMethod('post')) {
 
       // SECURITY FIX: NEVER store user_role in cookies (privilege escalation risk)
       // Store role in server-side session only - client cannot modify
-      Session::put('admin_Id', $result->id);
+      Session::put('admin_id', $result->id);
+      Session::put('admin_logged_in', true);
       Session::put('admin_role', $result->user_role); // Store role server-side
 
       // SECURITY FIX: Regenerate session ID to prevent session fixation

@@ -38,15 +38,15 @@ class LoginController extends Controller
 
 		$logo_details = DB::table('website_logo')
 		->where($logo_data)
-		->first();  
-		
-// 		$get_logo = $logo_details->logo;
-       $get_logo = $logo_details->pCloudFileID; //pCloudFileID
+		->first();
+
+		// Safety check: ensure logo record exists before accessing
+		$get_logo = $logo_details ? $logo_details->pCloudFileID : null;
 
 		$output['pageTitle'] = 'Login';
 		$output['logo'] = $get_logo;
-		
-		if(isset($_GET['success'])){
+
+		if($request->has('success')){
 		    $output['success']="Thanks! Your email account has been verified.";
 		}
 		
@@ -184,26 +184,24 @@ class LoginController extends Controller
 
 		if (Session::get('clientId')) {
             return redirect()->intended("Client_dashboard");
-            exit;
         } else if(Session::get('tempClientId')) {
             $tmpClientId = Session::get('tempClientId');
             Session::put('clientId', $tmpClientId);
-            
+            Session::forget('tempClientId');
+
             ## DISABLE CLIENT PROFILE RESUBMISSION PROCESS
             //return redirect()->intended("Client_resubmission_step1");
-            return redirect()->intended("Client_dashboard");            
-            exit;
+            return redirect()->intended("Client_dashboard");
         } else if (Session::get('memberId')) {
             return redirect()->intended("Member_dashboard_newest_tracks");
-            exit;
         } else if (Session::get('tempMemberId')) {
             $tmpMemId = Session::get('tempMemberId');
             Session::put('memberId', $tmpMemId);
-            
+            Session::forget('tempMemberId');
+
             ## DISABLE MEMBER PROFILE RESUBMISSION PROCESS
             //return redirect()->intended("Member_resubmission_step2");
-            return redirect()->intended("Member_dashboard_newest_tracks");            
-            exit;
+            return redirect()->intended("Member_dashboard_newest_tracks");
         }
         
         
@@ -237,24 +235,18 @@ class LoginController extends Controller
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
 				$upData = array(
-					'userLocation' => $_SERVER['REMOTE_ADDR'],
+					'userLocation' => $request->ip(),
 					'lastlogon' => date('Y-m-d H:i:s'),
-					
+
 				);
-				
+
 				$resQry = DB::table('clients')
 				->where('id', $users[0]->id)  // find your user by their email
 				->limit(1)  // optional - to ensure only one record is updated.
 				->update($upData);  // update the record in the DB.
-				
-				//echo'<pre>';print_r($users[0]->uname);die('---YSYSYS');
-				//Session::put('loggedin_user', $users[0]->uname);				
-				/* return redirect()->intended('home');
-				exit; */
-				
+
 			}else{
 				return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
-				exit;
 			}		
 		}else if($membertype == 'member'){
 
@@ -285,23 +277,18 @@ class LoginController extends Controller
 				$result['numRows'] = count($users);
 				$result['data'] = $users;
 				$upData = array(
-					'userLocation' => $_SERVER['REMOTE_ADDR'],
+					'userLocation' => $request->ip(),
 					'lastlogon' => date('Y-m-d H:i:s'),
-					
+
 				);
-				
+
 				$resQry = DB::table('members')
 				->where('id', $users[0]->id)  // find your user by their email
 				->limit(1)  // optional - to ensure only one record is updated.
 				->update($upData);  // update the record in the DB.
-				
-				//echo'<pre>';print_r($users[0]->uname);die('---YSYSYS');
-				//Session::put('loggedin_user', $users[0]->uname);				
-				/* return redirect()->intended('home');
-				exit; */
+
 			}else{
 				return redirect('login?type='.$membertype)->with('error', 'Oops! You have entered invalid credentials');
-				exit;
 			}
 		}
 // 		pArr($result);die('YSYS');
