@@ -84,14 +84,14 @@
                                     <div class="row">
                                         <div class="col-lg-8 col-md-9 col-sm-8">
                                             <div class="form-group"><span class="man"></span>
-                                                <input required name="artist" id="artist" class="form-control input artist_title" <?php if (isset($_GET['artist'])) { ?> value="<?php echo $_GET['artist']; ?>" <?php } ?> size="20" placeholder="Artist Name & Features" type="text">
+                                                <input required name="artist" id="artist" class="form-control input artist_title" <?php if (isset($_GET['artist'])) { ?> value="<?php echo htmlspecialchars($_GET['artist'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> size="20" placeholder="Artist Name & Features" type="text">
                                             </div>
                                             <div class="form-group"><span class="man"></span>
-                                                <input required name="title" id="title" class="form-control input artist_title" size="20" <?php if (isset($_GET['title'])) { ?> value="<?php echo $_GET['title']; ?>" <?php } ?> placeholder="Song Title" type="text">
+                                                <input required name="title" id="title" class="form-control input artist_title" size="20" <?php if (isset($_GET['title'])) { ?> value="<?php echo htmlspecialchars($_GET['title'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> placeholder="Song Title" type="text">
                                             </div>
                                             
                                             <div class="form-group"><span class="man"></span>
-                                                <input required name="producer" id="producer" class="form-control input" size="20" <?php if (isset($_GET['producer'])) { ?> value="<?php echo $_GET['producer']; ?>" <?php } ?> placeholder="Producer/Production Company" type="text">
+                                                <input required name="producer" id="producer" class="form-control input" size="20" <?php if (isset($_GET['producer'])) { ?> value="<?php echo htmlspecialchars($_GET['producer'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> placeholder="Producer/Production Company" type="text">
                                             </div>
                                         </div>
                                         <div class="col-lg-4 col-md-3 col-sm-4">
@@ -106,18 +106,18 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group"><span class="man"></span>
-                                                <input required name="trackTime" id="trackTime" class="form-control input" <?php if (isset($_GET['trackTime'])) { ?> value="<?php echo $_GET['trackTime']; ?>" <?php } ?> size="20" placeholder="Track Time (in minutes)" type="text">
+                                                <input required name="trackTime" id="trackTime" class="form-control input" <?php if (isset($_GET['trackTime'])) { ?> value="<?php echo htmlspecialchars($_GET['trackTime'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> size="20" placeholder="Track Time (in minutes)" type="text">
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="form-group">
                                                 <!--<span class="man"></span>-->
-                                                <input type="text" name="bpm" id="bpm" <?php if (isset($_GET['bpm'])) { ?> value="<?php echo $_GET['bpm']; ?>" <?php } ?> class="form-control" placeholder="BPM (Beats Per Minute)" />
+                                                <input type="text" name="bpm" id="bpm" <?php if (isset($_GET['bpm'])) { ?> value="<?php echo htmlspecialchars($_GET['bpm'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> class="form-control" placeholder="BPM (Beats Per Minute)" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <input name="album" id="album" class="form-control input" <?php if (isset($_GET['album'])) { ?> value="<?php echo $_GET['album']; ?>" <?php } ?> size="20" placeholder="Album Name" type="text">
+                                        <input name="album" id="album" class="form-control input" <?php if (isset($_GET['album'])) { ?> value="<?php echo htmlspecialchars($_GET['album'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> size="20" placeholder="Album Name" type="text">
                                         <!--<input type="text" name="test" class="datepicker" /> 
                                  <input size="16" type="text" value="2012-06-15 14:45" readonly class="form_datetime">
                                  
@@ -222,16 +222,16 @@
                                     </div>
                                     <div style="clear:both;"></div>
                                     <div class="form-group">
-                                        <input name="website" id="website" <?php if (isset($_GET['website'])) { ?> value="<?php echo $_GET['website']; ?>" <?php } ?> class="form-control input" size="20" placeholder="Website Link" type="text">
+                                        <input name="website" id="website" <?php if (isset($_GET['website'])) { ?> value="<?php echo htmlspecialchars($_GET['website'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> class="form-control input" size="20" placeholder="Website Link" type="text">
                                     </div>
                                     <div class="uptrk" id="uptrk1">
                                         <?php $linkDivDisplay1 = 'none';
                                         $linkDivDisplay2 = 'none'; ?>
                                         <div class="form-group" id="linkDiv1" style="display:<?php echo $linkDivDisplay1; ?>;">
-                                            <input name="website1" id="website1" <?php if (isset($_GET['website1'])) { ?> value="<?php echo $_GET['website2']; ?>" <?php } ?> class="form-control input" size="20" placeholder="Website Link" type="text">
+                                            <input name="website1" id="website1" <?php if (isset($_GET['website1'])) { ?> value="<?php echo htmlspecialchars($_GET['website1'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> class="form-control input" size="20" placeholder="Website Link" type="text">
                                         </div>
                                         <div class="form-group" id="linkDiv2" style="display:<?php echo $linkDivDisplay2; ?>;">
-                                            <input name="website2" id="website2" <?php if (isset($_GET['website1'])) { ?> value="<?php echo $_GET['website2']; ?>" <?php } ?> class="form-control input" size="20" placeholder="Website Link" type="text">
+                                            <input name="website2" id="website2" <?php if (isset($_GET['website2'])) { ?> value="<?php echo htmlspecialchars($_GET['website2'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> class="form-control input" size="20" placeholder="Website Link" type="text">
                                         </div>
                                     </div>
                                     <div style="clear:both;"></div>
@@ -244,18 +244,16 @@
                                     </a>
                                     <div style="clear:both;" class="mt-3"></div>
                                     <div class="form-group">
-                                        <input name="facebookLink" id="facebookLink" class="form-control input" <?php if (isset($_GET['facebookLink'])) { ?> value="<?php echo $_GET['facebookLink']; ?>" <?php } ?> size="20" placeholder="Facebook Link" type="text">
+                                        <input name="facebookLink" id="facebookLink" class="form-control input" <?php if (isset($_GET['facebookLink'])) { ?> value="<?php echo htmlspecialchars($_GET['facebookLink'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> size="20" placeholder="Facebook Link" type="text">
                                     </div>
                                     <div class="form-group">
-                                        <input name="twitterLink" id="twitterLink" class="form-control input" <?php if (isset($_GET['twitterLink'])) { ?> value="<?php echo $_GET['twitterLink']; ?>" <?php } ?> size="20" placeholder="Twitter Link" type="text">
+                                        <input name="twitterLink" id="twitterLink" class="form-control input" <?php if (isset($_GET['twitterLink'])) { ?> value="<?php echo htmlspecialchars($_GET['twitterLink'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> size="20" placeholder="Twitter Link" type="text">
                                     </div>
                                     <div class="form-group">
-                                        <input name="instagramLink" id="instagramLink" class="form-control input" <?php if (isset($_GET['instagramLink'])) { ?> value="<?php echo $_GET['instagramLink']; ?>" <?php } ?> size="20" placeholder="Instagram Link" type="text">
+                                        <input name="instagramLink" id="instagramLink" class="form-control input" <?php if (isset($_GET['instagramLink'])) { ?> value="<?php echo htmlspecialchars($_GET['instagramLink'], ENT_QUOTES, 'UTF-8'); ?>" <?php } ?> size="20" placeholder="Instagram Link" type="text">
                                     </div>
                                     <div class="form-group">
-                                        <textarea name="trackInfo" id="trackInfo" class="form-control" placeholder="Bonus Track Information" rows="5"><?php if (isset($_GET['trackInfo'])) {
-                                                                                                                                                            echo $_GET['trackInfo'];
-                                                                                                                                                        } ?></textarea>
+                                        <textarea name="trackInfo" id="trackInfo" class="form-control" placeholder="Bonus Track Information" rows="5"><?php if (isset($_GET['trackInfo'])) { echo htmlspecialchars($_GET['trackInfo'], ENT_QUOTES, 'UTF-8'); } ?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <span class="man"></span>

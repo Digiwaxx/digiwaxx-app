@@ -15329,37 +15329,39 @@ $output['staffTracks'] = $this->memberAllDB_model->getStaffSelectedTracks_fem(0,
 
 
 
-        if (isset($_GET['mp3Id'])) {
+        if (isset($_GET['mp3Id']) && isset($_GET['trackId'])) {
+            // SECURITY FIX: Sanitize GET parameters to prevent SQL injection
+            $mp3Id = (int)$_GET['mp3Id'];
+            $trackId = (int)$_GET['trackId'];
+
             $countryCode = '';
             $countryName = '';
 
             // get user location details:
-            //	function getLocationInfoByIp(){
-
             $client  = @$_SERVER['HTTP_CLIENT_IP'];
             $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
             $remote  = @$_SERVER['REMOTE_ADDR'];
             $result  = array('country' => '', 'city' => '');
 
             if (filter_var($client, FILTER_VALIDATE_IP)) {
-
                 $ip = $client;
             } else if (filter_var($forward, FILTER_VALIDATE_IP)) {
-
                 $ip = $forward;
             } else {
                 $ip = $remote;
             }
 
-            $ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $ip));
+            // SECURITY NOTE: Using validated IP for geolocation lookup
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                $ip_data = @json_decode(file_get_contents("http://www.geoplugin.net/json.gp?ip=" . urlencode($ip)));
 
-            if ($ip_data && $ip_data->geoplugin_countryName != null) {
-                $countryCode = $ip_data->geoplugin_countryCode;
-                $countryName = $ip_data->geoplugin_countryName;
+                if ($ip_data && $ip_data->geoplugin_countryName != null) {
+                    $countryCode = $ip_data->geoplugin_countryCode;
+                    $countryName = $ip_data->geoplugin_countryName;
+                }
             }
 
-            // }
-            $result = $this->memberAllDB_model->downloadIncrement($_GET['mp3Id'], $_GET['trackId'], $memberId_from_session, $countryName, $countryCode);
+            $result = $this->memberAllDB_model->downloadIncrement($mp3Id, $trackId, $memberId_from_session, $countryName, $countryCode);
         }
         
         if(isset($_GET['pcloud']) && $_GET['pcloud'] == true){
@@ -16898,11 +16900,11 @@ if ($response_ipn === 'VERIFIED') {
 		    $memID= Session::get('memberId');
 		}
 		
-		$mem_data =  DB::select("SELECT email, uname FROM members where id = '" . $memID . "'");
-		$mem_email = $mem_data[0]->email;
-		$member_uname = $mem_data[0]->uname;
-// 		dd($member_uname);
-	
+		// SECURITY FIX: Use parameterized query to prevent SQL injection
+		$mem_data = DB::table('members')->select('email', 'uname')->where('id', $memID)->get()->toArray();
+		$mem_email = !empty($mem_data) ? $mem_data[0]->email : '';
+		$member_uname = !empty($mem_data) ? $mem_data[0]->uname : '';
+
 	    $output = array();
 		$logo_data = array(
 			'logo_id' => 1,
@@ -16922,9 +16924,15 @@ if ($response_ipn === 'VERIFIED') {
 				// get sub genres
     
     if (isset($_GET['getSubGenres']) && isset($_GET['genreId'])) {
-    
-        $genreId = $_GET['genreId'];
-        $query = DB::select("SELECT subGenreId, subGenre FROM genres_sub where genreId = '" . $genreId . "' order by subGenre");
+
+        // SECURITY FIX: Sanitize and use parameterized query to prevent SQL injection
+        $genreId = (int)$_GET['genreId'];
+        $query = DB::table('genres_sub')
+            ->select('subGenreId', 'subGenre')
+            ->where('genreId', $genreId)
+            ->orderBy('subGenre')
+            ->get()
+            ->toArray();
         $result1['numRows'] = count($query);
         $result1['data']  = $query;
         $subGenres = $result1;
@@ -16953,25 +16961,46 @@ if ($response_ipn === 'VERIFIED') {
 
     if(isset($_POST['addTrack']))
 		{
-		    
+
+		 // SECURITY FIX: Properly encode GET parameters to prevent header injection
 		 $getString = '';
+		 $allowedParams = ['artist', 'title', 'producer', 'trackTime', 'bpm', 'album', 'albumType', 'priorityType', 'month', 'day', 'year', 'website', 'facebookLink', 'twitterLink', 'instagramLink', 'trackInfo', 'genre'];
 		 foreach($_POST as $key => $value)
-		 { 
-		   $getString .= '&'.$key.'='.$value;
+		 {
+		   if (in_array($key, $allowedParams)) {
+		       $getString .= '&' . urlencode($key) . '=' . urlencode($value);
+		   }
 		 }
-		
+
 
 		// track validation
-	   if(!(isset($_FILES['amr1'])) || (strlen($_FILES['amr1']['name'])<4)) 
+	   if(!(isset($_FILES['amr1'])) || (strlen($_FILES['amr1']['name'])<4))
 		 {
-		   header("location: ".url("member_uploadmedia?invalidTrack=1".$getString));   exit;
+		   return redirect('member_uploadmedia?invalidTrack=1' . $getString);
 		 }
 
-	    
+
 	    $data=$_POST;
-	    
+
 	    ///////////// query insert data /////////////////////
-    	    extract($data);
+	    // SECURITY FIX: Removed dangerous extract() - access variables via $data array instead
+	    $artist = isset($data['artist']) ? $data['artist'] : '';
+	    $title = isset($data['title']) ? $data['title'] : '';
+	    $producer = isset($data['producer']) ? $data['producer'] : '';
+	    $trackTime = isset($data['trackTime']) ? $data['trackTime'] : '';
+	    $bpm = isset($data['bpm']) ? $data['bpm'] : '';
+	    $album = isset($data['album']) ? $data['album'] : '';
+	    $albumType = isset($data['albumType']) ? $data['albumType'] : '';
+	    $priorityType = isset($data['priorityType']) ? $data['priorityType'] : '';
+	    $website = isset($data['website']) ? $data['website'] : '';
+	    $facebookLink = isset($data['facebookLink']) ? $data['facebookLink'] : '';
+	    $twitterLink = isset($data['twitterLink']) ? $data['twitterLink'] : '';
+	    $instagramLink = isset($data['instagramLink']) ? $data['instagramLink'] : '';
+	    $trackInfo = isset($data['trackInfo']) ? $data['trackInfo'] : '';
+	    $genre = isset($data['genre']) ? $data['genre'] : '';
+	    $subGenre = isset($data['subGenre']) ? $data['subGenre'] : '';
+	    $version = isset($data['version']) ? $data['version'] : '';
+	    $numVersion = isset($data['numVersion']) ? (int)$data['numVersion'] : 1;
     	   // dd($producer);
             $release_date = $data['year'] . '-' . $data['month'] . '-' . $data['day'];
     
