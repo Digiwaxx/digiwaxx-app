@@ -4,23 +4,8 @@
     <div class="footer-top">
       <div class="row align-items-center">
         <div class="col-md-6 col-sm-12">
-          <?php
-          $get_logo = '';
-
-          $logo_details = DB::table('website_logo')->where('logo_id', 1)->first();
-          // Use local logo field instead of pCloudFileID
-          if (!empty($logo_details) && !empty($logo_details->logo)) {
-            $get_logo = $logo_details->logo;
-          }
-
-          ?>
           <div class="foot-logo">
-            <?php if (!empty($get_logo)) { ?>
-              <a href="https://digiwaxx.com"><img src="<?php echo asset('public/images/' . $get_logo); ?>" class="img-fluid"></a>
-            <?php   } else { ?>
-              <a href="https://digiwaxx.com"><img src="{{ asset('public/images/logo.png') }}" class="img-fluid"></a>
-            <?php    } ?>
-            <!--<a href="{{ url('/') }}"><img src="{{ asset('public/images/logo.png') }}" class="img-fluid"></a>-->
+            <a href="https://digiwaxx.com"><img src="{{ asset('public/images/logo.png') }}" class="img-fluid"></a>
           </div>
         </div>
         <!-- <div class="col-md-6 col-sm-12">
