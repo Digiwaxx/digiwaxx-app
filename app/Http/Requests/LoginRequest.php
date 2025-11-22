@@ -40,7 +40,7 @@ class LoginRequest extends FormRequest
             'password' => [
                 'required',
                 'string',
-                'min:6', // Minimum password length
+                'min:1', // Allow any password length for legacy accounts
                 'max:255',
             ],
             'membertype' => [
@@ -60,7 +60,7 @@ class LoginRequest extends FormRequest
             'email.required' => 'Please enter your email or username.',
             'email.max' => 'Email/username is too long.',
             'password.required' => 'Please enter your password.',
-            'password.min' => 'Password must be at least 6 characters.',
+            'password.min' => 'Please enter your password.',
             'password.max' => 'Password is too long.',
             'membertype.required' => 'Please select account type.',
             'membertype.in' => 'Invalid account type selected.',
