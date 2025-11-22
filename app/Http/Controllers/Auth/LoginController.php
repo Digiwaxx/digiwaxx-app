@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -162,11 +163,12 @@ class LoginController extends Controller
 		}
     }
 
-    public function authenticate(Request $request)
+    public function authenticate(LoginRequest $request)
     {
-		// SECURITY FIX: Removed global variables, using local scope
-		$username = trim($request->input('email'));
-		$password = trim($request->input('password'));
+		// SECURITY FIX: Using LoginRequest for validation and sanitization
+		// LoginRequest validates: email (required), password (min 6), membertype (client|member)
+		$username = $request->input('email');
+		$password = $request->input('password');
 		$membertype = $request->input('membertype');
 
 		// Initialize $result array to prevent undefined variable errors
@@ -177,7 +179,7 @@ class LoginController extends Controller
 			'image' => ''
 		];
 
-		// Validate membertype - must be 'client' or 'member'
+		// Defense-in-depth: LoginRequest already validates membertype, but keep fallback check
 		if (!in_array($membertype, ['client', 'member'])) {
 			return redirect('login')->with('error', 'Invalid account type selected. Please select Client or Member.');
 		}
@@ -209,10 +211,11 @@ class LoginController extends Controller
 
 			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
 			// Using parameterized whereRaw for case-insensitive username matching
+			// Note: LoginRequest already trims input in prepareForValidation()
 			$users = DB::table('clients')
 				->where(function($query) use ($username) {
-					$query->whereRaw('LOWER(uname) = ?', [strtolower(trim($username))])
-						  ->orWhere('email', trim($username));
+					$query->whereRaw('LOWER(uname) = ?', [strtolower($username)])
+						  ->orWhere('email', $username);
 				})
 				->where('deleted', 0)
 				->get()
@@ -222,7 +225,7 @@ class LoginController extends Controller
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
 				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
-					trim($password),
+					$password,
 					$users[0]->pword,
 					'clients',
 					$users[0]->id
@@ -252,10 +255,11 @@ class LoginController extends Controller
 
 			// SECURITY FIX: Find user first, then verify password with auto-upgrade from MD5 to bcrypt
 			// Using parameterized whereRaw for case-insensitive username matching
+			// Note: LoginRequest already trims input in prepareForValidation()
 			$users = DB::table('members')
 				->where(function($query) use ($username) {
-					$query->whereRaw('LOWER(uname) = ?', [strtolower(trim($username))])
-						  ->orWhere('email', trim($username));
+					$query->whereRaw('LOWER(uname) = ?', [strtolower($username)])
+						  ->orWhere('email', $username);
 				})
 				->where('deleted', 0)
 				->get()
@@ -265,7 +269,7 @@ class LoginController extends Controller
 			$passwordValid = false;
 			if (!empty($users) && count($users) > 0) {
 				$passwordValid = \App\Helpers\PasswordMigrationHelper::verifyAndUpgrade(
-					trim($password),
+					$password,
 					$users[0]->pword,
 					'members',
 					$users[0]->id
