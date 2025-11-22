@@ -42,8 +42,8 @@ class LoginController extends Controller
 		->where($logo_data)
 		->first();
 
-		// Safety check: ensure logo record exists before accessing
-		$get_logo = $logo_details ? $logo_details->pCloudFileID : null;
+		// Safety check: use local logo field instead of pCloudFileID
+		$get_logo = $logo_details ? $logo_details->logo : null;
 
 		$output['pageTitle'] = 'Login';
 		$output['logo'] = $get_logo;

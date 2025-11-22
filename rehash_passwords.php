@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Hash;
 
 // Parse command line arguments
 $dryRun = in_array('--dry-run', $argv);
-$tempPassword = 'TempPass123!';
+$tempPassword = 'DigiwaxxReset2024';
 
 foreach ($argv as $arg) {
     if (strpos($arg, '--password=') === 0) {
