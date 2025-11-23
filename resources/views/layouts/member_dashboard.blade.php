@@ -445,6 +445,7 @@ font-family: "Roboto",sans-serif; font-size: 18px; font-style: italic; margin-bo
 <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script-->
 <script src="{{ asset('public/plugins/bootstrap/js/popper.min.js') }}"></script>
 <script src="{{ asset('public/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('public/js/image-fallback.js') }}"></script>
 <script src="{{ asset('public/js/menu.js') }}"></script>
 <script src="{{ asset('public/js/TMSearch.js') }}"></script>
 <script src="{{ asset('public/jvectormap/jquery-jvectormap-2.0.3.min.js') }}" defer></script>

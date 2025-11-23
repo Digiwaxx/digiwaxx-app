@@ -345,6 +345,7 @@
 </div>
 <script src="{{ asset('public/plugins/bootstrap/js/popper.min.js') }}"></script>
 <script src="{{ asset('public/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('public/js/image-fallback.js') }}"></script>
 <script src="{{ asset('public/js/menu.js') }}"></script>
 <script src="{{ asset('public/js/TMSearch.js') }}"></script>
 <script src="{{ asset('public/js/bootstrap-select.js') }}" defer></script>
