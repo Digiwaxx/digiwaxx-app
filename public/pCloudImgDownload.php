@@ -11,7 +11,8 @@ $fileId = $_GET['fileID'] ?? $_GET['fileId'] ?? null;
 $localFile = $_GET['local'] ?? '';
 $type = $_GET['type'] ?? 'track';
 
-// Base path
+// Base path - use the public folder (where this file is located)
+$publicPath = __DIR__;
 $basePath = dirname(__DIR__);
 
 // Load Laravel's database config
@@ -97,17 +98,18 @@ function getLocalFilename($basePath, $fileId) {
 }
 
 // Define local paths based on type
+// Paths are relative to the public folder (where this file is located)
 function getLocalPaths($type) {
     switch ($type) {
         case 'logo':
-            return ['public/Logos', 'public/images'];
+            return ['../public/Logos', 'Logos', 'images'];
         case 'track':
         case 'album':
-            return ['ImagesUp', 'public/images'];
+            return ['../ImagesUp', 'images'];
         case 'banner':
-            return ['public/images'];
+            return ['images', '../public/images'];
         default:
-            return ['ImagesUp', 'public/images'];
+            return ['../ImagesUp', 'images'];
     }
 }
 
@@ -125,7 +127,7 @@ function getMimeType($filename) {
 }
 
 // Try to serve local file
-function serveLocalFile($basePath, $filename, $type) {
+function serveLocalFile($publicPath, $filename, $type) {
     if (empty($filename)) {
         return false;
     }
@@ -133,7 +135,8 @@ function serveLocalFile($basePath, $filename, $type) {
     $paths = getLocalPaths($type);
 
     foreach ($paths as $path) {
-        $fullPath = $basePath . '/' . $path . '/' . $filename;
+        // Paths are relative to the public folder
+        $fullPath = $publicPath . '/' . $path . '/' . $filename;
         if (file_exists($fullPath) && is_file($fullPath)) {
             header('Content-Type: ' . getMimeType($filename));
             header('Content-Length: ' . filesize($fullPath));
@@ -147,16 +150,17 @@ function serveLocalFile($basePath, $filename, $type) {
 }
 
 // Serve placeholder
-function servePlaceholder($basePath, $type) {
+function servePlaceholder($publicPath, $type) {
+    // Placeholders are in the public/images folder
     $placeholders = [
-        'track' => 'public/images/noimage-avl.jpg',
-        'album' => 'public/images/noimage-avl.jpg',
-        'logo' => 'public/images/logo.png',
-        'banner' => 'public/images/banner-default.jpg',
+        'track' => 'images/noimage-avl.jpg',
+        'album' => 'images/noimage-avl.jpg',
+        'logo' => 'images/logo.png',
+        'banner' => 'images/banner-default.jpg',
     ];
 
     $placeholder = $placeholders[$type] ?? $placeholders['track'];
-    $fullPath = $basePath . '/' . $placeholder;
+    $fullPath = $publicPath . '/' . $placeholder;
 
     if (file_exists($fullPath)) {
         header('Content-Type: ' . getMimeType($placeholder));
@@ -184,6 +188,6 @@ if (empty($localFile) && !empty($fileId)) {
 }
 
 // Try local file, then placeholder
-if (!serveLocalFile($basePath, $localFile, $type)) {
-    servePlaceholder($basePath, $type);
+if (!serveLocalFile($publicPath, $localFile, $type)) {
+    servePlaceholder($publicPath, $type);
 }
