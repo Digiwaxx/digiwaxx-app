@@ -3,7 +3,7 @@
  * pCloud Image Download Handler - Local Only Mode
  *
  * Serves images from local storage only.
- * pCloud is disabled due to revoked access token.
+ * Looks up local filename from database using pCloud file ID.
  */
 
 // Get parameters
@@ -13,6 +13,88 @@ $type = $_GET['type'] ?? 'track';
 
 // Base path
 $basePath = dirname(__DIR__);
+
+// Load Laravel's database config
+require $basePath . '/vendor/autoload.php';
+
+// Simple database connection using PDO
+function getDbConnection($basePath) {
+    // Read .env file
+    $envFile = $basePath . '/.env';
+    $env = [];
+    if (file_exists($envFile)) {
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            if (strpos($line, '#') === 0) continue;
+            if (strpos($line, '=') !== false) {
+                list($key, $value) = explode('=', $line, 2);
+                $env[trim($key)] = trim($value, '"\'');
+            }
+        }
+    }
+
+    $host = $env['DB_HOST'] ?? '127.0.0.1';
+    $port = $env['DB_PORT'] ?? '3306';
+    $database = $env['DB_DATABASE'] ?? 'digiwaxx';
+    $username = $env['DB_USERNAME'] ?? 'root';
+    $password = $env['DB_PASSWORD'] ?? '';
+
+    try {
+        $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
+        return new PDO($dsn, $username, $password, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
+// Look up local filename from pCloud file ID
+function getLocalFilename($basePath, $fileId) {
+    if (empty($fileId) || !is_numeric($fileId)) {
+        return null;
+    }
+
+    $db = getDbConnection($basePath);
+    if (!$db) {
+        return null;
+    }
+
+    // Search in tracks table
+    $stmt = $db->prepare("SELECT imgpage FROM tracks WHERE pCloudFileID = ? LIMIT 1");
+    $stmt->execute([$fileId]);
+    $result = $stmt->fetch();
+    if ($result && !empty($result['imgpage'])) {
+        return $result['imgpage'];
+    }
+
+    // Search in tracks_submitted table
+    $stmt = $db->prepare("SELECT imgpage FROM tracks_submitted WHERE pCloudFileID = ? LIMIT 1");
+    $stmt->execute([$fileId]);
+    $result = $stmt->fetch();
+    if ($result && !empty($result['imgpage'])) {
+        return $result['imgpage'];
+    }
+
+    // Search in albums table
+    $stmt = $db->prepare("SELECT album_page_image FROM albums WHERE pCloudFileID_album = ? LIMIT 1");
+    $stmt->execute([$fileId]);
+    $result = $stmt->fetch();
+    if ($result && !empty($result['album_page_image'])) {
+        return $result['album_page_image'];
+    }
+
+    // Search in website_logo table
+    $stmt = $db->prepare("SELECT logo FROM website_logo WHERE pCloudFileID_logo = ? LIMIT 1");
+    $stmt->execute([$fileId]);
+    $result = $stmt->fetch();
+    if ($result && !empty($result['logo'])) {
+        return $result['logo'];
+    }
+
+    return null;
+}
 
 // Define local paths based on type
 function getLocalPaths($type) {
@@ -94,7 +176,14 @@ function servePlaceholder($basePath, $type) {
     return true;
 }
 
-// Main: Try local file, then placeholder
+// Main logic
+// If local filename provided, use it
+if (empty($localFile) && !empty($fileId)) {
+    // Look up local filename from database using pCloud file ID
+    $localFile = getLocalFilename($basePath, $fileId);
+}
+
+// Try local file, then placeholder
 if (!serveLocalFile($basePath, $localFile, $type)) {
     servePlaceholder($basePath, $type);
 }
