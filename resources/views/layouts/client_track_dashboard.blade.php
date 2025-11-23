@@ -195,24 +195,38 @@
                                 <div class="jp-controls-holder">
 
                                     <?php
-                                    if (!empty($tracks['data'][0]->pCloudFileID)) {
-                                        $img_get = url('/pCloudImgDownload.php?fileID=' . $tracks['data'][0]->pCloudFileID);
-                                    } else if (!empty($tracks['data'][0]->imgpage)) {
+                                    // Image loading with automatic fallback support
+                                    // Uses IMAGE_PRIMARY_SOURCE setting (local/pcloud) from .env
+                                    $track_data = $tracks['data'][0] ?? null;
+                                    $pcloud_id = $track_data->pCloudFileID ?? '';
+                                    $local_file = $track_data->imgpage ?? '';
+                                    $placeholder = asset('public/images/noimage-avl.jpg');
 
-                                        if (file_exists(base_path('ImagesUp/' . $tracks['data'][0]->imgpage))) {
-
-                                            $img_get = asset('ImagesUp/' . $tracks['data'][0]->imgpage);
-                                        } else {
-                                            $img_get = asset('public/images/noimage-avl.jpg');
-                                        }
+                                    // Build image URL with fallback parameters
+                                    if (!empty($pcloud_id) || !empty($local_file)) {
+                                        $img_get = url('/image/serve') . '?' . http_build_query([
+                                            'fileId' => $pcloud_id,
+                                            'local' => $local_file,
+                                            'type' => 'track'
+                                        ]);
+                                        $local_src = !empty($local_file) && file_exists(base_path('ImagesUp/' . $local_file))
+                                            ? asset('ImagesUp/' . $local_file)
+                                            : $placeholder;
                                     } else {
-                                        $img_get = asset('public/images/noimage-avl.jpg');
+                                        $img_get = $placeholder;
+                                        $local_src = $placeholder;
                                     }
-
                                     ?>
 
 
-                                    <div class="jp-image" id="jp-image"><img id="jp-image-img" src="<?php echo $img_get; ?>"></div>
+                                    <div class="jp-image" id="jp-image">
+                                        <img id="jp-image-img"
+                                             src="<?php echo $img_get; ?>"
+                                             data-local-src="<?php echo $local_src; ?>"
+                                             data-placeholder-src="<?php echo $placeholder; ?>"
+                                             onerror="handleImageError(this)"
+                                             alt="Track artwork">
+                                    </div>
                                     <div class="jp-details">
                                         <div class="jp-title" aria-label="title" id="jp-title"><?php if (!empty($tracks['data'][0])) echo urldecode($tracks['data'][0]->title); ?></div>
                                     </div>
@@ -352,21 +366,17 @@
                 <div class="row align-items-center">
                     <div class="col-md-3 col-sm-4 col-7">
                         <?php
-                        $get_logo = '';
-
-                        $logo_details = DB::table('website_logo')->where('logo_id', 1)->first();
-                        if (!empty($logo_details) && !empty($logo_details->pCloudFileID)) {
-                            $get_logo = $logo_details->pCloudFileID;
-                        }
-
+                        // Logo handling with fallback support
+                        // Uses local logo.png as primary source for reliability
                         ?>
                         <div class="logo">
-                            <?php if (!empty($get_logo)) { ?>
-                                <a href="{{ url('/') }}"><img src="<?php echo url('/pCloudImgDownload.php?fileID=' . $get_logo); ?>"></a>
-                            <?php     } else { ?>
-                                <a href="{{ url('/') }}"><img src="{{ asset('public/images/logo.png') }}"></a>
-                            <?php    } ?>
-
+                            <a href="{{ url('/') }}">
+                                <img src="{{ asset('public/images/logo.png') }}"
+                                     alt="Digiwaxx Logo"
+                                     data-local-src="{{ asset('public/images/logo.png') }}"
+                                     data-placeholder-src="{{ asset('public/images/logo.png') }}"
+                                     onerror="handleImageError(this)">
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-9 col-sm-8 col-5">
@@ -803,6 +813,7 @@
     <script src="{{ asset('public/plugins/bootstrap/js/popper.min.js') }}"></script>
     {{-- <script src="{{ asset('public/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('public/js/bootstrap-select.js') }}"></script> --}}
+    <script src="{{ asset('public/js/image-fallback.js') }}"></script>
     <script src="{{ asset('public/js/menu.js') }}"></script>
     <script src="{{ asset('public/js/TMSearch.js') }}"></script>
     {{-- <script src="{{ asset('public/jvectormap/jquery-jvectormap-2.0.3.min.js') }}" defer></script>       changed

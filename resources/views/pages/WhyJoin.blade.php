@@ -1,23 +1,28 @@
 @extends('layouts.app')
 
-  <?php 
-  $ban_img='';
-  if(is_numeric($banner[0]->pCloudFileID)){
-      $ban_img= url('/pCloudImgDownload.php?fileID='.$banner[0]->pCloudFileID);
-  }else{
-      $ban_img=  url('public/images/'.$banner[0]->banner_image);
-  }
-  
-  ?>
+<?php
+// Banner image with fallback support
+$pcloud_id = $banner[0]->pCloudFileID ?? '';
+$local_file = $banner[0]->banner_image ?? '';
+$ban_img = '';
+
+// Build image URL with fallback parameters
+if (!empty($pcloud_id) || !empty($local_file)) {
+    $ban_img = url('/image/serve') . '?' . http_build_query([
+        'fileId' => $pcloud_id,
+        'local' => $local_file,
+        'type' => 'banner'
+    ]);
+} else {
+    // Fallback to default banner
+    $ban_img = asset('public/images/banner-default.jpg');
+}
+?>
 
 <?php if(!empty($ban_img)){ ?>
 <style>
 	.why-bg-login{
-		    <?php if(is_numeric($banner[0]->pCloudFileID)){?>
-                 background-image: url(<?php echo $ban_img;?>);
-      <?php }else{ ?>
-                    background-image: url(<?php echo $ban_img;?>);
-         <?php }?>
+		background-image: url(<?php echo $ban_img; ?>);
 	}
 </style>
 <?php } ?>

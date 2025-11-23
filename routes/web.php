@@ -77,6 +77,14 @@ Route::any('/client_submitted_tracks', 'App\Http\Controllers\Clients\ClientsTrac
 // image-pcloud
 Route::get('client_pcloud_fetch_image/{id}', 'App\Http\Controllers\Clients\ClientsTrackController@pcloudFetchImageUri')->name('client_pcloud_fetch_image');
 
+// Image serving routes with fallback support
+// This replaces the old pCloudImgDownload.php functionality
+Route::get('image/serve', 'App\Http\Controllers\ImageController@serve')->name('image.serve');
+Route::get('image/pcloud/{fileId}', 'App\Http\Controllers\ImageController@servePCloud')->name('image.pcloud');
+Route::get('image/status', 'App\Http\Controllers\ImageController@checkStatus')->name('image.status');
+// Backward compatibility route for old pCloudImgDownload.php references
+Route::get('pCloudImgDownload.php', 'App\Http\Controllers\ImageController@serve');
+
 //Route::get('/', 'App\Http\Controllers\Auth\LoginController@login');
 
 Route::get('register', 'App\Http\Controllers\Auth\RegisterController@register');
