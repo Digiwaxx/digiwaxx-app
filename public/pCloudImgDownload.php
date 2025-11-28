@@ -1,9 +1,9 @@
 <?php
 /**
- * pCloud Image Download Handler - Local Only Mode
+ * pCloud Image Download Handler - With pCloud Support
  *
- * Serves images from local storage only.
- * Looks up local filename from database using pCloud file ID.
+ * Serves images from pCloud or local storage based on configuration.
+ * Supports automatic fallback between sources.
  */
 
 // Get parameters
@@ -18,9 +18,8 @@ $basePath = dirname(__DIR__);
 // Load Laravel's database config
 require $basePath . '/vendor/autoload.php';
 
-// Simple database connection using PDO
-function getDbConnection($basePath) {
-    // Read .env file
+// Read .env configuration
+function getEnvConfig($basePath) {
     $envFile = $basePath . '/.env';
     $env = [];
     if (file_exists($envFile)) {
@@ -33,12 +32,21 @@ function getDbConnection($basePath) {
             }
         }
     }
+    return $env;
+}
 
-    $host = $env['DB_HOST'] ?? '127.0.0.1';
-    $port = $env['DB_PORT'] ?? '3306';
-    $database = $env['DB_DATABASE'] ?? 'digiwaxx';
-    $username = $env['DB_USERNAME'] ?? 'root';
-    $password = $env['DB_PASSWORD'] ?? '';
+$config = getEnvConfig($basePath);
+$primarySource = $config['IMAGE_PRIMARY_SOURCE'] ?? 'pcloud';
+$enableFallback = ($config['IMAGE_ENABLE_FALLBACK'] ?? 'true') === 'true';
+$pcloudEnabled = ($config['PCLOUD_ENABLED'] ?? 'true') === 'true';
+
+// Simple database connection using PDO
+function getDbConnection($config) {
+    $host = $config['DB_HOST'] ?? '127.0.0.1';
+    $port = $config['DB_PORT'] ?? '3306';
+    $database = $config['DB_DATABASE'] ?? 'digiwaxx';
+    $username = $config['DB_USERNAME'] ?? 'root';
+    $password = $config['DB_PASSWORD'] ?? '';
 
     try {
         $dsn = "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
@@ -52,12 +60,12 @@ function getDbConnection($basePath) {
 }
 
 // Look up local filename from pCloud file ID
-function getLocalFilename($basePath, $fileId) {
+function getLocalFilename($config, $fileId) {
     if (empty($fileId) || !is_numeric($fileId)) {
         return null;
     }
 
-    $db = getDbConnection($basePath);
+    $db = getDbConnection($config);
     if (!$db) {
         return null;
     }
@@ -97,8 +105,80 @@ function getLocalFilename($basePath, $fileId) {
     return null;
 }
 
+// Try to fetch image from pCloud
+function tryPCloud($config, $fileId) {
+    if (empty($fileId) || !is_numeric($fileId)) {
+        return false;
+    }
+
+    $accessToken = $config['PCLOUD_ACCESS_TOKEN'] ?? '';
+    if (empty($accessToken) || $accessToken === 'your_pcloud_access_token') {
+        return false;
+    }
+
+    try {
+        $locationId = $config['PCLOUD_LOCATION_ID'] ?? 1;
+        $apiBase = $locationId == 2 ? 'https://eapi.pcloud.com' : 'https://api.pcloud.com';
+
+        // Get file link from pCloud
+        $url = $apiBase . '/getfilelink?fileid=' . intval($fileId) . '&access_token=' . urlencode($accessToken);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT => 5,
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200 || empty($response)) {
+            return false;
+        }
+
+        $data = json_decode($response, true);
+        if (empty($data['hosts']) || empty($data['path'])) {
+            return false;
+        }
+
+        $imageUrl = 'https://' . $data['hosts'][0] . $data['path'];
+
+        // Fetch and stream the image
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $imageUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_FOLLOWLOCATION => true,
+        ]);
+        $imageData = curl_exec($ch);
+        $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200 || empty($imageData)) {
+            return false;
+        }
+
+        if (empty($contentType) || strpos($contentType, 'image') === false) {
+            $contentType = 'image/jpeg';
+        }
+
+        header('Content-Type: ' . $contentType);
+        header('Content-Length: ' . strlen($imageData));
+        header('Cache-Control: public, max-age=86400');
+        header('X-Image-Source: pcloud');
+        echo $imageData;
+        return true;
+
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
 // Define local paths based on type
-// Paths are relative to the public folder (where this file is located)
 function getLocalPaths($type) {
     switch ($type) {
         case 'logo':
@@ -135,7 +215,6 @@ function serveLocalFile($publicPath, $filename, $type) {
     $paths = getLocalPaths($type);
 
     foreach ($paths as $path) {
-        // Paths are relative to the public folder
         $fullPath = $publicPath . '/' . $path . '/' . $filename;
         if (file_exists($fullPath) && is_file($fullPath)) {
             header('Content-Type: ' . getMimeType($filename));
@@ -151,7 +230,6 @@ function serveLocalFile($publicPath, $filename, $type) {
 
 // Serve placeholder
 function servePlaceholder($publicPath, $type) {
-    // Placeholders are in the public/images folder
     $placeholders = [
         'track' => 'images/noimage-avl.jpg',
         'album' => 'images/noimage-avl.jpg',
@@ -181,13 +259,33 @@ function servePlaceholder($publicPath, $type) {
 }
 
 // Main logic
-// If local filename provided, use it
+$served = false;
+
+// Look up local filename if not provided
 if (empty($localFile) && !empty($fileId)) {
-    // Look up local filename from database using pCloud file ID
-    $localFile = getLocalFilename($basePath, $fileId);
+    $localFile = getLocalFilename($config, $fileId);
 }
 
-// Try local file, then placeholder
-if (!serveLocalFile($publicPath, $localFile, $type)) {
+// Try primary source first
+if ($primarySource === 'pcloud' && $pcloudEnabled) {
+    // Try pCloud first
+    $served = tryPCloud($config, $fileId);
+
+    // Fallback to local if enabled
+    if (!$served && $enableFallback) {
+        $served = serveLocalFile($publicPath, $localFile, $type);
+    }
+} else {
+    // Try local first
+    $served = serveLocalFile($publicPath, $localFile, $type);
+
+    // Fallback to pCloud if enabled
+    if (!$served && $enableFallback && $pcloudEnabled) {
+        $served = tryPCloud($config, $fileId);
+    }
+}
+
+// Serve placeholder if nothing worked
+if (!$served) {
     servePlaceholder($publicPath, $type);
 }
