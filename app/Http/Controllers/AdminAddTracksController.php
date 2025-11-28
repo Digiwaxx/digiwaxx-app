@@ -50,7 +50,10 @@ class AdminAddTracksController extends Controller
 		$this->admin_model = new \App\Models\Admin;
 		$this->memberAllDB_model = new \App\Models\MemberAllDB;
 
-		$this->pCloudApp = new App();
+		$this->pCloudApp = new App(
+			config('laravel-pcloud.client_id'),
+			config('laravel-pcloud.client_secret')
+		);
 		$this->pCloudApp->setAccessToken(config('laravel-pcloud.access_token'));
 		$this->pCloudApp->setLocationId(config('laravel-pcloud.location_id'));
 	}

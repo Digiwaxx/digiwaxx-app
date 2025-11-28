@@ -19,7 +19,10 @@ class ImageController extends Controller
         // Initialize pCloud app if configured
         if ($this->isPCloudConfigured()) {
             try {
-                $this->pCloudApp = new App();
+                $this->pCloudApp = new App(
+                    config('laravel-pcloud.client_id'),
+                    config('laravel-pcloud.client_secret')
+                );
                 $this->pCloudApp->setAccessToken(config('laravel-pcloud.access_token', config('images.pcloud.access_token')));
                 $this->pCloudApp->setLocationId(config('laravel-pcloud.location_id', config('images.pcloud.location_id', 1)));
             } catch (\Exception $e) {
