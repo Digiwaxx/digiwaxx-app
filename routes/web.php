@@ -87,10 +87,14 @@ Route::get('pCloudImgDownload.php', 'App\Http\Controllers\ImageController@serve'
 
 //Route::get('/', 'App\Http\Controllers\Auth\LoginController@login');
 
+// Authentication Routes
 Route::get('register', 'App\Http\Controllers\Auth\RegisterController@register');
 Route::post('/register', 'App\Http\Controllers\Auth\RegisterController@storeUser')->name('register');
+
+// Login routes - GET shows form, POST processes authentication
 Route::get('login', 'App\Http\Controllers\Auth\LoginController@login')->name('login');
-Route::post('login', 'App\Http\Controllers\Auth\LoginController@authenticate');
+Route::post('login', 'App\Http\Controllers\Auth\LoginController@authenticate')->name('login.authenticate');
+
 Route::get('logout', 'App\Http\Controllers\Auth\LoginController@logout')->name('logout');
 
 Route::any('Member_resubmission_step2', 'App\Http\Controllers\Auth\LoginController@MemberResubmissionStep2');
